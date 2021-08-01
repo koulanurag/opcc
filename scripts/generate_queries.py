@@ -79,3 +79,6 @@ if __name__ == '__main__':
     os.makedirs(os.path.join(CQUE_DIR, args.env_name), exist_ok=True)
     pickle.dump(queries, open(_path, 'wb'))
     wandb.save(_path)
+
+    # close env
+    env.close()

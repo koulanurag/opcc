@@ -20,6 +20,6 @@ def get_queries(env_name):
     run_path = ENV_IDS[env_name]['wandb_run_path']
     env_root = os.path.join(CQUE_DIR, env_name)
     os.makedirs(env_root, exist_ok=True)
-    wandb.restore(name='queries', run_path=run_path, replace=True, root=env_root)
-    queries = pickle.load(os.path.join(env_root, 'queries'))
+    wandb.restore(name='queries.p', run_path=run_path, replace=True, root=env_root)
+    queries = pickle.load(open(os.path.join(env_root, 'queries.p'), 'rb'))
     return queries
