@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
                 info = {}
 
-                for horizon in [10,50,100]:
+                for horizon in [10, 50, 100]:
                     # evaluate policy
                     for policy, root_action, name in [(policy_a, root_action_a, 'policy_a'),
                                                       (policy_b, root_action_b, 'policy_b')]:
