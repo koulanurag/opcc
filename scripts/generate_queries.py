@@ -1,4 +1,6 @@
 import argparse
+
+import numpy as np
 import wandb
 import policybazaar
 import pickle
@@ -19,12 +21,16 @@ if __name__ == '__main__':
     wandb.init(project='cque', config={'env-name': args.env_name})
 
     queries = {}
+    overall_target_a = []
+    overall_target_b = []
+    overall_target = []
+    overall_horizon = []
     env = gym.make(args.env_name)
 
     for id_a in range(1, 5):
         for id_b in range(1, 5):
             if id_a == id_b:
-                break
+                continue
 
             observations_a = []
             observations_b = []
@@ -38,7 +44,7 @@ if __name__ == '__main__':
             targets_b = []
             targets = []
 
-            for seed in range(2):
+            for seed in range(5):
                 env.seed(seed)
                 obs = env.reset().tolist()
                 root_action_a = env.action_space.sample().tolist()
@@ -56,7 +62,8 @@ if __name__ == '__main__':
                         for _ in range(args.max_episodes):
                             episode_reward = 0
                             env.seed(seed)
-                            env.reset()
+                            step_obs = env.reset()
+                            assert (obs == step_obs).all()
                             step_obs, step_reward, done, _ = env.step(root_action)
                             episode_reward += step_reward
                             for step_count in range(horizon):
@@ -90,7 +97,19 @@ if __name__ == '__main__':
             queries[_key] = (observations_a, actions_a, horizon_a, gamma_a,
                              observations_b, actions_b, horizon_b, gamma_b,
                              targets_a, targets_b, targets)
+            overall_target_a += targets_a
+            overall_target_b += targets_b
+            overall_target += targets
+            overall_horizon += horizon_a
 
+    import plotly.express as px
+    import pandas as pd
+
+    df = pd.DataFrame(
+        data={'q-value-a': overall_target_a, 'q-value-b': overall_target_b, 'target': overall_target,
+              'horizon':overall_horizon})
+    fig = px.scatter_3d(df, x='q-value-a', y='q-value-b', z='target', color='target', symbol='horizon')
+    wandb.log({'query-values': fig})
     _path = os.path.join(CQUE_DIR, args.env_name, 'queries.p')
     os.makedirs(os.path.join(CQUE_DIR, args.env_name), exist_ok=True)
     pickle.dump(queries, open(_path, 'wb'))
