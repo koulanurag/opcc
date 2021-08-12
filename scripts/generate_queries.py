@@ -15,6 +15,8 @@ if __name__ == '__main__':
     parser.add_argument('--env-name', required=False, default='d4rl:maze2d-open-v0')
     parser.add_argument('--max-episodes', type=int, default=2, required=False)
     parser.add_argument('--gamma', type=float, default=1, required=False)
+    parser.add_argument('--episode-count', type=float, default=3, required=False)
+    parser.add_argument('--horizons', '--list', nargs='+', help='<Required> Set flag', required=True)
 
     # Process arguments
     args = parser.parse_args()
@@ -44,7 +46,7 @@ if __name__ == '__main__':
             targets_b = []
             targets = []
 
-            for seed in range(3):
+            for seed in range(args.episode_count):
                 env.seed(seed)
                 obs = env.reset().tolist()
                 root_action_a = env.action_space.sample().tolist()
@@ -55,7 +57,7 @@ if __name__ == '__main__':
                 info = {}
 
                 # evaluate policy
-                horizons = [10, 50, 100]
+                horizons = args.horizons
                 for policy, root_action, name in [(policy_a, root_action_a, 'policy_a'),
                                                   (policy_b, root_action_b, 'policy_b')]:
                     max_horizon = max(horizons)
@@ -106,8 +108,9 @@ if __name__ == '__main__':
     df = pd.DataFrame(
         data={'q-value-a': overall_target_a, 'q-value-b': overall_target_b, 'target': overall_target,
               'horizon': overall_horizon})
-    fig = px.scatter_3d(df, x='q-value-a', y='q-value-b', z='target', color='target', symbol='horizon')
-    wandb.log({'query-values': fig})
+    fig1 = px.scatter_3d(df, x='q-value-a', y='q-value-b', z='target', color='target', symbol='horizon')
+    fig2 = px.scatter(df, x='q-value-a', y='q-value-b', color='target')
+    wandb.log({'query-values-3d': fig1, 'query-values-scatter': fig2})
     _path = os.path.join(CQUE_DIR, args.env_name, 'queries.p')
     os.makedirs(os.path.join(CQUE_DIR, args.env_name), exist_ok=True)
     pickle.dump(queries, open(_path, 'wb'))
