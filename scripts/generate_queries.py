@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument('--max-episodes', type=int, default=2, required=False)
     parser.add_argument('--gamma', type=float, default=1, required=False)
     parser.add_argument('--episode-count', type=float, default=3, required=False)
-    parser.add_argument('--horizons', '--list', nargs='+', help='<Required> Set flag',type=int, required=True)
+    parser.add_argument('--horizons', '--list', nargs='+', help='<Required> Set flag', type=int, required=True)
 
     # Process arguments
     args = parser.parse_args()
@@ -29,8 +29,8 @@ if __name__ == '__main__':
     overall_horizon = []
     env = gym.make(args.env_name)
 
-    for id_a in range(1, 5):
-        for id_b in range(1, 5):
+    for id_a in [1, 4]:
+        for id_b in [1, 4]:
             if id_a == id_b:
                 continue
 
