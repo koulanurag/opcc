@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('--env-name', required=False, default='d4rl:maze2d-open-v0')
     parser.add_argument('--max-episodes', type=int, default=2, required=False)
     parser.add_argument('--gamma', type=float, default=1, required=False)
-    parser.add_argument('--episode-count', type=float, default=3, required=False)
+    parser.add_argument('--episode-count', type=float, default=5, required=False)
     parser.add_argument('--horizons', '--list', nargs='+', help='<Required> Set flag', type=int, required=True)
 
     # Process arguments
