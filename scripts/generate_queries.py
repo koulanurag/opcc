@@ -66,7 +66,7 @@ if __name__ == '__main__':
                         env.seed(seed)
                         step_obs = env.reset()
                         assert (obs == step_obs).all()
-                        step_obs, step_reward, done, _ = env.step(root_action)
+                        step_obs, step_reward, done, _ = env.step(np.array(root_action))
                         episode_rewards[ep_i, 0] = step_reward
                         for step_count in range(1, max_horizon):
                             action = policy.actor(torch.tensor(step_obs).unsqueeze(0).float())
