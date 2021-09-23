@@ -21,7 +21,7 @@ MAZE_ENV_IDS = {'d4rl:walker2d-random-v2': {'wandb_run_path': 'koulanurag/cque/3
                 'd4rl:halfcheetah-medium-v2': {'wandb_run_path': 'koulanurag/cque/28t69ki6'},
                 'd4rl:halfcheetah-medium-replay-v2': {'wandb_run_path': 'koulanurag/cque/28t69ki6'},
                 'd4rl:halfcheetah-medium-expert-v2': {'wandb_run_path': 'koulanurag/cque/28t69ki6'},
-		'd4rl:halfcheetah-expert-v2': {'wandb_run_path': 'koulanurag/cque/28t69ki6'},
+                'd4rl:halfcheetah-expert-v2': {'wandb_run_path': 'koulanurag/cque/28t69ki6'},
                 'd4rl:walker2d-expert-v2': {'wandb_run_path': 'koulanurag/cque/39l783xs'},
                 'd4rl:walker2d-medium-v2': {'wandb_run_path': 'koulanurag/cque/39l783xs'},
                 'd4rl:walker2d-medium-replay-v2': {'wandb_run_path': 'koulanurag/cque/39l783xs'},
