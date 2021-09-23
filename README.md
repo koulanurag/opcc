@@ -46,7 +46,7 @@ pip install -e .
 
 ## Environments
 
-### :small_blue_diamond: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
+### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
 
 | Environment Name | Datasets |
 |:------: | :------: | 
@@ -55,7 +55,7 @@ pip install -e .
 |`d4rl:maze2d-umaze-v1`|`d4rl:maze2d-umaze-v1-1k, d4rl:maze2d-umaze-v1-10k, d4rl:maze2d-umaze-v1-100k`|
 |`d4rl:maze2d-large-v1`|`d4rl:maze2d-large-v1-1k, d4rl:maze2d-large-v1-10k, d4rl:maze2d-large-v1-100k`|
 
-### :small_blue_diamond: [mujoco(gym)](https://gym.openai.com/envs/#mujoco)
+### :low_brightness: [mujoco(gym)](https://gym.openai.com/envs/#mujoco)
 
 | Environment Name | Datasets|
 |:------: |:------:|
