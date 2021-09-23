@@ -21,9 +21,11 @@ pip install -e .
 ```
 
 ## Usage
+
 ```python console
 >>> import cque, policybazaar
 >>> env_name = 'd4rl:maze2d-open-v0'
+>>> dataset_name = 'd4rl:maze2d-open-v0-1k'
 >>> queries = cque.get_queries(env_name)
 
 >>> # Queries are dictonaries with policies as keys and corresponding queries as values.
@@ -36,12 +38,21 @@ pip install -e .
         policy_b = policybazaar.get_policy(env_name_b, pre_trained_id_b)
         state_a, action_a, state_b, action_b, target_a, target_b, target = queries[(policy_a_id, policy_b_id)]
 
->>> # Datasets
->>> # This is a slim wrapper over D4RL datasets
->>> 
-```
+>>> # Datasets:
+>>> # This is a very-slim wrapper over D4RL datasets
+>>> dataset = cqu.get_datasets(dataset_name)
+
+``` 
 
 ## Environments
+
+| Environment Name | Datasets |
+|:------: | :------: | 
+|`d4rl:maze2d-open-v0`|d4rl:maze2d-open-v0-1k, d4rl:maze2d-open-v0-10k, d4rl:maze2d-open-v0-100k|
+|`d4rl:maze2d-medium-v1`|d4rl:maze2d-medium-v1-1k, d4rl:maze2d-medium-v1-10k, d4rl:maze2d-medium-v1-100k|
+|`d4rl:maze2d-umaze-v1`|d4rl:maze2d-umaze-v1-1k, d4rl:maze2d-umaze-v1-10k, d4rl:maze2d-umaze-v1-100k|
+|`d4rl:maze2d-large-v1`|d4rl:maze2d-large-v1-1k, d4rl:maze2d-large-v1-10k, d4rl:maze2d-large-v1-100k|
+
 ### :small_blue_diamond: [mujoco(gym)](https://gym.openai.com/envs/#mujoco)
 
 | Environment Name | Datasets|
