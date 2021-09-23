@@ -22,7 +22,7 @@ pip install -e .
 
 ## Usage
 ```python console
->>> import cque
+>>> import cque, policybazaar
 >>> env_name = 'd4rl:maze2d-open-v0'
 >>> queries = cque.get_queries(env_name)
 
@@ -31,9 +31,21 @@ pip install -e .
 >>> for (policy_a_id, policy_b_id) in queries:
         env_name_a, pre_trained_id_a = policy_a_id
         env_name_b, pre_trained_id_b = policy_b_id
+
         policy_a = policybazaar.get_policy(env_name_a, pre_trained_id_a)
         policy_b = policybazaar.get_policy(env_name_b, pre_trained_id_b)
         state_a, action_a, state_b, action_b, target_a, target_b, target = queries[(policy_a_id, policy_b_id)]
+
+>>> # Datasets
+>>> # This is a slim wrapper over D4RL datasets
+>>> 
 ```
 
 ## Environments
+### :small_blue_diamond: [mujoco(gym)](https://gym.openai.com/envs/#mujoco)
+
+| Environment Name | Datasets|
+|:------: |:------:|
+|`HalfCheetah-v2`| halfcheetah-random-v2, halfcheetah-expert-v2, halfcheetah-medium-v2, halfcheetah-medium-replay-v2, halfcheetah-expert-v2|
+|`Hopper-v2`|hopper-random-v2, hopper-expert-v2, hopper-medium-v2, hopper-medium-replay-v2, hopper-expert-v2|
+|`Walker2d-v2`|walker2d-random-v2, walker2d-expert-v2, walker2d-medium-v2, walker2d-medium-replay-v2, walker2d-expert-v2|
