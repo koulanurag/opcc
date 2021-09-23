@@ -46,6 +46,8 @@ pip install -e .
 
 ## Environments
 
+### :small_blue_diamond: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
+
 | Environment Name | Datasets |
 |:------: | :------: | 
 |`d4rl:maze2d-open-v0`|d4rl:maze2d-open-v0-1k, d4rl:maze2d-open-v0-10k, d4rl:maze2d-open-v0-100k|
