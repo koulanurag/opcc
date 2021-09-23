@@ -1,17 +1,9 @@
-import numpy as np
-from .config import ENV_IDS, CQUE_DIR
-import wandb
 import os
 import pickle
 
-
-def measure_uncertainty(prediction, uncertainty_score, target, uncertainty_threshold):
-    match = np.zeros(prediction.shape)
-    abstain = np.zeros(prediction.shape)
-    certain_idx = uncertainty_score <= uncertainty_threshold
-    match[certain_idx] = (prediction[certain_idx] == target[certain_idx]).astype(int)
-    abstain[~certain_idx] = 1
-    return match.mean() if sum(match) != 0 else 1, abstain.mean(), {}
+import wandb
+import d4rl
+from .config import ENV_IDS, CQUE_DIR
 
 
 def get_queries(env_name):
@@ -23,3 +15,18 @@ def get_queries(env_name):
     wandb.restore(name='queries.p', run_path=run_path, replace=True, root=env_root)
     queries = pickle.load(open(os.path.join(env_root, 'queries.p'), 'rb'))
     return queries
+
+
+def get_dataset(env_name, dataset_name):
+    assert env_name in ENV_IDS, \
+        '`{}` not found. It should be among following: {}'.format(env_name, list(ENV_IDS.keys()))
+    assert dataset_name in ENV_IDS[env_name]['datasets'], \
+        '`{}` not found. It should be among following: {}'.format(dataset_name,
+                                                                  list(ENV_IDS[env_name]['datasets'].keys()))
+
+    dataset_env = ENV_IDS[env_name]['datasets'][dataset_name]['name']
+    dataset = d4rl.getdataset(dataset_env)
+    split = ENV_IDS[env_name]['datasets'][dataset_name]['split']
+    if split is not None:
+        dataset = {k: v[:split] for k, v in dataset.items()}
+    return dataset

@@ -27,3 +27,7 @@ def test_get_queries(env_name):
         policy_b = policybazaar.get_policy(env_name_b, pre_trained_id_b)
 
         state_a, action_a, state_b, action_b, target_a, target_b, target = queries[(policy_a_id, policy_b_id)]
+
+@pytest.mark.parametrize('dataset_name', ENV_IDS.keys())
+def test_get_dataset(dataset_name):
+    dataset = cque.get_dataset(dataset_name)
