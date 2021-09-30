@@ -1,6 +1,7 @@
 import os
 import pickle
 
+import gym
 import wandb
 import d4rl
 from .config import ENV_IDS, CQUE_DIR
@@ -25,7 +26,8 @@ def get_dataset(env_name, dataset_name):
                                                                   list(ENV_IDS[env_name]['datasets'].keys()))
 
     dataset_env = ENV_IDS[env_name]['datasets'][dataset_name]['name']
-    dataset = d4rl.getdataset(dataset_env)
+    env = gym.make(dataset_env)
+    dataset = env.get_dataset()
     split = ENV_IDS[env_name]['datasets'][dataset_name]['split']
     if split is not None:
         dataset = {k: v[:split] for k, v in dataset.items()}

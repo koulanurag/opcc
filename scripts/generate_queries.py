@@ -29,8 +29,8 @@ if __name__ == '__main__':
     overall_horizon = []
     env = gym.make(args.env_name)
 
-    for id_a in [1, 4]:
-        for id_b in [1, 4]:
+    for id_a in range(1, 4):
+        for id_b in range(1, 4):
             if id_a == id_b:
                 continue
 

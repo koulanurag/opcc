@@ -22,25 +22,24 @@ pip install -e .
 
 ## Usage
 
-```python console
->>> import cque, policybazaar
->>> env_name = 'd4rl:maze2d-open-v0'
->>> dataset_name = '1k'
->>> queries = cque.get_queries(env_name)
+```python
+import cque, policybazaar
 
->>> # Queries are dictonaries with policies as keys and corresponding queries as values.
->>> # Batch iteration through Queries :
->>> for (policy_a_id, policy_b_id) in queries:
-        env_name_a, pre_trained_id_a = policy_a_id
-        env_name_b, pre_trained_id_b = policy_b_id
+env_name = 'd4rl:maze2d-open-v0'
+dataset_name = '1k'
 
-        policy_a = policybazaar.get_policy(env_name_a, pre_trained_id_a)
-        policy_b = policybazaar.get_policy(env_name_b, pre_trained_id_b)
-        state_a, action_a, state_b, action_b, target_a, target_b, target = queries[(policy_a_id, policy_b_id)]
+# Queries are dictonaries with policies as keys and corresponding queries as values.
+# Batch iteration through Queries :
+queries = cque.get_queries(env_name)
+for (policy_a_id, policy_b_id), query_batch in enumerate(queries):
+    policy_a = policybazaar.get_policy(**policy_a_id)
+    policy_b = policybazaar.get_policy(**policy_b_id)
 
->>> # Datasets:
->>> # This is a very-slim wrapper over D4RL datasets
->>> dataset = cqu.get_dataset(env_name, dataset_name)
+    state_a, action_a, state_b, action_b, target_a, target_b, target = query_batch
+    
+# Datasets:
+# This is a very-slim wrapper over D4RL datasets
+dataset = cqu.get_dataset(env_name, dataset_name)
 
 ``` 
 
@@ -60,6 +59,6 @@ pip install -e .
 
 | Environment Name | Datasets|
 |:------: |:------:|
-|`HalfCheetah-v2`| `random, expert, medium, medium-replay, expert-replay`|
-|`Hopper-v2`| `random, expert, medium, medium-replay, expert-replay`|
-|`Walker2d-v2`| `random, expert, medium, medium-replay, expert-replay`|
+|`HalfCheetah-v2`| `random, expert, medium, medium-replay, medium-expert`|
+|`Hopper-v2`| `random, expert, medium, medium-replay, medium-expert`|
+|`Walker2d-v2`| `random, expert, medium, medium-replay, medium-expert`|
