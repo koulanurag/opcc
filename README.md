@@ -39,7 +39,7 @@ for (policy_a_id, policy_b_id), query_batch in enumerate(queries):
     
 # Datasets:
 # This is a very-slim wrapper over D4RL datasets
-dataset = cqu.get_dataset(env_name, dataset_name)
+dataset = cque.get_dataset(env_name, dataset_name)
 
 ``` 
 
