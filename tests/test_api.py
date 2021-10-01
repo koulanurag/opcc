@@ -17,7 +17,7 @@ def test_get_queries(env_name):
         policy_a = policybazaar.get_policy(**policy_a_id)
         policy_b = policybazaar.get_policy(**policy_b_id)
 
-        state_a, action_a, state_b, action_b, target_a, target_b, target = query_batch
+        state_a, action_a, horizon_a, state_b, action_b, horizon_b, target_a, target_b, target = query_batch
 
 
 @pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)

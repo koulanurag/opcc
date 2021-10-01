@@ -1,4 +1,5 @@
 import argparse
+import random
 
 import numpy as np
 import wandb
@@ -8,6 +9,8 @@ from cque.config import CQUE_DIR
 import os
 import gym
 import torch
+import plotly.express as px
+import pandas as pd
 
 if __name__ == '__main__':
     # Lets gather arguments
@@ -28,6 +31,64 @@ if __name__ == '__main__':
     overall_target = []
     overall_horizon = []
     env = gym.make(args.env_name)
+
+    np.random.seed(0)
+    random.seed(0)
+
+    for id_a in range(1, 5):
+        for id_b in range(1, 5):
+
+            states_a = []
+            states_b = []
+            actions_a = []
+            actions_b = []
+            horizons_a = []
+            horizons_b = []
+
+            for query_count in range(50):
+                same_state = random.choice([True, False])
+                same_action = random.choice([True, False])
+
+                if same_state and same_action:
+                    same_horizon = False
+                else:
+                    same_horizon = random.choice([True, False])
+
+                sample_from_dataset = random.choice([True, False])
+                if sample_from_dataset:
+                    state_a, action_a = x
+                    if same_state:
+                        state_b, action_b = state_a, action_a
+                    else:
+                        state_b, action_b = sample
+                else:
+                    state_a = x
+                    action_a = x
+
+                if same_horizon:
+                    _horizon = random.choice(horizon_set)
+                    horizon_a, horizon_b = _horizon, _horizon
+                else:
+                    horizon_a, horizon_b = random.choice(horizon_set), random.choice(horizon_set)
+
+            # evaluate
+            targets_a, targets_b, targets = [], [], []
+            for ep_i in range(args.max_episodes):
+                env.seed(seed)
+                step_obs = env.reset()
+                assert (obs == step_obs).all()
+                step_obs, step_reward, done, _ = env.step(np.array(root_action))
+                episode_rewards[ep_i, 0] = step_reward
+                for step_count in range(1, max_horizon):
+                    action = policy.actor(torch.tensor(step_obs).unsqueeze(0).float())
+                    action = action.data.cpu().numpy()[0]
+                    step_obs, step_reward, done, _ = env.step(action)
+                    episode_rewards[ep_i, step_count] = step_reward
+
+            _key = ((args.env_name, id_a), (args.env_name, id_b))
+            queries[_key] = (states_a, actions_a, horizons_a,
+                             states_b, actions_b, horizons_b,
+                             targets_a, targets_b, targets)
 
     for id_a in range(1, 4):
         for id_b in range(1, 4):
@@ -102,12 +163,10 @@ if __name__ == '__main__':
             overall_target += targets
             overall_horizon += horizon_a
 
-    import plotly.express as px
-    import pandas as pd
-
-    df = pd.DataFrame(
-        data={'q-value-a': overall_target_a, 'q-value-b': overall_target_b, 'target': overall_target,
-              'horizon': overall_horizon})
+    df = pd.DataFrame(data={'q-value-a': overall_target_a,
+                            'q-value-b': overall_target_b,
+                            'target': overall_target,
+                            'horizon': overall_horizon})
     fig1 = px.scatter_3d(df, x='q-value-a', y='q-value-b', z='target', color='target', symbol='horizon')
     fig2 = px.scatter(df, x='q-value-a', y='q-value-b', color='target')
     wandb.log({'query-values-3d': fig1, 'query-values-scatter': fig2})
