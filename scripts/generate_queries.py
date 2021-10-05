@@ -137,6 +137,8 @@ if __name__ == '__main__':
                     targets_b.append(target_b)
                     targets.append(target_a < target_b)
 
+                    query_count += 1
+
             _key = ((args.env_name, id_a), (args.env_name, id_b))
             queries[_key] = (states_a, actions_a, horizons_a,
                              states_b, actions_b, horizons_b,
