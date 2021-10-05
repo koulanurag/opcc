@@ -44,7 +44,7 @@ if __name__ == '__main__':
     parser.add_argument('--max-eval-episodes', type=int, default=2, required=False)
     parser.add_argument('--noise', type=float, default=0.05, required=False)
     parser.add_argument('--episode-count', type=float, default=5, required=False)
-    parser.add_argument('--ignore-delta', type=float, default=20, required=False)
+    parser.add_argument('--ignore-delta', type=float, default=1, required=False)
     parser.add_argument('--horizons', '--list', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--use-wandb', action='store_true', default=False)
 
@@ -101,10 +101,9 @@ if __name__ == '__main__':
                 else:
                     same_horizon = random.choice([True, False])
 
-                state_a = random.choice(env_states)
-                action_a = env.action_space.sample()
-
+                state_a, action_a = random.choice(env_states), env.action_space.sample()
                 _state_b, _action_b = random.choice(env_states), env.action_space.sample()
+
                 if same_state:
                     state_b = state_a
                 else:
