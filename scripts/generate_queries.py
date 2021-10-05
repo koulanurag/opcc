@@ -1,4 +1,5 @@
 import argparse
+import pdb
 import random
 
 import numpy as np
@@ -22,7 +23,8 @@ def mc_return(env, init_action, horizon, policy, max_episodes):
         obs, reward, done, info = _env.step(init_action)
         score = reward
         step_count = 1
-
+        #_env.render()
+        import pdb; pdb.set_trace()
         while not done and step_count < horizon:
             action = policy.actor(torch.tensor(obs).unsqueeze(0).float())
             obs, reward, done, info = _env.step(action.data.cpu().numpy()[0])
@@ -59,7 +61,7 @@ if __name__ == '__main__':
     env_states = []
     env = gym.make(args.env_name)
     while len(env_states) < 1000:
-        policy_id = random.randint(1, 4)
+        policy_id = random.randint(2, 4)
         model, model_info = policybazaar.get_policy(args.env_name, policy_id)
         obs = env.reset()
 
@@ -69,16 +71,17 @@ if __name__ == '__main__':
             if save:
                 env_states.append((obs, deepcopy(env)))
             action = model.actor(torch.tensor(obs).unsqueeze(0).float())
-            noise = torch.normal(0, args.noise, size=action.shape)
+            # noise = torch.normal(0, args.noise, size=action.shape)
+            noise=0
             step_action = (action + noise).data.cpu().numpy()[0]
             obs, _, done, info = env.step(step_action)
 
     # evaluate queries
     overall_data = {'q-value-a': [], 'q-value-b': [], 'target': [], 'horizon-a': [], 'horizon-b': []}
     queries = {}
-    for id_a in range(1, 5):
+    for id_a in range(4,5):
         policy_a, _ = policybazaar.get_policy(args.env_name, id_a)
-        for id_b in range(1, 5):
+        for id_b in range(4, 5):
             policy_b, _ = policybazaar.get_policy(args.env_name, id_b)
 
             states_a = []
@@ -123,6 +126,7 @@ if __name__ == '__main__':
                 # evaluate
                 target_a = mc_return(env, action_a, horizon_a, policy_a, args.max_eval_episodes)
                 target_b = mc_return(env, action_b, horizon_b, policy_b, args.max_eval_episodes)
+                print(target_a, target_b)
                 if False and abs(target_a - target_b) <= args.ignore_delta:
                     continue
                 else:
