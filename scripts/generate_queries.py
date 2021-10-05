@@ -44,6 +44,7 @@ if __name__ == '__main__':
     parser.add_argument('--max-eval-episodes', type=int, default=2, required=False)
     parser.add_argument('--noise', type=float, default=0.05, required=False)
     parser.add_argument('--episode-count', type=float, default=5, required=False)
+    parser.add_argument('--ignore-delta', type=float, default=20, required=False)
     parser.add_argument('--horizons', '--list', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--use-wandb', action='store_true', default=False)
 
@@ -90,7 +91,8 @@ if __name__ == '__main__':
             targets_b = []
             targets = []
 
-            for query_count in range(50):
+            query_count = 0
+            while query_count < 50:
                 same_state = random.choice([True, False])
                 same_action = random.choice([True, False])
 
@@ -122,16 +124,18 @@ if __name__ == '__main__':
                 # evaluate
                 target_a = mc_return(env, action_a, horizon_a, policy_a, args.max_eval_episodes)
                 target_b = mc_return(env, action_b, horizon_b, policy_b, args.max_eval_episodes)
-
-                states_a.append(state_a)
-                states_b.append(state_b)
-                actions_a.append(action_a)
-                actions_b.append(action_b)
-                horizons_a.append(horizon_a)
-                horizons_b.append(horizon_b)
-                targets_a.append(target_a)
-                targets_b.append(target_b)
-                targets.append(target_a < target_b)
+                if abs(target_a - target_b) <= args.ignore_delta:
+                    continue
+                else:
+                    states_a.append(state_a)
+                    states_b.append(state_b)
+                    actions_a.append(action_a)
+                    actions_b.append(action_b)
+                    horizons_a.append(horizon_a)
+                    horizons_b.append(horizon_b)
+                    targets_a.append(target_a)
+                    targets_b.append(target_b)
+                    targets.append(target_a < target_b)
 
             _key = ((args.env_name, id_a), (args.env_name, id_b))
             queries[_key] = (states_a, actions_a, horizons_a,
@@ -150,6 +154,7 @@ if __name__ == '__main__':
         df = pd.DataFrame(data=overall_data)
         fig2 = px.scatter(df, x='q-value-a', y='q-value-b', color='target')
         wandb.log({'query-values-scatter': fig2})
+        wandb.log({'query-data': df})
 
     # save queries
     _path = os.path.join(CQUE_DIR, args.env_name, 'queries.p')
