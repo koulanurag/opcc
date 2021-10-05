@@ -21,10 +21,12 @@ def mc_return(env, init_action, horizon, policy, max_episodes):
 
         _env = deepcopy(env)
         obs, reward, done, info = _env.step(init_action)
+        if 'TimeLimit.truncated' in info and info['TimeLimit.truncated']:
+            done = False
+
         score = reward
         step_count = 1
-        #_env.render()
-        import pdb; pdb.set_trace()
+
         while not done and step_count < horizon:
             action = policy.actor(torch.tensor(obs).unsqueeze(0).float())
             obs, reward, done, info = _env.step(action.data.cpu().numpy()[0])
@@ -72,16 +74,16 @@ if __name__ == '__main__':
                 env_states.append((obs, deepcopy(env)))
             action = model.actor(torch.tensor(obs).unsqueeze(0).float())
             # noise = torch.normal(0, args.noise, size=action.shape)
-            noise=0
+            noise = 0
             step_action = (action + noise).data.cpu().numpy()[0]
             obs, _, done, info = env.step(step_action)
 
     # evaluate queries
     overall_data = {'q-value-a': [], 'q-value-b': [], 'target': [], 'horizon-a': [], 'horizon-b': []}
     queries = {}
-    for id_a in range(4,5):
+    for id_a in range(1, 5):
         policy_a, _ = policybazaar.get_policy(args.env_name, id_a)
-        for id_b in range(4, 5):
+        for id_b in range(1, 5):
             policy_b, _ = policybazaar.get_policy(args.env_name, id_b)
 
             states_a = []
