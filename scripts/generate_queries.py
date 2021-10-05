@@ -73,8 +73,8 @@ if __name__ == '__main__':
             if save:
                 env_states.append((obs, deepcopy(env)))
             action = model.actor(torch.tensor(obs).unsqueeze(0).float())
-            # noise = torch.normal(0, args.noise, size=action.shape)
-            noise = 0
+            noise = torch.normal(0, args.noise, size=action.shape)
+            # noise = 0
             step_action = (action + noise).data.cpu().numpy()[0]
             obs, _, done, info = env.step(step_action)
 
