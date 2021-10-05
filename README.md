@@ -45,6 +45,7 @@ dataset = cque.get_dataset(env_name, dataset_name)
 
 ## Environments
 - We borrow dataset's from D4RL 
+- Queries data can be visualized [**here**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx).
 
 ### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
 
