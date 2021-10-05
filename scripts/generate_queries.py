@@ -48,7 +48,7 @@ if __name__ == '__main__':
     parser.add_argument('--max-eval-episodes', type=int, default=2, required=False)
     parser.add_argument('--noise', type=float, default=0.05, required=False)
     parser.add_argument('--episode-count', type=float, default=5, required=False)
-    parser.add_argument('--ignore-delta', type=float, default=10, required=False)
+    parser.add_argument('--ignore-delta', type=float, default=20, required=False)
     parser.add_argument('--horizons', '--list', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--use-wandb', action='store_true', default=False)
 
