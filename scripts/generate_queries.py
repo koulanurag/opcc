@@ -118,12 +118,12 @@ if __name__ == '__main__':
                     _horizon = random.choice(args.horizons)
                     horizon_a, horizon_b = _horizon, _horizon
                 else:
-                    horizon_a, horizon_b = random.choice(args.horizons), random.choice(args.horizons)
+                    horizon_a, horizon_b = np.random.choice(args.horizons, replace=False, size=(2,))
 
                 # evaluate
                 target_a = mc_return(env, action_a, horizon_a, policy_a, args.max_eval_episodes)
                 target_b = mc_return(env, action_b, horizon_b, policy_b, args.max_eval_episodes)
-                if abs(target_a - target_b) <= args.ignore_delta:
+                if False and abs(target_a - target_b) <= args.ignore_delta:
                     continue
                 else:
                     states_a.append(state_a)
