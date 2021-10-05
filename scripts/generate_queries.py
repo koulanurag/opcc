@@ -92,11 +92,11 @@ if __name__ == '__main__':
             targets = []
 
             query_count = 0
-            while query_count < 50:
+            while query_count < 100:
                 same_state = random.choice([True, False])
                 same_action = random.choice([True, False])
 
-                if same_state and same_action:
+                if same_state and same_action and id_a == id_b:
                     same_horizon = False
                 else:
                     same_horizon = random.choice([True, False])
