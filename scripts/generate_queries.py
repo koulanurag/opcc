@@ -48,7 +48,7 @@ if __name__ == '__main__':
     parser.add_argument('--max-eval-episodes', type=int, default=2, required=False)
     parser.add_argument('--noise', type=float, default=0.05, required=False)
     parser.add_argument('--episode-count', type=float, default=5, required=False)
-    parser.add_argument('--ignore-delta', type=float, default=1, required=False)
+    parser.add_argument('--ignore-delta', type=float, default=10, required=False)
     parser.add_argument('--horizons', '--list', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--use-wandb', action='store_true', default=False)
 
@@ -97,7 +97,8 @@ if __name__ == '__main__':
             targets = []
 
             query_count = 0
-            while query_count < 100:
+            ignore_count = 0
+            while query_count < 100 and ignore_count < 200:
                 same_state = random.choice([True, False])
                 same_action = random.choice([True, False])
 
@@ -129,7 +130,8 @@ if __name__ == '__main__':
                 target_a = mc_return(env, action_a, horizon_a, policy_a, args.max_eval_episodes)
                 target_b = mc_return(env, action_b, horizon_b, policy_b, args.max_eval_episodes)
                 print(target_a, target_b)
-                if False and abs(target_a - target_b) <= args.ignore_delta:
+                if abs(target_a - target_b) <= args.ignore_delta:
+                    ignore_count += 1
                     continue
                 else:
                     states_a.append(state_a)
