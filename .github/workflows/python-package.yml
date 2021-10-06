@@ -52,4 +52,6 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          pytest
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200/bin
+          export MUJOCO_KEY_PATH=$HOME/.mujoco/mjkey.txt
+          pytest -v
