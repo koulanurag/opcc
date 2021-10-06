@@ -28,6 +28,7 @@ jobs:
         env:
           MUJOCO_KEY: ${{ secrets.MUJOCO_KEY }}
         run: |
+          sudo apt-get update
           sudo apt install -y  libosmesa6-dev  libglew-dev  libgl1-mesa-glx libgl1-mesa-dev libgl1-mesa-glx libglfw3
           sudo apt install xpra xserver-xorg-dev
           wget https://www.roboti.us/download/mujoco200_linux.zip
