@@ -31,9 +31,9 @@ dataset_name = '1k'
 # Queries are dictonaries with policies as keys and corresponding queries as values.
 # Batch iteration through Queries :
 queries = cque.get_queries(env_name)
-for (policy_a_id, policy_b_id), query_batch in enumerate(queries):
-    policy_a = policybazaar.get_policy(**policy_a_id)
-    policy_b = policybazaar.get_policy(**policy_b_id)
+for (policy_a_id, policy_b_id), query_batch in queries.items():
+    policy_a = policybazaar.get_policy(*policy_a_id)
+    policy_b = policybazaar.get_policy(*policy_b_id)
 
     state_a, action_a, horizon_a, state_b, action_b, horizon_b, target_a, target_b, target = query_batch
     
