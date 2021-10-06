@@ -23,8 +23,23 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Setup Mujoco
+        env:
+          MUJOCO_KEY: ${{ secrets.MUJOCO_KEY }}
+        run: |
+          sudo apt install -y  libosmesa6-dev  libglew-dev  libgl1-mesa-glx libgl1-mesa-dev libgl1-mesa-glx libglfw3
+          sudo apt install xpra xserver-xorg-dev
+          wget https://www.roboti.us/download/mujoco200_linux.zip
+          mkdir -p "/home/runner/.mujoco/mujoco200"
+          unzip -o mujoco200_linux.zip -d .
+          mv mujoco200_linux /home/runner/.mujoco/
+          cp -r /home/runner/.mujoco/mujoco200_linux/* /home/runner/.mujoco/mujoco200
+          echo  "$MUJOCO_KEY" > "/home/runner/.mujoco/mjkey.txt"
+
       - name: Install dependencies
         run: |
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/runner/.mujoco/mujoco200/bin
           python -m pip install --upgrade pip
           python -m pip install flake8 pytest
           pip install -e .
