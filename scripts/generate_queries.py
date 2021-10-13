@@ -71,7 +71,6 @@ if __name__ == '__main__':
         done = False
         while not done:
             save = random.random() >= 0.7
-            env.render()
             if save:
                 env_states.append((obs, deepcopy(env)))
             action = model.actor(torch.tensor(obs).unsqueeze(0).float())
