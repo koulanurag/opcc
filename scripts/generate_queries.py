@@ -78,9 +78,7 @@ if __name__ == '__main__':
             # noise = 0
             step_action = (action + noise).data.cpu().numpy()[0]
             obs, _, done, info = env.step(step_action)
-        import sys
 
-        sys.exit()
     # evaluate queries
     overall_data = {'q-value-a': [], 'q-value-b': [], 'target': [], 'horizon-a': [], 'horizon-b': []}
     queries = {}
