@@ -5,7 +5,7 @@ It's a benchmark comprising of queries to evaluate uncertainty estimation in off
 ## Installation
 It requires:
 
-- [Python 3.6+](https://www.python.org/downloads/)
+- [Python 3.7+](https://www.python.org/downloads/)
 - [mujoco-py](https://github.com/openai/mujoco-py), [mujoco 200](https://www.roboti.us/index.html) and [mujoco license](https://www.roboti.us/license.html). Please, follow `mujoco-py` installation instructions from [here](https://github.com/openai/mujoco-py).
 - [Pytorch >= 1.8.0](https://pytorch.org/)
 

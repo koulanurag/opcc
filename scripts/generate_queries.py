@@ -49,7 +49,8 @@ if __name__ == '__main__':
     parser.add_argument('--noise', type=float, default=0.05, required=False)
     parser.add_argument('--episode-count', type=float, default=5, required=False)
     parser.add_argument('--ignore-delta', type=float, default=20, required=False)
-    parser.add_argument('--horizons', '--list', nargs='+', help='<Required> Set flag', type=int, required=True)
+    parser.add_argument('--horizons', nargs='+', help='<Required> Set flag', type=int, required=True)
+    parser.add_argument('--policy_ids', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--use-wandb', action='store_true', default=False)
 
     # Process arguments
@@ -63,13 +64,14 @@ if __name__ == '__main__':
     env_states = []
     env = gym.make(args.env_name)
     while len(env_states) < 1000:
-        policy_id = random.randint(2, 4)
+        policy_id = random.choice(args.policy_ids)
         model, model_info = policybazaar.get_policy(args.env_name, policy_id)
         obs = env.reset()
 
         done = False
         while not done:
             save = random.random() >= 0.7
+            env.render()
             if save:
                 env_states.append((obs, deepcopy(env)))
             action = model.actor(torch.tensor(obs).unsqueeze(0).float())
@@ -77,13 +79,15 @@ if __name__ == '__main__':
             # noise = 0
             step_action = (action + noise).data.cpu().numpy()[0]
             obs, _, done, info = env.step(step_action)
+        import sys
 
+        sys.exit()
     # evaluate queries
     overall_data = {'q-value-a': [], 'q-value-b': [], 'target': [], 'horizon-a': [], 'horizon-b': []}
     queries = {}
-    for id_a in range(1, 5):
+    for id_a in args.policy_ids:
         policy_a, _ = policybazaar.get_policy(args.env_name, id_a)
-        for id_b in range(1, 5):
+        for id_b in args.policy_ids:
             policy_b, _ = policybazaar.get_policy(args.env_name, id_b)
 
             states_a = []
