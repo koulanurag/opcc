@@ -6,7 +6,22 @@ CQUE_DIR = os.getenv('CQUE_DIR', default=os.path.join(str(Path.home()), '.cque')
 MAZE_BASE_PROJECT_URL = 'koulanurag/cque'
 MUJOCO_BASE_PROJECT_URL = 'koulanurag/cque'
 
-MAZE_ENV_IDS = {}
+MAZE_ENV_IDS = {'d4rl:maze2d-medium-v1': {'wandb_run_path': 'koulanurag/cque/zr19tmtd',
+                                          'datasets': {'1k': {'name': 'd4rl:maze2d-medium-v1', 'split': 1000},
+                                                       '10k': {'name': 'd4rl:maze2d-medium-v1', 'split': 10000},
+                                                       '100k': {'name': 'd4rl:maze2d-medium-v1', 'split': 100000}}},
+                'd4rl:maze2d-large-v1': {'wandb_run_path': 'koulanurag/cque/3m5e06yq',
+                                         'datasets': {'1k': {'name': 'd4rl:maze2d-large-v1', 'split': 1000},
+                                                      '10k': {'name': 'd4rl:maze2d-large-v1', 'split': 10000},
+                                                      '100k': {'name': 'd4rl:maze2d-large-v1', 'split': 100000}}},
+                'd4rl:maze2d-open-v0': {'wandb_run_path': 'koulanurag/cque/3kf1u2ev',
+                                        'datasets': {'1k': {'name': 'd4rl:maze2d-open-v0', 'split': 1000},
+                                                     '10k': {'name': 'd4rl:maze2d-open-v0', 'split': 10000},
+                                                     '100k': {'name': 'd4rl:maze2d-open-v0', 'split': 100000}}},
+                'd4rl:maze2d-umaze-v1': {'wandb_run_path': 'koulanurag/cque/2uptbks5',
+                                         'datasets': {'1k': {'name': 'd4rl:maze2d-umaze-v1', 'split': 1000},
+                                                      '10k': {'name': 'd4rl:maze2d-umaze-v1', 'split': 10000},
+                                                      '100k': {'name': 'd4rl:maze2d-umaze-v1', 'split': 100000}}}}
 
 MUJOCO_ENV_IDS = {'Hopper-v2': {'wandb_run_path': 'koulanurag/cque/5i4yraw1',
                                 'datasets': {'random': {'name': 'd4rl:hopper-random-v2', 'split': None},
