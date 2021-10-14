@@ -108,13 +108,16 @@ if __name__ == '__main__':
                 else:
                     same_horizon = random.choice([True, False])
 
-                state_a, action_a = random.choice(env_states), env.action_space.sample()
-                _state_b, _action_b = random.choice(env_states), env.action_space.sample()
+                (state_a, state_a_env), action_a = random.choice(env_states), env.action_space.sample()
+                (_state_b, _state_b_env), _action_b = random.choice(env_states), env.action_space.sample()
+                state_a_env = deepcopy(state_a_env)
 
                 if same_state:
                     state_b = state_a
+                    state_b_env = deepcopy(state_a_env)
                 else:
                     state_b = _state_b
+                    state_b_env = deepcopy(_state_b_env)
 
                 if same_action:
                     action_b = action_a
@@ -128,8 +131,8 @@ if __name__ == '__main__':
                     horizon_a, horizon_b = np.random.choice(args.horizons, replace=False, size=(2,))
 
                 # evaluate
-                target_a = mc_return(env, action_a, horizon_a, policy_a, args.max_eval_episodes)
-                target_b = mc_return(env, action_b, horizon_b, policy_b, args.max_eval_episodes)
+                target_a = mc_return(state_a_env, action_a, horizon_a, policy_a, args.max_eval_episodes)
+                target_b = mc_return(state_b_env, action_b, horizon_b, policy_b, args.max_eval_episodes)
                 print(target_a, target_b)
                 if abs(target_a - target_b) <= args.ignore_delta:
                     ignore_count += 1
