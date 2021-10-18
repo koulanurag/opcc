@@ -31,12 +31,25 @@ jobs:
           sudo apt-get update
           sudo apt install -y  libosmesa6-dev  libglew-dev  libgl1-mesa-glx libgl1-mesa-dev libgl1-mesa-glx libglfw3
           sudo apt install xpra xserver-xorg-dev
+          
           wget https://www.roboti.us/download/mujoco200_linux.zip
+          wget https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz
+
           mkdir -p "/home/runner/.mujoco/mujoco200"
+          mkdir -p "/home/runner/.mujoco/mujoco210"
+          
           unzip -o mujoco200_linux.zip -d .
+          unzip -o mujoco210_linux.gz -d .
+          
           mv mujoco200_linux /home/runner/.mujoco/
+          mv mujoco210_linux /home/runner/.mujoco/
+          
           cp -r /home/runner/.mujoco/mujoco200_linux/* /home/runner/.mujoco/mujoco200
+          cp -r /home/runner/.mujoco/mujoco210_linux/* /home/runner/.mujoco/mujoco210
+          
           rm -rf /home/runner/.mujoco/mujoco200_linux
+          rm -rf /home/runner/.mujoco/mujoco210_linux
+          
           echo  "$MUJOCO_KEY" > "/home/runner/.mujoco/mjkey.txt"
 
       - name: Install dependencies
