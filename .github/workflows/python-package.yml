@@ -39,7 +39,7 @@ jobs:
           mkdir -p "/home/runner/.mujoco/mujoco210"
           
           unzip -o mujoco200_linux.zip -d .
-          gzip mujoco210-linux-x86_64.tar.gz -d
+          tar -xf mujoco210-linux-x86_64.tar.gz
           
           mv mujoco200_linux /home/runner/.mujoco/
           mv mujoco210 /home/runner/.mujoco/
