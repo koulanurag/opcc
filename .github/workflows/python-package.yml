@@ -36,6 +36,7 @@ jobs:
           unzip -o mujoco200_linux.zip -d .
           mv mujoco200_linux /home/runner/.mujoco/
           cp -r /home/runner/.mujoco/mujoco200_linux/* /home/runner/.mujoco/mujoco200
+          rm -rf /home/runner/.mujoco/mujoco200_linux
           echo  "$MUJOCO_KEY" > "/home/runner/.mujoco/mjkey.txt"
 
       - name: Install dependencies
