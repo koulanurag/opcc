@@ -103,10 +103,10 @@ if __name__ == '__main__':
                 same_state = random.choice([True, False])
                 same_action = random.choice([True, False])
 
-                if same_state and same_action and id_a == id_b:
-                    same_horizon = False
-                else:
-                    same_horizon = random.choice([True, False])
+                # if same_state and same_action and id_a == id_b:
+                #     same_horizon = False
+                # else:
+                #     same_horizon = random.choice([True, False])
 
                 (state_a, state_a_env), action_a = random.choice(env_states), env.action_space.sample()
                 (_state_b, _state_b_env), _action_b = random.choice(env_states), env.action_space.sample()
@@ -124,6 +124,7 @@ if __name__ == '__main__':
                 else:
                     action_b = _action_b
 
+                same_horizon = True
                 if same_horizon:
                     _horizon = random.choice(args.horizons)
                     horizon_a, horizon_b = _horizon, _horizon
