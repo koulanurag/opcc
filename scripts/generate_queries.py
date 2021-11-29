@@ -1,18 +1,17 @@
 import argparse
-import pdb
-import random
-
-import numpy as np
-import wandb
-import policybazaar
-import pickle
-from cque.config import CQUE_DIR
 import os
-import gym
-import torch
-import plotly.express as px
-import pandas as pd
+import pickle
+import random
 from copy import deepcopy
+
+import gym
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import policybazaar
+import torch
+import wandb
+from cque.config import CQUE_DIR
 
 
 def mc_return(env, init_action, horizon, policy, max_episodes):
@@ -86,9 +85,9 @@ if __name__ == '__main__':
     # evaluate queries
     overall_data = {'q-value-a': [], 'q-value-b': [], 'target': [], 'horizon-a': [], 'horizon-b': []}
     queries = {}
-    for id_a in args.policy_ids:
+    for i, id_a in enumerate(args.policy_ids):
         policy_a, _ = policybazaar.get_policy(args.env_name, id_a)
-        for id_b in args.policy_ids:
+        for id_b in args.policy_ids[i:]:
             policy_b, _ = policybazaar.get_policy(args.env_name, id_b)
 
             states_a = []
