@@ -1,6 +1,7 @@
-import cque
 import policybazaar
 import pytest
+
+import cque
 from cque.config import ENV_IDS
 
 DATASET_ENV_PAIRS = []
