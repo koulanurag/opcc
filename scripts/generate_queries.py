@@ -52,7 +52,6 @@ if __name__ == '__main__':
     parser.add_argument('--horizons', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--policy_ids', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--use-wandb', action='store_true', default=False)
-    parser.add_argument('--ignore-count', type=int, default=200, required=False)
     parser.add_argument('--max-transaction-count', type=int, default=1000, required=False)
     parser.add_argument('--ignore-stuck-count', type=int, default=200, required=False)
     parser.add_argument('--save-prob', type=float, default=0.7, required=False)
