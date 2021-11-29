@@ -52,6 +52,11 @@ if __name__ == '__main__':
     parser.add_argument('--horizons', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--policy_ids', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--use-wandb', action='store_true', default=False)
+    parser.add_argument('--ignore-count', type=int, default=200, required=False)
+    parser.add_argument('--max-transaction-count', type=int, default=1000, required=False)
+    parser.add_argument('--ignore-stuck-count', type=int, default=200, required=False)
+    parser.add_argument('--save-prob', type=float, default=0.7, required=False)
+    parser.add_argument('--per-policy-comb-query', type=int, default=100, required=False)
 
     # Process arguments
     args = parser.parse_args()
@@ -63,14 +68,14 @@ if __name__ == '__main__':
 
     env_states = []
     env = gym.make(args.env_name)
-    while len(env_states) < 1000:
+    while len(env_states) < args.max_transaction_count:
         policy_id = random.choice(args.policy_ids)
         model, model_info = policybazaar.get_policy(args.env_name, policy_id)
         obs = env.reset()
 
         done = False
         while not done:
-            save = random.random() >= 0.7
+            save = random.random() >= args.save_prob
             if save:
                 env_states.append((obs, deepcopy(env)))
             action = model.actor(torch.tensor(obs).unsqueeze(0).float())
@@ -99,9 +104,10 @@ if __name__ == '__main__':
 
             query_count = 0
             ignore_count = 0
-            while query_count < 100 and ignore_count < 200:
+            while query_count < args.per_policy_comb_query and ignore_count < args.ignore_stuck_count:
                 same_state = random.choice([True, False])
-                same_action = random.choice([True, False])
+                # same_action = random.choice([True, False])
+                same_action = False
 
                 # if same_state and same_action and id_a == id_b:
                 #     same_horizon = False
