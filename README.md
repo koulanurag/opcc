@@ -28,7 +28,7 @@ import cque, policybazaar
 env_name = 'd4rl:maze2d-open-v0'
 dataset_name = '1k'
 
-# Queries are dictonaries with policies as keys and corresponding queries as values.
+# Queries are dictionaries with policies as keys and corresponding queries as values.
 # Batch iteration through Queries :
 queries = cque.get_queries(env_name)
 for (policy_a_id, policy_b_id), query_batch in queries.items():
