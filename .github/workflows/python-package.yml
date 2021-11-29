@@ -53,6 +53,7 @@ jobs:
       - name: Install dependencies
         run: |
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/runner/.mujoco/mujoco200/bin
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/runner/.mujoco/mujoco210/bin
           python -m pip install --upgrade pip
           python -m pip install flake8 pytest
           pip install -e .
@@ -68,5 +69,6 @@ jobs:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
         run: |
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200/bin
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
           export MUJOCO_KEY_PATH=$HOME/.mujoco/mjkey.txt
           pytest -v
