@@ -156,9 +156,9 @@ if __name__ == '__main__':
                     query_count += 1
 
             _key = ((args.env_name, id_a), (args.env_name, id_b))
-            queries[_key] = (states_a, actions_a, horizons_a,
-                             states_b, actions_b, horizons_b,
-                             targets_a, targets_b, targets)
+            queries[_key] = (np.array(states_a), np.array(actions_a), np.array(horizons_a),
+                             np.array(states_b), np.array(actions_b), np.array(horizons_b),
+                             np.array(targets_a), np.array(targets_b), np.array(targets))
 
             # save data separately for ease of visualization
             overall_data['q-value-a'] += targets_a
