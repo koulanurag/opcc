@@ -168,10 +168,11 @@ if __name__ == '__main__':
     if args.use_wandb:
         df = pd.DataFrame(data=overall_data)
         fig = px.scatter(df, x='q-value-a', y='q-value-b', color='target',
+                         marginal_x="histogram", marginal_y="histogram",
                          symbol='horizons')
         wandb.log({'query-values-scatter': fig,
                    'query-data': df,
-                   'query-count': len(overall_data)})
+                   'query-count': len(overall_data['q-value-a'])})
 
     # save queries
     _path = os.path.join(CQUE_DIR, args.env_name, 'queries.p')
