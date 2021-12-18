@@ -46,7 +46,6 @@ if __name__ == '__main__':
     parser.add_argument('--env-name', required=False, default='d4rl:maze2d-open-v0')
     parser.add_argument('--max-eval-episodes', type=int, default=2, required=False)
     parser.add_argument('--noise', type=float, default=0.05, required=False)
-    parser.add_argument('--episode-count', type=float, default=5, required=False)
     parser.add_argument('--ignore-delta', type=float, default=20, required=False)
     parser.add_argument('--horizons', nargs='+', help='<Required> Set flag', type=int, required=True)
     parser.add_argument('--policy_ids', nargs='+', help='<Required> Set flag', type=int, required=True)
@@ -83,7 +82,8 @@ if __name__ == '__main__':
             obs, _, done, info = env.step(step_action)
 
     # evaluate queries
-    overall_data = {'q-value-a': [], 'q-value-b': [], 'target': [], 'horizon-a': [], 'horizon-b': []}
+    overall_data = {'q-value-a': [], 'q-value-b': [], 'target': [], 'horizon-a': [], 'horizon-b': [],
+                    'horizons': []}
     queries = {}
     for i, id_a in enumerate(args.policy_ids):
         policy_a, _ = policybazaar.get_policy(args.env_name, id_a)
@@ -94,6 +94,7 @@ if __name__ == '__main__':
             states_b = []
             actions_a = []
             actions_b = []
+            horizons = []
             horizons_a = []
             horizons_b = []
             targets_a = []
@@ -104,13 +105,7 @@ if __name__ == '__main__':
             ignore_count = 0
             while query_count < args.per_policy_comb_query and ignore_count < args.ignore_stuck_count:
                 same_state = random.choice([True, False])
-                # same_action = random.choice([True, False])
                 same_action = False
-
-                # if same_state and same_action and id_a == id_b:
-                #     same_horizon = False
-                # else:
-                #     same_horizon = random.choice([True, False])
 
                 (state_a, state_a_env), action_a = random.choice(env_states), env.action_space.sample()
                 (_state_b, _state_b_env), _action_b = random.choice(env_states), env.action_space.sample()
@@ -147,6 +142,7 @@ if __name__ == '__main__':
                     states_b.append(state_b)
                     actions_a.append(action_a)
                     actions_b.append(action_b)
+                    horizons.append((horizon_a, horizon_b))
                     horizons_a.append(horizon_a)
                     horizons_b.append(horizon_b)
                     targets_a.append(target_a)
@@ -165,14 +161,17 @@ if __name__ == '__main__':
             overall_data['q-value-b'] += targets_b
             overall_data['target'] += targets
             overall_data['horizon-a'] += horizons_a
+            overall_data['horizons'] += horizons
             overall_data['horizon-b'] += horizons_b
 
     # visualize
     if args.use_wandb:
         df = pd.DataFrame(data=overall_data)
-        fig2 = px.scatter(df, x='q-value-a', y='q-value-b', color='target')
-        wandb.log({'query-values-scatter': fig2})
-        wandb.log({'query-data': df})
+        fig = px.scatter(df, x='q-value-a', y='q-value-b', color='target',
+                         symbol='horizons')
+        wandb.log({'query-values-scatter': fig,
+                   'query-data': df,
+                   'query-count': len(overall_data)})
 
     # save queries
     _path = os.path.join(CQUE_DIR, args.env_name, 'queries.p')
