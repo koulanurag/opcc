@@ -16,6 +16,7 @@ from cque.config import CQUE_DIR
 
 def mc_return(env, init_action, horizon, policy, max_episodes):
     expected_score = 0
+    expected_step = 0
     for ep_i in range(max_episodes):
 
         _env = deepcopy(env)
@@ -36,8 +37,9 @@ def mc_return(env, init_action, horizon, policy, max_episodes):
             score += reward
 
         expected_score += score
+        expected_step += step_count
 
-    return expected_score / max_episodes
+    return expected_score / max_episodes, expected_step / max_episodes
 
 
 if __name__ == '__main__':
@@ -99,6 +101,8 @@ if __name__ == '__main__':
             horizons_b = []
             targets_a = []
             targets_b = []
+            expected_horizons_a = []
+            expected_horizons_b = []
             targets = []
 
             query_count = 0
@@ -131,8 +135,10 @@ if __name__ == '__main__':
                     horizon_a, horizon_b = np.random.choice(args.horizons, replace=False, size=(2,))
 
                 # evaluate
-                target_a = mc_return(state_a_env, action_a, horizon_a, policy_a, args.max_eval_episodes)
-                target_b = mc_return(state_b_env, action_b, horizon_b, policy_b, args.max_eval_episodes)
+                target_a, expected_horizon_a = mc_return(state_a_env, action_a, horizon_a, policy_a,
+                                                         args.max_eval_episodes)
+                target_b, expected_horizon_b = mc_return(state_b_env, action_b, horizon_b, policy_b,
+                                                         args.max_eval_episodes)
                 print(target_a, target_b)
                 if abs(target_a - target_b) <= args.ignore_delta:
                     ignore_count += 1
@@ -147,6 +153,8 @@ if __name__ == '__main__':
                     horizons_b.append(horizon_b)
                     targets_a.append(target_a)
                     targets_b.append(target_b)
+                    expected_horizons_a.append(expected_horizon_a)
+                    expected_horizons_b.append(expected_horizon_b)
                     targets.append(target_a < target_b)
 
                     query_count += 1
@@ -155,6 +163,20 @@ if __name__ == '__main__':
             queries[_key] = (np.array(states_a), np.array(actions_a), np.array(horizons_a),
                              np.array(states_b), np.array(actions_b), np.array(horizons_b),
                              np.array(targets_a), np.array(targets_b), np.array(targets))
+
+            # queries[_key] = {'obs_a': np.array(obss_a),
+            #                  'action_a': np.array(actions_b),
+            #                  'obs_b': np.array(obss_a),
+            #                  'action_b': np.array(actions_b),
+            #                  'horizon': np.array(horizon),
+            #                  'target': np.array(targets),
+            #                  'info': {'return_a': np.array(targets_a),
+            #                           'return_b': np.array(targets_b),
+            #                           'state_a': np.array(sim_states_a),
+            #                           'state_b': np.array(sim_states_b),
+            #                           'runs': args.max_eval_episodes,
+            #                           'horizon_a': expected_horizons_a,
+            #                           'horizon_b': expected_horizons_b}}
 
             # save data separately for ease of visualization
             overall_data['q-value-a'] += targets_a
