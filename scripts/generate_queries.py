@@ -103,6 +103,8 @@ if __name__ == '__main__':
             targets_b = []
             expected_horizons_a = []
             expected_horizons_b = []
+            sim_states_a = []
+            sim_states_b = []
             targets = []
 
             query_count = 0
@@ -113,6 +115,10 @@ if __name__ == '__main__':
 
                 (state_a, state_a_env), action_a = random.choice(env_states), env.action_space.sample()
                 (_state_b, _state_b_env), _action_b = random.choice(env_states), env.action_space.sample()
+
+                sim_state_a = state_a_env.sim.get_state().flatten().tolist()
+                sim_state_b = state_b_env.sim.get_state().flatten().tolist()
+
                 state_a_env = deepcopy(state_a_env)
 
                 if same_state:
@@ -153,6 +159,8 @@ if __name__ == '__main__':
                     horizons_b.append(horizon_b)
                     targets_a.append(target_a)
                     targets_b.append(target_b)
+                    sim_states_a.append(sim_state_a)
+                    sim_states_b.append(sim_state_b)
                     expected_horizons_a.append(expected_horizon_a)
                     expected_horizons_b.append(expected_horizon_b)
                     targets.append(target_a < target_b)
