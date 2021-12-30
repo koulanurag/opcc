@@ -1,7 +1,6 @@
+import cque
 import policybazaar
 import pytest
-
-import cque
 from cque.config import ENV_IDS
 
 DATASET_ENV_PAIRS = []
@@ -18,7 +17,16 @@ def test_get_queries(env_name):
         policy_a = policybazaar.get_policy(*policy_a_id)
         policy_b = policybazaar.get_policy(*policy_b_id)
 
-        state_a, action_a, horizon_a, state_b, action_b, horizon_b, target_a, target_b, target = query_batch
+        keys = ['obs_a', 'obs_a', 'action_a', 'action_b', 'horizon', 'target', 'info']
+        for key in keys:
+            assert key in query_batch, '{} not in query_batch'.format(key)
+
+        info_keys = ['return_a', 'return_b', 'state_a', 'state_b', 'runs', 'horizon_a', 'horizon_b']
+        for key in keys:
+            assert key in query_batch['info'], '{} not in query_batch'.format(key)
+
+        assert np.mean([len(query_batch[key] for key in keys)] + [len(query_batch['info'][key] for key in info_keys)]) \
+               == len(query_batch['oba_a']), ' batch sizes doesn\'t match'
 
 
 @pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)

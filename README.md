@@ -3,17 +3,21 @@
 It's a benchmark comprising of queries to evaluate uncertainty estimation in offline reinforcement learning.
 
 ## Installation
+
 It requires:
 
 - [Python 3.7+](https://www.python.org/downloads/)
-- [mujoco-py](https://github.com/openai/mujoco-py), [mujoco 200](https://www.roboti.us/index.html) and [mujoco license](https://www.roboti.us/license.html). Please, follow `mujoco-py` installation instructions from [here](https://github.com/openai/mujoco-py).
+- [mujoco-py](https://github.com/openai/mujoco-py) and [mujoco 200](https://www.roboti.us/index.html)
 - [Pytorch >= 1.8.0](https://pytorch.org/)
 
 Python package and dependencies could be installed using:
+
 ```bash
 pip install git+https://github.com/koulanurag/cque@main#egg=cque
 ```
+
 Or
+
 ```bash
 git clone https://github.com/koulanurag/cque.git
 cd cque
@@ -31,12 +35,27 @@ dataset_name = '1k'
 # Queries are dictionaries with policies as keys and corresponding queries as values.
 # Batch iteration through Queries :
 queries = cque.get_queries(env_name)
+
 for (policy_a_id, policy_b_id), query_batch in queries.items():
+    
+    # retrieve policies
     policy_a = policybazaar.get_policy(*policy_a_id)
     policy_b = policybazaar.get_policy(*policy_b_id)
-
-    state_a, action_a, horizon_a, state_b, action_b, horizon_b, target_a, target_b, target = query_batch
     
+    # query-a
+    obs_a = query_batch['obs_a']
+    action_a = query_batch['action_a']
+    
+    # query-b
+    obs_b = query_batch['obs_b']
+    action_b = query_batch['action_b']
+
+    # horizon for policy evaluation
+    horizon = query_batch['horizon']
+    
+    # binary vector q(obs_a, action_a, horizon) <  q(obs_b,action_b, horizon)
+    target = query_batch['target'] 
+
 # Datasets:
 # This is a very-slim wrapper over D4RL datasets
 dataset = cque.get_dataset(env_name, dataset_name)
@@ -44,8 +63,10 @@ dataset = cque.get_dataset(env_name, dataset_name)
 ``` 
 
 ## Environments
-- We borrow dataset's from D4RL 
-- Queries data can be visualized [**here**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx).
+
+- We borrow dataset's from [D4RL](https://arxiv.org/abs/2004.07219)
+- Queries data can be visualized [**
+  here**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx).
 
 ### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
 
