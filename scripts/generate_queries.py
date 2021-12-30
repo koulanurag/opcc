@@ -203,7 +203,7 @@ if __name__ == '__main__':
         df = pd.DataFrame(data=overall_data)
         fig = px.scatter(df, x='return-a', y='return-b', color='target',
                          marginal_x="histogram", marginal_y="histogram",
-                         symbol='horizons')
+                         symbol='horizon')
         wandb.log({'query-values-scatter': fig,
                    'query-data': df})
 
