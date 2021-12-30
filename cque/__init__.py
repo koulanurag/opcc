@@ -3,7 +3,7 @@ import pickle
 
 import gym
 import wandb
-import d4rl
+
 from .config import ENV_IDS, CQUE_DIR
 
 

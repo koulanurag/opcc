@@ -1,5 +1,5 @@
-import wandb
 import cque.config
+import wandb
 
 if __name__ == '__main__':
 
