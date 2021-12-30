@@ -7,6 +7,7 @@ import argparse
 import os
 import pickle
 import random
+from collections import defaultdict
 from copy import deepcopy
 
 import gym
@@ -16,6 +17,7 @@ import plotly.express as px
 import policybazaar
 import torch
 import wandb
+
 from cque.config import CQUE_DIR
 
 
@@ -93,8 +95,9 @@ if __name__ == '__main__':
             obs, _, done, info = env.step(step_action)
 
     # evaluate queries
-    overall_data = defaultdit(lambda: [])
+    overall_data = defaultdict(lambda: [])
     queries = {}
+    total_query_count = 0
     for i, policy_id_a in enumerate(args.policy_ids):
         policy_a, _ = policybazaar.get_policy(args.env_name, policy_id_a)
         for policy_id_b in args.policy_ids[i:]:
@@ -120,7 +123,7 @@ if __name__ == '__main__':
             ignore_count = 0
             while query_count < args.per_policy_comb_query \
                     and ignore_count < args.ignore_stuck_count:
-                same_state = random.choice([True, False])
+                same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[0]
 
                 # query-a attributes
                 (obs_a, state_a_env) = random.choice(env_states)
@@ -144,8 +147,8 @@ if __name__ == '__main__':
                                                          args.max_eval_episodes)
                 return_b, expected_horizon_b = mc_return(state_b_env, action_b, horizon, policy_b,
                                                          args.max_eval_episodes)
-                print(target_a, target_b)
-                if abs(target_a - target_b) <= args.ignore_delta:
+                print(return_a, return_b)
+                if abs(return_a - return_b) <= args.ignore_delta:
                     ignore_count += 1
                     continue
                 else:
@@ -164,16 +167,21 @@ if __name__ == '__main__':
                     expected_horizons_b.append(expected_horizon_b)
 
                     query_count += 1
+                    total_query_count += 1
+
+                    # log for tracking progress
+                    if args.use_wandb:
+                        wandb.log({'query-count': total_query_count})
 
             _key = ((args.env_name, policy_id_a), (args.env_name, policy_id_b))
             queries[_key] = {'obs_a': np.array(obss_a),
-                             'action_a': np.array(actions_b),
-                             'obs_b': np.array(obss_a),
+                             'action_a': np.array(actions_a),
+                             'obs_b': np.array(obss_b),
                              'action_b': np.array(actions_b),
-                             'horizon': np.array(horizon),
+                             'horizon': np.array(horizons),
                              'target': np.array(targets),
-                             'info': {'return_a': np.array(targets_a),
-                                      'return_b': np.array(targets_b),
+                             'info': {'return_a': np.array(returns_a),
+                                      'return_b': np.array(returns_b),
                                       'state_a': np.array(sim_states_a),
                                       'state_b': np.array(sim_states_b),
                                       'runs': args.max_eval_episodes,
@@ -183,8 +191,8 @@ if __name__ == '__main__':
             # save data separately for ease of visualization
             overall_data['obs-a'] += obss_a
             overall_data['obs-b'] += obss_b
-            overall_data['return-a'] += targets_a
-            overall_data['return-b'] += targets_b
+            overall_data['return-a'] += returns_a
+            overall_data['return-b'] += returns_b
             overall_data['target'] += targets
             overall_data['horizon'] += horizons
             overall_data['horizon-a'] += expected_horizons_a
@@ -197,8 +205,7 @@ if __name__ == '__main__':
                          marginal_x="histogram", marginal_y="histogram",
                          symbol='horizons')
         wandb.log({'query-values-scatter': fig,
-                   'query-data': df,
-                   'query-count': len(overall_data['return-a'])})
+                   'query-data': df})
 
     # save queries
     _path = os.path.join(CQUE_DIR, args.env_name, 'queries.p')
