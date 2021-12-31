@@ -1,5 +1,6 @@
-import cque.config
 import wandb
+
+import cque.config
 
 if __name__ == '__main__':
 
@@ -20,12 +21,11 @@ if __name__ == '__main__':
                                                                'split': 100000}}}
             elif env_name in ['HalfCheetah-v2', 'Walker2d-v2', 'Hopper-v2']:
                 mujoco_data[env_name] = {'wandb_run_path': '/'.join(run.path),
-                                         'datasets': {x: {'name': 'd4rl:{}-{}-v2'.format(env_name.lower().split('-')[0],
-                                                                                         x),
-                                                          'split': None}
-                                                      for x in ['random', 'expert', 'medium', 'medium-replay',
-                                                                'medium-expert']}
-                                         }
+                                         'datasets':
+                                             {x: {'name': 'd4rl:{}-{}-v2'.format(env_name.lower().split('-')[0], x),
+                                                  'split': None}
+                                              for x in ['random', 'expert', 'medium', 'medium-replay',
+                                                        'medium-expert']}}
             else:
                 other_data[env_name] = {'wandb_run_path': '/'.join(run.path)}
 

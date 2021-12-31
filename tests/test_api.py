@@ -9,9 +9,9 @@ import cque
 from cque.config import ENV_IDS
 
 DATASET_ENV_PAIRS = []
-for env_name in ENV_IDS.keys():
-    DATASET_ENV_PAIRS += [(env_name, dataset_name)
-                          for dataset_name in ENV_IDS[env_name]['datasets']]
+for _env_name in ENV_IDS.keys():
+    DATASET_ENV_PAIRS += [(_env_name, dataset_name)
+                          for dataset_name in ENV_IDS[_env_name]['datasets']]
 
 
 @pytest.mark.parametrize('env_name', ENV_IDS.keys())
