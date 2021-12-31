@@ -21,13 +21,15 @@ import wandb
 from cque.config import CQUE_DIR
 
 
-def mc_return(env, init_action, horizon, policy, max_episodes):
+def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
     expected_score = 0
     expected_step = 0
     for ep_i in range(max_episodes):
+        env.reset()
+        env.sim.set_state_from_flattened(sim_state)
+        env.sim.forward()
 
-        _env = deepcopy(env)
-        obs, reward, done, info = _env.step(init_action)
+        obs, reward, done, info = env.step(init_action)
         if 'TimeLimit.truncated' in info and info['TimeLimit.truncated']:
             done = False
 
@@ -36,7 +38,7 @@ def mc_return(env, init_action, horizon, policy, max_episodes):
 
         while not done and step_count < horizon:
             action = policy.actor(torch.tensor(obs).unsqueeze(0).float())
-            obs, reward, done, info = _env.step(action.data.cpu().numpy()[0])
+            obs, reward, done, info = env.step(action.data.cpu().numpy()[0])
 
             if 'TimeLimit.truncated' in info and info['TimeLimit.truncated']:
                 done = False
@@ -139,16 +141,9 @@ if __name__ == '__main__':
 
                 # evaluate
                 horizon = random.choice(args.horizons)
-                env.reset()
-                env.sim.set_state_from_flattened(sim_state_a)
-                env.sim.forward()
-                return_a, expected_horizon_a = mc_return(env, action_a, horizon, policy_a,
+                return_a, expected_horizon_a = mc_return(env, sim_state_a, action_a, horizon, policy_a,
                                                          args.max_eval_episodes)
-
-                env.reset()
-                env.sim.set_state_from_flattened(sim_state_b)
-                env.sim.forward()
-                return_b, expected_horizon_b = mc_return(env, action_b, horizon, policy_b,
+                return_b, expected_horizon_b = mc_return(env, sim_state_b, action_b, horizon, policy_b,
                                                          args.max_eval_episodes)
                 print(return_a, return_b)
                 if abs(return_a - return_b) <= args.ignore_delta:
