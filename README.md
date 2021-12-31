@@ -7,7 +7,7 @@ It's a benchmark comprising queries to evaluate uncertainty estimation in offlin
 It requires:
 
 - [Python 3.7+](https://www.python.org/downloads/)
-- [mujoco-py](https://github.com/openai/mujoco-py) and [mujoco 200](https://www.roboti.us/index.html)
+- [mujoco-py](https://github.com/openai/mujoco-py) and [mujoco 210](https://www.roboti.us/index.html)
 - [Pytorch >= 1.8.0](https://pytorch.org/)
 
 Python package and dependencies could be installed using:
