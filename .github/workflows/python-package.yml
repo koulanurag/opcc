@@ -33,8 +33,8 @@ jobs:
           sudo apt install xpra xserver-xorg-dev          
           wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
           tar -xf mujoco210-linux-x86_64.tar.gz
-          mkdir -p "/home/runner/.mujoco"
-          mv mujoco210 /home/runner/.mujoco
+          mkdir -p "/home/runner/.mujoco/mujoco210"
+          mv mujoco210 /home/runner/.mujoco/
       - name: Install dependencies
         run: |
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/runner/.mujoco/mujoco210/bin
