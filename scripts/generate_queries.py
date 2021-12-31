@@ -22,8 +22,8 @@ from cque.config import CQUE_DIR
 
 
 def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
-    expected_score = 0
-    expected_step = 0
+    expected_score = []
+    expected_step = []
     for ep_i in range(max_episodes):
         env.reset()
         env.sim.set_state_from_flattened(sim_state)
@@ -37,18 +37,19 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
         step_count = 1
 
         while not done and step_count < horizon:
-            action = policy.actor(torch.tensor(obs).unsqueeze(0).float())
-            obs, reward, done, info = env.step(action.data.cpu().numpy()[0])
+            obs = torch.tensor(obs, requires_grad=False).unsqueeze(0).float()
+            action = policy.actor(obs).data.cpu().numpy()[0]
+            obs, reward, done, info = env.step(action)
 
             if 'TimeLimit.truncated' in info and info['TimeLimit.truncated']:
                 done = False
             step_count += 1
             score += reward
 
-        expected_score += score
-        expected_step += step_count
+        expected_score.append(score)
+        expected_step.append(step_count)
 
-    return expected_score / max_episodes, expected_step / max_episodes
+    return np.mean(expected_score), np.mean(expected_step)
 
 
 if __name__ == '__main__':
@@ -57,10 +58,12 @@ if __name__ == '__main__':
     parser.add_argument('--env-name', default='d4rl:maze2d-open-v0')
     parser.add_argument('--max-eval-episodes', type=int, default=2)
     parser.add_argument('--noise', type=float, default=0.05, )
-    parser.add_argument('--ignore-delta', type=float, default=20, )
-    parser.add_argument('--horizons', nargs='+', help='<Required> Set flag',
+    parser.add_argument('--ignore-delta', type=float, default=20,
+                        help='ignore query if difference between two sides '
+                             'of query is less than it.')
+    parser.add_argument('--horizons', nargs='+', help='horizon lists',
                         type=int, required=True)
-    parser.add_argument('--policy-ids', nargs='+', help='<Required> Set flag',
+    parser.add_argument('--policy-ids', nargs='+', help='policy id lists',
                         type=int, required=True)
     parser.add_argument('--use-wandb', action='store_true', default=False)
     parser.add_argument('--max-transaction-count', type=int, default=1000, )
@@ -125,7 +128,9 @@ if __name__ == '__main__':
             ignore_count = 0
             while query_count < args.per_policy_comb_query \
                     and ignore_count < args.ignore_stuck_count:
-                same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[0]
+                same_state = random.choices([True, False],
+                                            weights=[0.2, 0.8],
+                                            k=1)[0]
 
                 # query-a attributes
                 (obs_a, sim_state_a) = random.choice(env_states)
