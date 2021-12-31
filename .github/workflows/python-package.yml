@@ -33,7 +33,7 @@ jobs:
           sudo apt install xpra xserver-xorg-dev          
           wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
           tar -xf mujoco210-linux-x86_64.tar.gz
-          mv mujoco210 /home/runner/.mujoco/
+          mv mujoco210 /home/runner/.mujoco
       - name: Install dependencies
         run: |
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/runner/.mujoco/mujoco210/bin
@@ -51,6 +51,5 @@ jobs:
         env:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
         run: |
-          "ls -la /home/runner/.mujoco"
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
           pytest -v
