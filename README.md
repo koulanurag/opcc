@@ -1,6 +1,6 @@
 # Contrastive Queries (cque)
 
-It's a benchmark comprising of queries to evaluate uncertainty estimation in offline reinforcement learning.
+It's a benchmark comprising queries to evaluate uncertainty estimation in offline reinforcement learning.
 
 ## Installation
 
