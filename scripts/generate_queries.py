@@ -88,7 +88,7 @@ if __name__ == '__main__':
         while not done:
             save = random.random() >= args.save_prob
             if save:
-                env_states.append((obs, deepcopy(env)))
+                env_states.append((obs, env.sim.get_state().flatten().tolist()))
             action = model.actor(torch.tensor(obs).unsqueeze(0).float())
             noise = torch.normal(0, args.noise, size=action.shape)
             step_action = (action + noise).data.cpu().numpy()[0]
@@ -126,26 +126,29 @@ if __name__ == '__main__':
                 same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[0]
 
                 # query-a attributes
-                (obs_a, state_a_env) = random.choice(env_states)
+                (obs_a, sim_state_a) = random.choice(env_states)
                 action_a = env.action_space.sample()
-                sim_state_a = state_a_env.sim.get_state().flatten().tolist()
-                state_a_env = deepcopy(state_a_env)
 
                 # query-b attributes
                 if same_state:
                     obs_b = deepcopy(obs_a)
-                    state_b_env = deepcopy(state_a_env)
                     sim_state_b = deepcopy(sim_state_a)
                 else:
-                    obs_b, state_b_env = random.choice(env_states)
-                    sim_state_b = state_b_env.sim.get_state().flatten().tolist()
+                    obs_b, sim_state_b = random.choice(env_states)
                 action_b = env.action_space.sample()
 
                 # evaluate
                 horizon = random.choice(args.horizons)
-                return_a, expected_horizon_a = mc_return(state_a_env, action_a, horizon, policy_a,
+                env.reset()
+                env.sim.set_state_from_flattened(sim_state_a)
+                env.sim.forward()
+                return_a, expected_horizon_a = mc_return(env, action_a, horizon, policy_a,
                                                          args.max_eval_episodes)
-                return_b, expected_horizon_b = mc_return(state_b_env, action_b, horizon, policy_b,
+
+                env.reset()
+                env.sim.set_state_from_flattened(sim_state_b)
+                env.sim.forward()
+                return_b, expected_horizon_b = mc_return(env, action_b, horizon, policy_b,
                                                          args.max_eval_episodes)
                 print(return_a, return_b)
                 if abs(return_a - return_b) <= args.ignore_delta:
