@@ -27,12 +27,12 @@ def test_get_queries(env_name):
             assert key in query_batch, '{} not in query_batch'.format(key)
 
         info_keys = ['return_a', 'return_b', 'state_a', 'state_b', 'runs', 'horizon_a', 'horizon_b']
-        for key in keys:
+        for key in info_keys:
             assert key in query_batch['info'], '{} not in query_batch'.format(key)
 
-        avg_batch_size = np.mean([len(query_batch[key]) for key in keys]
-                                 + [len(query_batch['info'][key]) for key in info_keys])
-        assert avg_batch_size == len(query_batch['oba_a']), ' batch sizes does not match'
+        avg_batch_size = np.mean([len(query_batch[key]) for key in keys if key != 'info']
+                                 + [len(query_batch['info'][key]) for key in info_keys if key != 'runs'])
+        assert avg_batch_size == len(query_batch['obs_a']), ' batch sizes does not match'
 
 
 def mc_return(env_name, state_a, init_obs, init_action, policy, horizon: int,
@@ -109,7 +109,7 @@ def test_query_targets(env_name):
             return_b = mc_return(env_name, state_b, obs_b, action_b, policy_b, horizon,
                                  runs=query_batch['info']['runs'])
             predict = return_a < return_b
-            assert target[_filter] == predict
+            assert all(target[_filter] == predict), 'Query targets do not match'
 
 
 @pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)
