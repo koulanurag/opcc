@@ -36,8 +36,9 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
         step_count = 1
 
         while not done and step_count < horizon:
-            obs = torch.tensor(obs, requires_grad=False).unsqueeze(0).float()
-            action = policy.actor(obs).data.cpu().numpy()[0]
+            with torch.no_grad():
+                obs = torch.tensor(obs).unsqueeze(0).float()
+                action = policy.actor(obs).data.cpu().numpy()[0]
             obs, reward, done, info = env.step(action)
             step_count += 1
             score += reward
