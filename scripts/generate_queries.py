@@ -105,7 +105,7 @@ if __name__ == '__main__':
     total_query_count = 0
     for i, policy_id_a in enumerate(args.policy_ids):
         policy_a, _ = policybazaar.get_policy(args.env_name, policy_id_a)
-        for policy_id_b in args.policy_ids[i:]:
+        for policy_id_b in args.policy_ids[i + 1:]:
             policy_b, _ = policybazaar.get_policy(args.env_name, policy_id_b)
 
             # core attributes
