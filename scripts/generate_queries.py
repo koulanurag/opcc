@@ -123,11 +123,8 @@ if __name__ == '__main__':
 
             query_count = 0
             ignore_count = 0
-            while query_count < args.per_policy_comb_query \
-                    and ignore_count < args.ignore_stuck_count:
-                same_state = random.choices([True, False],
-                                            weights=[0.2, 0.8],
-                                            k=1)[0]
+            while query_count < args.per_policy_comb_query and ignore_count < args.ignore_stuck_count:
+                same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[0]
 
                 # query-a attributes
                 (obs_a, sim_state_a) = random.choice(env_states)
@@ -148,7 +145,7 @@ if __name__ == '__main__':
                 return_a_mean, return_b_mean = np.mean(return_a), np.mean(return_b)
                 horizon_a_mean, horizon_b_mean = np.mean(horizon_a), np.mean(horizon_b)
                 if (abs(return_a_mean - return_b_mean) <= args.ignore_delta) \
-                        and np.mean(np.array(return_a) < np.array(return_b)) in [0, 1]:
+                        and ((max(return_a) < min(return_b)) or (min(return_a) > max(return_b))):
                     ignore_count += 1
                     continue
                 else:
