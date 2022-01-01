@@ -35,8 +35,8 @@ def test_get_queries(env_name):
         assert avg_batch_size == len(query_batch['obs_a']), ' batch sizes does not match'
 
 
-def mc_return(env_name, state_a, init_obs, init_action, policy, horizon: int,
-              device='cpu', runs=1, step_batch_size=128):
+def mc_return(env_name, state_a, init_obs, init_action, policy, horizon: int, device='cpu', runs=1,
+              step_batch_size=128):
     batch_size, obs_size = init_obs.shape
     _, action_size = init_action.shape
 
@@ -48,8 +48,7 @@ def mc_return(env_name, state_a, init_obs, init_action, policy, horizon: int,
         init_action = init_action.repeat(runs, 1)
 
         # setup env
-        envs = SyncVectorEnv([lambda: gym.make(env_name)
-                              for _ in range(len(state_a) * runs)])
+        envs = SyncVectorEnv([lambda: gym.make(env_name) for _ in range(len(state_a) * runs)])
         envs.reset()
         for i, env in enumerate(envs.envs):
             env.sim.set_state_from_flattened(state_a[i % len(state_a)])
@@ -60,6 +59,8 @@ def mc_return(env_name, state_a, init_obs, init_action, policy, horizon: int,
         dones = np.zeros((batch_size * runs), dtype=bool)
         for step in range(horizon):
             for batch_idx in range(0, returns.shape[0], step_batch_size):
+
+                # step-action
                 if step == 0:
                     step_action = init_action[batch_idx:batch_idx + step_batch_size].to(device)
                 else:
@@ -67,6 +68,7 @@ def mc_return(env_name, state_a, init_obs, init_action, policy, horizon: int,
                     step_action = policy.actor(_step_obs)
                 step_action = step_action.cpu().numpy()
 
+                # step
                 next_obs, reward, done = [], [], []
                 for env_i, env in enumerate(envs.envs[batch_idx: batch_idx + step_batch_size]):
                     _next_obs, _reward, _done, info = env.step(step_action[env_i])
@@ -109,7 +111,10 @@ def test_query_targets(env_name):
             return_b = mc_return(env_name, state_b, obs_b, action_b, policy_b, horizon,
                                  runs=query_batch['info']['runs'])
             predict = return_a < return_b
-            assert all(target[_filter] == predict), 'Query targets do not match'
+            print(horizon, (policy_a_id, policy_b_id))
+            assert all(target[_filter] == predict), \
+                'Query targets do not match for ' \
+                'policies: {} and horizon: {}'.format((policy_a_id, policy_b_id), horizon)
 
 
 @pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)
