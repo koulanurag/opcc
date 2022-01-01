@@ -78,7 +78,8 @@ def mc_return(env_name, state_a, init_obs, init_action, policy, horizon: int, de
                 reward = np.array(reward)
                 not_done_filter = ~dones[batch_idx: batch_idx + step_batch_size]
                 returns[batch_idx: batch_idx + step_batch_size][not_done_filter] += reward[not_done_filter]
-                dones[batch_idx:batch_idx + step_batch_size] = done
+                dones[batch_idx:batch_idx + step_batch_size] = np.logical_or(dones[batch_idx:
+                                                                                   batch_idx + step_batch_size], done)
 
                 step_obs[batch_idx: batch_idx + step_batch_size] = torch.Tensor(next_obs).to(device)
 
