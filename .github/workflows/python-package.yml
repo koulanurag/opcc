@@ -25,19 +25,17 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Setup Mujoco
-        env:
-          MUJOCO_KEY: ${{ secrets.MUJOCO_KEY }}
         run: |
           sudo apt-get update
           sudo apt install -y  libosmesa6-dev  libglew-dev  libgl1-mesa-glx libgl1-mesa-dev libgl1-mesa-glx libglfw3
-          sudo apt install xpra xserver-xorg-dev          
+          sudo apt install -y xpra xserver-xorg-dev
           wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
           tar -xf mujoco210-linux-x86_64.tar.gz
-          mkdir -p "/home/runner/.mujoco/mujoco210"
-          mv mujoco210 /home/runner/.mujoco/
+          mkdir -p "$HOME/.mujoco/mujoco210"
+          mv mujoco210 $HOME/.mujoco/
       - name: Install dependencies
         run: |
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/runner/.mujoco/mujoco210/bin
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
           python -m pip install --upgrade pip
           python -m pip install flake8 pytest
           pip install -e .
