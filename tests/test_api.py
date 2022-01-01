@@ -112,7 +112,6 @@ def test_query_targets(env_name):
             return_b = mc_return(env_name, state_b, obs_b, action_b, policy_b, horizon,
                                  runs=query_batch['info']['runs'])
             predict = return_a < return_b
-            print(horizon, (policy_a_id, policy_b_id))
             assert all(target[_filter] == predict), \
                 'Query targets do not match for ' \
                 'policies: {} and horizon: {}'.format((policy_a_id, policy_b_id), horizon)

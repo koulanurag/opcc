@@ -56,7 +56,7 @@ if __name__ == '__main__':
     # Lets gather arguments
     parser = argparse.ArgumentParser(description='Generate queries')
     parser.add_argument('--env-name', default='d4rl:maze2d-open-v0')
-    parser.add_argument('--max-eval-episodes', type=int, default=2)
+    parser.add_argument('--eval-runs', type=int, default=2)
     parser.add_argument('--noise', type=float, default=0.05, )
     parser.add_argument('--ignore-delta', type=float, default=20,
                         help='ignore query if difference between two sides '
@@ -147,9 +147,9 @@ if __name__ == '__main__':
                 # evaluate
                 horizon = random.choice(args.horizons)
                 return_a, expected_horizon_a = mc_return(env, sim_state_a, action_a, horizon, policy_a,
-                                                         args.max_eval_episodes)
+                                                         args.eval_runs)
                 return_b, expected_horizon_b = mc_return(env, sim_state_b, action_b, horizon, policy_b,
-                                                         args.max_eval_episodes)
+                                                         args.eval_runs)
                 print(return_a, return_b)
                 if abs(return_a - return_b) <= args.ignore_delta:
                     ignore_count += 1
