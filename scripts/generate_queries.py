@@ -183,7 +183,7 @@ if __name__ == '__main__':
                                       'return_b': np.array(returns_b),
                                       'state_a': np.array(sim_states_a),
                                       'state_b': np.array(sim_states_b),
-                                      'runs': args.max_eval_episodes,
+                                      'runs': args.eval_runs,
                                       'horizon_a': horizons_a,
                                       'horizon_b': horizons_b}}
 
