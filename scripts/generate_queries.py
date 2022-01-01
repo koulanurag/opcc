@@ -22,6 +22,8 @@ from cque.config import CQUE_DIR
 
 
 def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
+    assert horizon <= env._max_episode_steps
+
     expected_score = []
     expected_step = []
     for ep_i in range(max_episodes):
@@ -30,9 +32,6 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
         env.sim.forward()
 
         obs, reward, done, info = env.step(init_action)
-        if 'TimeLimit.truncated' in info and info['TimeLimit.truncated']:
-            done = False
-
         score = reward
         step_count = 1
 
@@ -40,16 +39,13 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
             obs = torch.tensor(obs, requires_grad=False).unsqueeze(0).float()
             action = policy.actor(obs).data.cpu().numpy()[0]
             obs, reward, done, info = env.step(action)
-
-            if 'TimeLimit.truncated' in info and info['TimeLimit.truncated']:
-                done = False
             step_count += 1
             score += reward
 
         expected_score.append(score)
         expected_step.append(step_count)
 
-    return np.mean(expected_score), np.mean(expected_step)
+    return expected_score, expected_step
 
 
 if __name__ == '__main__':
@@ -119,8 +115,8 @@ if __name__ == '__main__':
             # info attributes
             returns_a = []
             returns_b = []
-            expected_horizons_a = []
-            expected_horizons_b = []
+            horizons_a = []
+            horizons_b = []
             sim_states_a = []
             sim_states_b = []
 
@@ -146,12 +142,12 @@ if __name__ == '__main__':
 
                 # evaluate
                 horizon = random.choice(args.horizons)
-                return_a, expected_horizon_a = mc_return(env, sim_state_a, action_a, horizon, policy_a,
-                                                         args.eval_runs)
-                return_b, expected_horizon_b = mc_return(env, sim_state_b, action_b, horizon, policy_b,
-                                                         args.eval_runs)
-                print(return_a, return_b)
-                if abs(return_a - return_b) <= args.ignore_delta:
+                return_a, horizon_a = mc_return(env, sim_state_a, action_a, horizon, policy_a, args.eval_runs)
+                return_b, horizon_b = mc_return(env, sim_state_b, action_b, horizon, policy_b, args.eval_runs)
+                return_a_mean, return_b_mean = np.mean(return_a), np.mean(return_b)
+                horizon_a_mean, horizon_b_mean = np.mean(horizon_a), np.mean(horizon_b)
+                if (abs(return_a_mean - return_b_mean) <= args.ignore_delta) \
+                        and np.mean(np.array(return_a) < np.array(return_b)) in [0, 1]:
                     ignore_count += 1
                     continue
                 else:
@@ -160,14 +156,14 @@ if __name__ == '__main__':
                     actions_a.append(action_a)
                     actions_b.append(action_b)
                     horizons.append(horizon)
-                    targets.append(return_a < return_b)
+                    targets.append(return_a_mean < return_b_mean)
 
-                    returns_a.append(return_a)
-                    returns_b.append(return_b)
+                    returns_a.append(return_a_mean)
+                    returns_b.append(return_b_mean)
                     sim_states_a.append(sim_state_a)
                     sim_states_b.append(sim_state_b)
-                    expected_horizons_a.append(expected_horizon_a)
-                    expected_horizons_b.append(expected_horizon_b)
+                    horizons_a.append(horizon_a_mean)
+                    horizons_b.append(horizon_b_mean)
 
                     query_count += 1
                     total_query_count += 1
@@ -188,8 +184,8 @@ if __name__ == '__main__':
                                       'state_a': np.array(sim_states_a),
                                       'state_b': np.array(sim_states_b),
                                       'runs': args.max_eval_episodes,
-                                      'horizon_a': expected_horizons_a,
-                                      'horizon_b': expected_horizons_b}}
+                                      'horizon_a': horizons_a,
+                                      'horizon_b': horizons_b}}
 
             # save data separately for ease of visualization
             overall_data['obs-a'] += obss_a
@@ -198,8 +194,8 @@ if __name__ == '__main__':
             overall_data['return-b'] += returns_b
             overall_data['target'] += targets
             overall_data['horizon'] += horizons
-            overall_data['horizon-a'] += expected_horizons_a
-            overall_data['horizon-b'] += expected_horizons_b
+            overall_data['horizon-a'] += horizons_a
+            overall_data['horizon-b'] += horizons_b
 
     # visualize
     if args.use_wandb:
