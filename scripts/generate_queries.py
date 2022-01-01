@@ -116,6 +116,8 @@ if __name__ == '__main__':
             # info attributes
             returns_a = []
             returns_b = []
+            returns_list_a = []
+            returns_list_b = []
             horizons_a = []
             horizons_b = []
             sim_states_a = []
@@ -158,6 +160,8 @@ if __name__ == '__main__':
 
                     returns_a.append(return_a_mean)
                     returns_b.append(return_b_mean)
+                    returns_list_a.append(return_a)
+                    returns_list_b.append(return_b)
                     sim_states_a.append(sim_state_a)
                     sim_states_b.append(sim_state_b)
                     horizons_a.append(horizon_a_mean)
@@ -179,6 +183,8 @@ if __name__ == '__main__':
                              'target': np.array(targets),
                              'info': {'return_a': np.array(returns_a),
                                       'return_b': np.array(returns_b),
+                                      'return_list_a': np.array(returns_list_a),
+                                      'return_list_b': np.array(returns_list_b),
                                       'state_a': np.array(sim_states_a),
                                       'state_b': np.array(sim_states_b),
                                       'runs': args.eval_runs,
