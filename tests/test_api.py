@@ -3,7 +3,6 @@ import numpy as np
 import policybazaar
 import pytest
 import torch
-from gym.vector.sync_vector_env import SyncVectorEnv
 
 import cque
 from cque.config import ENV_IDS
@@ -35,58 +34,42 @@ def test_get_queries(env_name):
         assert avg_batch_size == len(query_batch['obs_a']), ' batch sizes does not match'
 
 
-def mc_return(env_name, state_a, init_obs, init_action, policy, horizon: int, device='cpu', runs=1,
-              step_batch_size=128):
-    batch_size, obs_size = init_obs.shape
-    _, action_size = init_action.shape
-
-    with torch.no_grad():
-        # setup initial obs and action
-        step_obs = torch.FloatTensor(init_obs).to(device)
-        init_action = torch.FloatTensor(init_action).to(device)
-        step_obs = step_obs.repeat(runs, 1)
-        init_action = init_action.repeat(runs, 1)
-
-        # setup env
-        envs = SyncVectorEnv([lambda: gym.make(env_name) for _ in range(len(state_a) * runs)])
-        envs.reset()
-        for i, env in enumerate(envs.envs):
-            env.sim.set_state_from_flattened(state_a[i % len(state_a)])
+def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
+    all_returns, all_steps = [], []
+    for sim_state_i, sim_state in enumerate(sim_states):
+        envs = []
+        for ep_i in range(runs):
+            env = gym.make(env_name)
+            env.reset()
+            env.sim.set_state_from_flattened(sim_state)
             env.sim.forward()
+            envs.append(env)
 
-        # rollout
-        returns = np.zeros((batch_size * runs))
-        dones = np.zeros((batch_size * runs), dtype=bool)
-        for step in range(horizon):
-            for batch_idx in range(0, returns.shape[0], step_batch_size):
+        obss = [None for _ in range(runs)]
+        dones = [False for _ in range(runs)]
+        returns = [0 for _ in range(runs)]
+        steps = [0 for _ in range(runs)]
 
-                # step-action
-                if step == 0:
-                    step_action = init_action[batch_idx:batch_idx + step_batch_size].to(device)
-                else:
-                    _step_obs = step_obs[batch_idx: batch_idx + step_batch_size].to(device)
-                    step_action = policy.actor(_step_obs)
-                step_action = step_action.cpu().numpy()
+        for step_count in range(horizon):
+            for env_i, env in enumerate(envs):
+                if not dones[env_i]:
+                    if step_count == 0:
+                        obs, reward, done, info = env.step(init_actions[sim_state_i])
+                    else:
+                        with torch.no_grad():
+                            obs = torch.tensor(obss[env_i]).unsqueeze(0).float()
+                            action = policy.actor(obs).data.cpu().numpy()[0]
+                        obs, reward, done, info = env.step(action)
+                    obss[env_i] = obs
+                    dones[env_i] = done or dones[env_i]
+                    returns[env_i] += reward
+                    steps[env_i] += 1
 
-                # step
-                next_obs, reward, done = [], [], []
-                for env_i, env in enumerate(envs.envs[batch_idx: batch_idx + step_batch_size]):
-                    _next_obs, _reward, _done, info = env.step(step_action[env_i])
-                    next_obs.append(_next_obs)
-                    reward.append(_reward)
-                    done.append(_done)
-                reward = np.array(reward)
-                not_done_filter = ~dones[batch_idx: batch_idx + step_batch_size]
-                returns[batch_idx: batch_idx + step_batch_size][not_done_filter] += reward[not_done_filter]
-                dones[batch_idx:batch_idx + step_batch_size] = np.logical_or(dones[batch_idx:
-                                                                                   batch_idx + step_batch_size], done)
+        [env.close() for env in envs]
+        all_returns.append(returns)
+        all_steps.append(steps)
 
-                step_obs[batch_idx: batch_idx + step_batch_size] = torch.Tensor(next_obs).to(device)
-
-    returns = returns.reshape((runs, batch_size))
-    returns = returns.mean(0)
-    envs.close()
-    return returns
+    return all_returns
 
 
 @pytest.mark.parametrize('env_name', ENV_IDS.keys())
