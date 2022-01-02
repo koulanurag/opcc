@@ -127,7 +127,7 @@ if __name__ == '__main__':
             ignore_count = 0
             while query_count < args.per_policy_comb_query and ignore_count < args.ignore_stuck_count:
                 same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[0]
-
+                same_state = False
                 # query-a attributes
                 (obs_a, sim_state_a) = random.choice(env_states)
                 action_a = env.action_space.sample()
