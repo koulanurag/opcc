@@ -208,7 +208,7 @@ if __name__ == '__main__':
                          marginal_x="histogram", marginal_y="histogram",
                          symbol='horizon')
         wandb.log({'query-values-scatter': fig,
-                   'query-data': df})
+                   'query-data': wandb.Table(dataframe=df)})
 
     # save queries
     _path = os.path.join(CQUE_DIR, args.env_name, 'queries.p')
