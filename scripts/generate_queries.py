@@ -1,6 +1,5 @@
 """
-Usage: python generate_queries.py --env-name d4rl:maze2d-open-v0
-                                  --dataset-name 1k --policy-ids 1,2,3,4
+Usage: python generate_queries.py --env-name d4rl:maze2d-open-v0 --dataset-name 1k --policy-ids 1,2,3,4
 """
 
 import argparse
@@ -56,12 +55,9 @@ if __name__ == '__main__':
     parser.add_argument('--eval-runs', type=int, default=2)
     parser.add_argument('--noise', type=float, default=0.05, )
     parser.add_argument('--ignore-delta', type=float, default=20,
-                        help='ignore query if difference between two sides '
-                             'of query is less than it.')
-    parser.add_argument('--horizons', nargs='+', help='horizon lists',
-                        type=int, required=True)
-    parser.add_argument('--policy-ids', nargs='+', help='policy id lists',
-                        type=int, required=True)
+                        help='ignore query if difference between two sides of query is less than it.')
+    parser.add_argument('--horizons', nargs='+', help='horizon lists', type=int, required=True)
+    parser.add_argument('--policy-ids', nargs='+', help='policy id lists', type=int, required=True)
     parser.add_argument('--use-wandb', action='store_true', default=False)
     parser.add_argument('--max-transaction-count', type=int, default=1000, )
     parser.add_argument('--ignore-stuck-count', type=int, default=200, )
@@ -83,7 +79,7 @@ if __name__ == '__main__':
     env = gym.make(args.env_name)
     while len(env_states) < args.max_transaction_count:
         policy_id = random.choice(args.policy_ids)
-        model, model_info = policybazaar.get_policy(args.env_name, policy_id)
+        policy, policy_info = policybazaar.get_policy(args.env_name, policy_id)
         obs = env.reset()
 
         done = False
@@ -91,7 +87,7 @@ if __name__ == '__main__':
             save = random.random() >= args.save_prob
             if save:
                 env_states.append((obs, env.sim.get_state().flatten().tolist()))
-            action = model.actor(torch.tensor(obs).unsqueeze(0).float())
+            action = policy.actor(torch.tensor(obs).unsqueeze(0).float())
             noise = torch.normal(0, args.noise, size=action.shape)
             step_action = (action + noise).data.cpu().numpy()[0]
             obs, _, done, info = env.step(step_action)
