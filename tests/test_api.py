@@ -107,10 +107,8 @@ def test_query_targets(env_name):
             obs_b = query_batch['obs_b'][_filter]
             action_a = query_batch['action_a'][_filter]
             action_b = query_batch['action_b'][_filter]
-            return_a = mc_return(env_name, state_a, obs_a, action_a, policy_a, horizon,
-                                 runs=query_batch['info']['runs'])
-            return_b = mc_return(env_name, state_b, obs_b, action_b, policy_b, horizon,
-                                 runs=query_batch['info']['runs'])
+            return_a = mc_return(env_name, state_a, obs_a, action_a, horizon, policy_a, query_batch['info']['runs'])
+            return_b = mc_return(env_name, state_b, obs_b, action_b, horizon, policy_b, query_batch['info']['runs'])
             predict = return_a < return_b
             assert all(target[_filter] == predict), \
                 'Query targets do not match for ' \
