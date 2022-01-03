@@ -86,13 +86,12 @@ def test_query_targets(env_name):
             _filter = horizons == horizon
             state_a = query_batch['info']['state_a'][_filter]
             state_b = query_batch['info']['state_b'][_filter]
-            obs_a = query_batch['obs_a'][_filter]
-            obs_b = query_batch['obs_b'][_filter]
             action_a = query_batch['action_a'][_filter]
             action_b = query_batch['action_b'][_filter]
-            return_a = mc_return(env_name, state_a, obs_a, action_a, horizon, policy_a, query_batch['info']['runs'])
-            return_b = mc_return(env_name, state_b, obs_b, action_b, horizon, policy_b, query_batch['info']['runs'])
+            return_a = mc_return(env_name, state_a, action_a, horizon, policy_a, query_batch['info']['runs'])
+            return_b = mc_return(env_name, state_b, action_b, horizon, policy_b, query_batch['info']['runs'])
             predict = return_a < return_b
+            # print(np.mean(~(target[_filter] == predict)), horizon, policy_a_id, policy_b_id)
             assert all(target[_filter] == predict), \
                 'Query targets do not match for ' \
                 'policies: {} and horizon: {}'.format((policy_a_id, policy_b_id), horizon)
