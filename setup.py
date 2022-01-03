@@ -24,6 +24,8 @@ setup(name='cque',
                         'gym>=0.17.0',
                         'torch>=1.8.0',
                         'dm-control==0.0.364896371',
+                        'pandas==1.3.5',
+                        'plotly==5.5.0',
                         # 'policybazaar @ git+https://github.com/koulanurag/policybazaar@main#egg=policybazaar'
                         ],
       extras_require=extras,
