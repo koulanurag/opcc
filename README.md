@@ -10,6 +10,7 @@ It requires:
 - [mujoco-py](https://github.com/openai/mujoco-py) and [mujoco 210](https://www.roboti.us/index.html)
 - [Pytorch >= 1.8.0](https://pytorch.org/)
 
+**'dm-control==0.0.364896371' is required as of now and is incorrectly provided by d4rl** 
 Python package and dependencies could be installed using:
 
 ```bash
