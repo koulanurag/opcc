@@ -69,7 +69,7 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
         all_returns.append(returns)
         all_steps.append(steps)
 
-    return all_returns
+    return np.array(all_returns).mean(1)
 
 
 @pytest.mark.parametrize('env_name', ENV_IDS.keys())
