@@ -143,7 +143,8 @@ if __name__ == '__main__':
                 return_a_mean, return_b_mean = np.mean(return_a), np.mean(return_b)
                 horizon_a_mean, horizon_b_mean = np.mean(horizon_a), np.mean(horizon_b)
                 if (abs(return_a_mean - return_b_mean) <= args.ignore_delta) \
-                        and ((max(return_a) < min(return_b)) or (min(return_a) > max(return_b))):
+                        or (min(return_b) <= max(return_a) <= max(return_b) or
+                            min(return_b) <= min(return_a) <= max(return_b)):
                     ignore_count += 1
                     continue
                 else:
