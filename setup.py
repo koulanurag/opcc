@@ -22,7 +22,6 @@ setup(name='cque',
       packages=setuptools.find_packages(),
       install_requires=['absl-py',
                         'wandb>=0.10',
-                        'torch>=1.8.0',
                         'policybazaar @ git+https://github.com/koulanurag/policybazaar@main#egg=policybazaar'
                         ],
       extras_require=extras,
