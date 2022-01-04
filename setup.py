@@ -20,7 +20,7 @@ setup(name='cque',
       author_email='koulanurag@gmail.com',
       license=open(path.join(path.abspath(path.dirname(__file__)), 'LICENSE'), encoding='utf-8').read(),
       packages=setuptools.find_packages(),
-      install_requires=['absl',
+      install_requires=['absl-py',
                         'wandb>=0.10',
                         'torch>=1.8.0',
                         'policybazaar @ git+https://github.com/koulanurag/policybazaar@main#egg=policybazaar'
