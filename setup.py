@@ -5,6 +5,7 @@ from setuptools import setup
 
 extras = {
     'test': ['pytest', 'pytest_cases'],
+    'dev': ['pandas==1.3.5', 'plotly==5.5.0']
 }
 # Meta dependency groups.
 extras['all'] = [item for group in extras.values() for item in group]
@@ -21,18 +22,12 @@ setup(name='cque',
       packages=setuptools.find_packages(),
       install_requires=['wheel',
                         'wandb>=0.10',
-                        'gym>=0.17.0',
                         'torch>=1.8.0',
-                        'dm-control==0.0.364896371',
-                        'pandas==1.3.5',
-                        'plotly==5.5.0',
-                        # 'policybazaar @ git+https://github.com/koulanurag/policybazaar@main#egg=policybazaar'
+                        'policybazaar @ git+https://github.com/koulanurag/policybazaar@main#egg=policybazaar'
                         ],
       extras_require=extras,
       tests_require=extras['test'],
       python_requires='>=3.7',
-      classifiers=[
-          'Programming Language :: Python :: 3.7',
-          'Programming Language :: Python :: 3.8',
-      ],
+      classifiers=['Programming Language :: Python :: 3.7',
+                   'Programming Language :: Python :: 3.8'],
       )
