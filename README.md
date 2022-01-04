@@ -14,6 +14,7 @@ It requires:
 Python package and dependencies could be installed using:
 
 ```bash
+python3 -m pip install --upgrade pip setuptools wheel
 pip install git+https://github.com/koulanurag/cque@main#egg=cque
 ```
 
@@ -22,6 +23,7 @@ Or
 ```bash
 git clone https://github.com/koulanurag/cque.git
 cd cque
+python3 -m pip install --upgrade pip setuptools wheel
 pip install -e .
 ```
 
