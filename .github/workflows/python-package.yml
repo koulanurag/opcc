@@ -51,6 +51,7 @@ jobs:
         env:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
         run: |
-          export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200
+          export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200/bin
           pytest -v
           
