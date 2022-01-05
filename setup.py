@@ -5,7 +5,7 @@ from setuptools import setup
 
 extras = {
     'test': ['pytest', 'pytest_cases'],
-    'dev': ['pandas==1.3.5', 'plotly==5.5.0']
+    'dev': ['pandas==1.3.5', 'plotly==5.5.0', 'sklearn']
 }
 # Meta dependency groups.
 extras['all'] = [item for group in extras.values() for item in group]
@@ -23,8 +23,7 @@ setup(name='cque',
       packages=setuptools.find_packages(),
       install_requires=['absl-py',
                         'wandb>=0.10',
-                        'policybazaar @ git+https://github.com/koulanurag/policybazaar@main#egg=policybazaar'
-                        ],
+                        'policybazaar @ git+https://github.com/koulanurag/policybazaar@main#egg=policybazaar'],
       extras_require=extras,
       tests_require=extras['test'],
       python_requires='>=3.7',
