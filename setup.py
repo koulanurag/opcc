@@ -12,7 +12,8 @@ extras['all'] = [item for group in extras.values() for item in group]
 
 setup(name='cque',
       version='0.0.1',
-      description='',
+      description="It's a benchmark comprising queries to evaluate uncertainty estimation "
+                  "in offline reinforcement learning.",
       long_description_content_type='text/markdown',
       long_description=open(path.join(path.abspath(path.dirname(__file__)), 'README.md'), encoding='utf-8').read(),
       url='https://github.com/koulanurag/cque',
