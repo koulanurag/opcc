@@ -29,15 +29,16 @@ jobs:
           sudo apt-get update
           sudo apt install -y  libosmesa6-dev  libglew-dev  libgl1-mesa-glx libgl1-mesa-dev libgl1-mesa-glx libglfw3
           sudo apt install -y xpra xserver-xorg-dev
-          wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
-          tar -xf mujoco210-linux-x86_64.tar.gz
-          mkdir -p "$HOME/.mujoco/mujoco210"
-          mv mujoco210 $HOME/.mujoco/
+          mkdir -p "$HOME/.mujoco/mujoco200"
+          cd $HOME/.mujoco
+          wget https://www.roboti.us/download/mujoco200_linux.zip
+          unzip -o mujoco200_linux.zip -d .
+          rm -rf *.zip*
+          cp -r $HOME/.mujoco/mujoco200_linux/* $HOME/.mujoco/mujoco200
       - name: Install dependencies
         run: |
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
           python3 -m pip install --upgrade pip setuptools wheel
-          python -m pip install flake8 pytest
+          python -m pip install flake8
           pip install -e .
           pip install -e ".[test]"
       - name: Lint with flake8
@@ -50,5 +51,6 @@ jobs:
         env:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
         run: |
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
+          export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200
           pytest -v
+          
