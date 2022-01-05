@@ -32,3 +32,9 @@ def get_dataset(env_name, dataset_name):
     if split is not None:
         dataset = {k: v[:split] for k, v in dataset.items()}
     return dataset
+
+
+def get_dataset_names(env_name):
+    assert env_name in ENV_IDS, \
+        '`{}` not found. It should be among following: {}'.format(env_name, list(ENV_IDS.keys()))
+    return list(ENV_IDS[env_name]['datasets'].keys())
