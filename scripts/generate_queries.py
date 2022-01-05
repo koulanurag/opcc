@@ -17,6 +17,9 @@ import policybazaar
 import torch
 import wandb
 
+import cque
+from kd import KDTree
+
 from cque.config import CQUE_DIR
 
 
@@ -48,38 +51,12 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
     return expected_score, expected_step
 
 
-if __name__ == '__main__':
-    # Lets gather arguments
-    parser = argparse.ArgumentParser(description='Generate queries')
-    parser.add_argument('--env-name', default='d4rl:maze2d-open-v0')
-    parser.add_argument('--eval-runs', type=int, default=2)
-    parser.add_argument('--noise', type=float, default=0.05, )
-    parser.add_argument('--ignore-delta', type=float, default=20,
-                        help='ignore query if difference between two sides of query is less than it.')
-    parser.add_argument('--horizons', nargs='+', help='horizon lists', type=int, required=True)
-    parser.add_argument('--policy-ids', nargs='+', help='policy id lists', type=int, required=True)
-    parser.add_argument('--use-wandb', action='store_true', default=False)
-    parser.add_argument('--max-transaction-count', type=int, default=1000, )
-    parser.add_argument('--ignore-stuck-count', type=int, default=200, )
-    parser.add_argument('--save-prob', type=float, default=0.7, )
-    parser.add_argument('--per-policy-comb-query', type=int, default=100, )
-
-    # Process arguments
-    args = parser.parse_args()
-    if args.use_wandb:
-        wandb.init(project='cque', config={'env-name': args.env_name})
-
-    # seed
-    np.random.seed(0)
-    random.seed(0)
-    torch.manual_seed(0)
-
+def generate_candidate_query_states(env, policies, max_transaction_count, args):
     # create collection of states
     env_states = []
-    env = gym.make(args.env_name)
-    while len(env_states) < args.max_transaction_count:
-        policy_id = random.choice(args.policy_ids)
-        policy, policy_info = policybazaar.get_policy(args.env_name, policy_id)
+    while len(env_states) < max_transaction_count:
+
+        policy = random.choice(list(policies.values()))
         obs = env.reset()
 
         done = False
@@ -91,15 +68,18 @@ if __name__ == '__main__':
             noise = torch.normal(0, args.noise, size=action.shape)
             step_action = (action + noise).data.cpu().numpy()[0]
             obs, _, done, info = env.step(step_action)
+    return env_states
 
-    # evaluate queries
-    overall_data = defaultdict(lambda: [])
-    queries = {}
+
+def evaluate_queries(env, candidate_states, policies, args):
+    _overall_data = defaultdict(lambda: [])
+    _queries = {}
     total_query_count = 0
-    for i, policy_id_a in enumerate(args.policy_ids):
-        policy_a, _ = policybazaar.get_policy(args.env_name, policy_id_a)
+    policy_ids = sorted(policies.keys())
+    for i, policy_id_a in enumerate(policy_ids):
+        policy_a = policies[policy_id_a]
         for policy_id_b in args.policy_ids[i + 1:]:
-            policy_b, _ = policybazaar.get_policy(args.env_name, policy_id_b)
+            policy_b = policies[policy_id_b]
 
             # core attributes
             obss_a = []
@@ -125,7 +105,7 @@ if __name__ == '__main__':
                 same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[0]
 
                 # query-a attributes
-                (obs_a, sim_state_a) = random.choice(env_states)
+                (obs_a, sim_state_a) = random.choice(candidate_states)
                 action_a = env.action_space.sample()
 
                 # query-b attributes
@@ -133,7 +113,7 @@ if __name__ == '__main__':
                     obs_b = deepcopy(obs_a)
                     sim_state_b = deepcopy(sim_state_a)
                 else:
-                    obs_b, sim_state_b = random.choice(env_states)
+                    obs_b, sim_state_b = random.choice(candidate_states)
                 action_b = env.action_space.sample()
 
                 # evaluate
@@ -172,40 +152,100 @@ if __name__ == '__main__':
                         wandb.log({'query-count': total_query_count})
 
             _key = ((args.env_name, policy_id_a), (args.env_name, policy_id_b))
-            queries[_key] = {'obs_a': np.array(obss_a),
-                             'action_a': np.array(actions_a),
-                             'obs_b': np.array(obss_b),
-                             'action_b': np.array(actions_b),
-                             'horizon': np.array(horizons),
-                             'target': np.array(targets),
-                             'info': {'return_a': np.array(returns_a),
-                                      'return_b': np.array(returns_b),
-                                      'return_list_a': np.array(returns_list_a),
-                                      'return_list_b': np.array(returns_list_b),
-                                      'state_a': np.array(sim_states_a),
-                                      'state_b': np.array(sim_states_b),
-                                      'runs': args.eval_runs,
-                                      'horizon_a': horizons_a,
-                                      'horizon_b': horizons_b}}
+            _queries[_key] = {'obs_a': np.array(obss_a),
+                              'action_a': np.array(actions_a),
+                              'obs_b': np.array(obss_b),
+                              'action_b': np.array(actions_b),
+                              'horizon': np.array(horizons),
+                              'target': np.array(targets),
+                              'info': {'return_a': np.array(returns_a),
+                                       'return_b': np.array(returns_b),
+                                       'return_list_a': np.array(returns_list_a),
+                                       'return_list_b': np.array(returns_list_b),
+                                       'state_a': np.array(sim_states_a),
+                                       'state_b': np.array(sim_states_b),
+                                       'runs': args.eval_runs,
+                                       'horizon_a': horizons_a,
+                                       'horizon_b': horizons_b}}
 
             # save data separately for ease of visualization
-            overall_data['obs-a'] += obss_a
-            overall_data['obs-b'] += obss_b
-            overall_data['return-a'] += returns_a
-            overall_data['return-b'] += returns_b
-            overall_data['target'] += targets
-            overall_data['horizon'] += horizons
-            overall_data['horizon-a'] += horizons_a
-            overall_data['horizon-b'] += horizons_b
+            _overall_data['obs-a'] += obss_a
+            _overall_data['obs-b'] += obss_b
+            _overall_data['action-a'] += actions_a
+            _overall_data['action-b'] += actions_b
+            _overall_data['return-a'] += returns_a
+            _overall_data['return-b'] += returns_b
+            _overall_data['target'] += targets
+            _overall_data['horizon'] += horizons
+            _overall_data['horizon-a'] += horizons_a
+            _overall_data['horizon-b'] += horizons_b
+    return _queries, _overall_data
+
+
+def main():
+    # Lets gather arguments
+    parser = argparse.ArgumentParser(description='Generate queries')
+    parser.add_argument('--env-name', default='d4rl:maze2d-open-v0')
+    parser.add_argument('--eval-runs', type=int, default=2)
+    parser.add_argument('--noise', type=float, default=0.05, )
+    parser.add_argument('--ignore-delta', type=float, default=20,
+                        help='ignore query if difference between two sides of query is less than it.')
+    parser.add_argument('--horizons', nargs='+', help='horizon lists', type=int, required=True)
+    parser.add_argument('--policy-ids', nargs='+', help='policy id lists', type=int, required=True)
+    parser.add_argument('--use-wandb', action='store_true', default=False)
+    parser.add_argument('--max-transaction-count', type=int, default=1000, )
+    parser.add_argument('--ignore-stuck-count', type=int, default=200, )
+    parser.add_argument('--save-prob', type=float, default=0.7, )
+    parser.add_argument('--per-policy-comb-query', type=int, default=100, )
+
+    # Process arguments
+    args = parser.parse_args()
+    if args.use_wandb:
+        wandb.init(project='cque', config={'env-name': args.env_name})
+
+    # seed
+    np.random.seed(0)
+    random.seed(0)
+    torch.manual_seed(0)
+
+    env = gym.make(args.env_name)
+    policies = {policy_id: policybazaar.get_policy(args.env_name, policy_id)[0] for policy_id in args.policy_ids}
+    datasets = {dataset_name: cque.get_dataset(args.env_name, dataset_name)
+                for dataset_name in cque.get_dataset_names(args.env_name)}
+    dataset_kd_trees = {dataset_name: KDTree(np.concatenate((datasets[dataset_name]['observations'],
+                                                             datasets[dataset_name]['actions']), 1))
+                        for dataset_name in datasets.keys()}
+    candidate_states = generate_candidate_query_states(env, policies, args.max_transaction_count, args)
+    queries, overall_data = evaluate_queries(env, candidate_states, policies, args)
+
+    for dataset_name, kd_tree in dataset_kd_trees.items():
+        distance_a = [list(_.values())[0] for _ in
+                      kd_tree.get_knn_batch(np.concatenate((overall_data['obs-a'], overall_data['action-a']), 1), k=1)]
+        overall_data['query_a_distance_from_{}_dataset'.format(dataset_name)] = distance_a
+        distance_b = [list(_.values())[0] for _ in
+                      kd_tree.get_knn_batch(np.concatenate((overall_data['obs-b'], overall_data['action-b']), 1), k=1)]
+        overall_data['query_b_distance_from_{}_dataset'.format(dataset_name)] = distance_b
 
     # visualize
     if args.use_wandb:
-        df = pd.DataFrame(data=overall_data)
-        fig = px.scatter(df, x='return-a', y='return-b', color='target',
-                         marginal_x="histogram", marginal_y="histogram",
-                         symbol='horizon')
-        wandb.log({'query-values-scatter': fig,
-                   'query-data': wandb.Table(dataframe=df)})
+        overall_df = pd.DataFrame(data=overall_data)
+        return_fig = px.scatter(overall_df, x='return-a', y='return-b', color='target',
+                                marginal_x="histogram", marginal_y="histogram",
+                                symbol='horizon')
+
+        df_distances_data = []
+        df_dataset_names_data = []
+        for dataset_name in datasets:
+            df_distances_data += overall_data['query_a_distance_from_{}_dataset'.format(dataset_name)]
+            df_distances_data += overall_data['query_b_distance_from_{}_dataset'.format(dataset_name)]
+            df_dataset_names_data += [dataset_name for _ in range(len(overall_data['obs-a']))]
+            df_dataset_names_data += [dataset_name for _ in range(len(overall_data['obs-a']))]
+
+        distance_df = pd.DataFrame(data={'distance': df_distances_data, 'dataset': df_dataset_names_data})
+        distance_fig = px.histogram(distance_df, x="distance", color="dataset")
+        wandb.log({'query-values-scatter': return_fig,
+                   'distance-histogram': distance_fig,
+                   'query-data': wandb.Table(dataframe=overall_df)})
 
     # save queries
     _path = os.path.join(CQUE_DIR, args.env_name, 'queries.p')
@@ -216,3 +256,7 @@ if __name__ == '__main__':
 
     # close env
     env.close()
+
+
+if __name__ == '__main__':
+    main()
