@@ -3,7 +3,7 @@ import pickle
 
 import gym
 import wandb
-
+import d4rl
 from .config import ENV_IDS, CQUE_DIR
 
 
@@ -18,7 +18,7 @@ def get_queries(env_name):
     return queries
 
 
-def get_dataset(env_name, dataset_name):
+def get_sequence_dataset(env_name, dataset_name):
     assert env_name in ENV_IDS, \
         '`{}` not found. It should be among following: {}'.format(env_name, list(ENV_IDS.keys()))
     assert dataset_name in ENV_IDS[env_name]['datasets'], \
@@ -31,6 +31,7 @@ def get_dataset(env_name, dataset_name):
     split = ENV_IDS[env_name]['datasets'][dataset_name]['split']
     if split is not None:
         dataset = {k: v[:split] for k, v in dataset.items()}
+    dataset = [x for x in d4rl.sequence_dataset(env, dataset)]
     return dataset
 
 
