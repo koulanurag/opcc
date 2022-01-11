@@ -29,9 +29,9 @@ def get_sequence_dataset(env_name, dataset_name):
     env = gym.make(dataset_env)
     dataset = env.get_dataset()
     # remove meta-data as the sequence dataset doesn't work with it.
-    for k in dataset.keys():
-        if 'meta' in k:
-            dataset.pop(k)
+    metadata_keys = [k for k in dataset.keys() if 'meta' in k]
+    for k in metadata_keys:
+        dataset.pop(k)
 
     split = ENV_IDS[env_name]['datasets'][dataset_name]['split']
     if split is not None:
