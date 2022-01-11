@@ -28,9 +28,15 @@ def get_sequence_dataset(env_name, dataset_name):
     dataset_env = ENV_IDS[env_name]['datasets'][dataset_name]['name']
     env = gym.make(dataset_env)
     dataset = env.get_dataset()
+    # remove meta-data as the sequence dataset doesn't work with it.
+    for k in dataset.keys():
+        if 'meta' in k:
+            dataset.pop(k)
+
     split = ENV_IDS[env_name]['datasets'][dataset_name]['split']
     if split is not None:
         dataset = {k: v[:split] for k, v in dataset.items()}
+
     dataset = [x for x in d4rl.sequence_dataset(env, dataset)]
     return dataset
 
