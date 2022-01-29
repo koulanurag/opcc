@@ -1,6 +1,8 @@
-# Contrastive Queries (cque)
+# Offline Policy Comparison with Confidence (opcc)
 
-It's a benchmark comprising queries to evaluate uncertainty estimation in offline reinforcement learning.
+It's a benchmark comprising "policy comparison queries"(pcq) to evaluate uncertainty estimation in offline reinforcement
+learning.  
+This work was introduced in ""
 
 ## Installation
 
@@ -10,79 +12,121 @@ It requires:
 - [mujoco-py](https://github.com/openai/mujoco-py) and [mujoco 210](https://www.roboti.us/index.html)
 - [Pytorch >= 1.8.0](https://pytorch.org/)
 
-**'dm-control==0.0.364896371' is required as of now and is incorrectly provided by d4rl** 
-Python package and dependencies could be installed using:
+**'dm-control==0.0.364896371' is required as of now and is incorrectly provided by d4rl** Python package and
+dependencies could be installed using:
 
-```bash
+```bash  
 python3 -m pip install --upgrade pip setuptools wheel
-pip install git+https://github.com/koulanurag/cque@main#egg=cque
-```
+pip install git+https://github.com/koulanurag/opcc@main#egg=opcc
+```  
 
 Or
 
-```bash
-git clone https://github.com/koulanurag/cque.git
-cd cque
+```bash  
+git clone https://github.com/koulanurag/opcc.gitcd cque
 python3 -m pip install --upgrade pip setuptools wheel
 pip install -e .
-```
+```  
 
 ## Usage
 
-```python
-import cque, policybazaar
+### Queries:
 
-env_name = 'd4rl:maze2d-open-v0'
-dataset_name = '1k'
+```python  
+import opcc  
+  
+env_name = 'HalfCheetah-v2'  
+dataset_name = 'random'  
+  
+# Queries are dictionaries with policies as keys and corresponding queries as values.  
+queries = opcc.get_queries(env_name)
 
-# Queries are dictionaries with policies as keys and corresponding queries as values.
-# Batch iteration through Queries :
-queries = cque.get_queries(env_name)
+# Batch iteration through Queries :  
+for (policy_a_id, policy_b_id), query_batch in queries.items():  
+	# retrieve policies
+	policy_a, _ = opcc.get_policy(*policy_a_id)
+	policy_b, _ = opcc.get_policy(*policy_b_id)
+	
+	# query-a
+	obs_a = query_batch['obs_a']
+	action_a = query_batch['action_a']
+	
+	# query-b 
+	obs_b = query_batch['obs_b']
+	action_b = query_batch['action_b']  
+	
+	# horizon for policy evaluation
+	horizon = query_batch['horizon']  
+	
+	# binary vector q(obs_a, action_a, horizon) <  q(obs_b,action_b, horizon)
+	target = query_batch['target']
 
-for (policy_a_id, policy_b_id), query_batch in queries.items():
-    # retrieve policies
-    policy_a, _ = policybazaar.get_policy(*policy_a_id)
-    policy_b, _ = policybazaar.get_policy(*policy_b_id)
+# Datasets:  
+# This is a very-slim wrapper over D4RL datasets  
+dataset = opcc.get_dataset(env_name, dataset_name)
+```
 
-    # query-a
-    obs_a = query_batch['obs_a']
-    action_a = query_batch['action_a']
+### Policy Usage:
 
-    # query-b
-    obs_b = query_batch['obs_b']
-    action_b = query_batch['action_b']
+```
+import opcc, gym, torch
+env_name = "HalfCheetah-v2"
+model, model_info = opcc.get_policy(env_name, pre_trained=1)
 
-    # horizon for policy evaluation
-    horizon = query_batch['horizon']
+episode_reward = 0
+done = False
+env = gym.make('d4rl:maze2d-open-v0')
+obs = env.reset()
+while not done:
+	action = model.actor(torch.tensor(obs).unsqueeze(0).float())
+	obs, reward, done, step_info = env.step(action.data.cpu().numpy()[0])
+	env.render()
+```
 
-    # binary vector q(obs_a, action_a, horizon) <  q(obs_b,action_b, horizon)
-    target = query_batch['target']
+## Info
 
-# Datasets:
-# This is a very-slim wrapper over D4RL datasets
-dataset = cque.get_dataset(env_name, dataset_name)
-
-``` 
-
-## Environments
+### Environments:
 
 - We borrow dataset's from [D4RL](https://arxiv.org/abs/2004.07219)
-- Queries data can be visualized [**
+- Queries data can be visualized [**  
   here**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx).
 
-### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
+#### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
 
-|    Environment Name     |    Datasets     |
-|:-----------------------:|:---------------:|
-|  `d4rl:maze2d-open-v0`  | `1k, 10k, 100k` |
-| `d4rl:maze2d-medium-v1` | `1k, 10k, 100k` |
-| `d4rl:maze2d-umaze-v1`  | `1k, 10k, 100k` |
-| `d4rl:maze2d-large-v1`  | `1k, 10k, 100k` |
+<img width="500" alt="maze2d-environments" src="https://github.com/rail-berkeley/offline_rl/raw/assets/assets/mazes_filmstrip.png">
+
+|    Environment Name     |    Datasets     |  
+|:-----------------------:|:---------------:|  
+|  `d4rl:maze2d-open-v0`  | `1k, 10k, 100k` |  
+| `d4rl:maze2d-medium-v1` | `1k, 10k, 100k` |  
+| `d4rl:maze2d-umaze-v1`  | `1k, 10k, 100k` |  
+| `d4rl:maze2d-large-v1`  | `1k, 10k, 100k` |  
+
+| Environment Name |`pre_trained=1` (best) |`pre_trained=2`  |`pre_trained=3`  |`pre_trained=4` (worst) |
+|:------: | :------: | :------: | :------: | :------: | 
+|`d4rl:maze2d-open-v0`|122.2±10.61 |104.9±22.19 |18.05±14.85 |4.85±8.62 |
+|`d4rl:maze2d-medium-v1`|245.55±272.75 |203.75±252.61 |256.65±260.16 |258.55±262.81 |
+|`d4rl:maze2d-umaze-v1`|235.5±35.45 |197.75±58.21 |23.4±73.24 |3.2±9.65 |
+|`d4rl:maze2d-large-v1`|231.35±268.37 |160.8±201.97 |50.65±76.94 |9.95±9.95 |
 
 ### :low_brightness: [mujoco(gym)](https://gym.openai.com/envs/#mujoco)
 
-| Environment Name |                        Datasets                        |
-|:----------------:|:------------------------------------------------------:|
-| `HalfCheetah-v2` | `random, expert, medium, medium-replay, medium-expert` |
-|   `Hopper-v2`    | `random, expert, medium, medium-replay, medium-expert` |
+  <p float="left">
+    <img width="200" alt="mujoco-halfcheetah" src="static/halfcheetah.png" /> 
+    <img width="200" alt="mujoco-hopper" src="static/hopper.png" />
+    <img width="200" alt="mujoco-walker2d" src="static/walker2d.png" />
+</p>
+
+| Environment Name |                        Datasets                        |  
+|:----------------:|:------------------------------------------------------:|  
+| `HalfCheetah-v2` | `random, expert, medium, medium-replay, medium-expert` |  
+|   `Hopper-v2`    | `random, expert, medium, medium-replay, medium-expert` |  
 |  `Walker2d-v2`   | `random, expert, medium, medium-replay, medium-expert` |
+
+
+| Environment Name |`pre_trained=1` (best) |`pre_trained=2`  |`pre_trained=3`  |`pre_trained=4` (worst) |
+|:------: | :------: | :------: | :------: | :------: | 
+|`HalfCheetah-v2`|1169.13±80.45 |1044.39±112.61 |785.88±303.59 |94.79±40.88 |
+|`Hopper-v2`|1995.84±794.71 |1466.71±497.1 |1832.43±560.86 |236.51±1.09 |
+|`Walker2d-v2`|2506.9±689.45 |811.28±321.66 |387.01±42.82 |162.7±102.14 |
+
