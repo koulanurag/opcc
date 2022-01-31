@@ -7,19 +7,16 @@ learning. This work was introduced in the research paper "Offline Policy Compari
 
 ## Installation
 
-It requires:
+#### Mujoco
+- Setup [mujoco 200](https://www.roboti.us/index.html) [No License required]
+- Add following to `.bashrc/.zshrc` and source it.
+  `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
+
+#### Pytorch
 - [Python 3.7+](https://www.python.org/downloads/)
 - [Pytorch >= 1.8.0](https://pytorch.org/)
 
-### Setup Mujoco
-- Setup [mujoco 200](https://www.roboti.us/index.html) [No License required]
-- Add following to `.bashrc/.zshrc` and source it.
-    
-- `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
-
-
-Python package and dependencies could be installed using:
-
+#### Python package and dependencies could be installed using:
 ```bash
 python3 -m pip install --upgrade pip setuptools wheel
 pip install git+https://github.com/koulanurag/opcc@main#egg=opcc
@@ -49,7 +46,7 @@ queries = opcc.get_queries(env_name)
 
 # Batch iteration through Queries :  
 for (policy_a_id, policy_b_id), query_batch in queries.items():
-  
+
     # retrieve policies
     policy_a, _ = opcc.get_policy(*policy_a_id)
     policy_b, _ = opcc.get_policy(*policy_b_id)
@@ -70,7 +67,8 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
 
 # Datasets:  
 # This is a very-slim wrapper over D4RL datasets  
-dataset = opcc.get_dataset(env_name, dataset_name)
+dataset = opcc.get_qlearning_dataset(env_name, dataset_name)
+
 ```
 
 ### Policy Usage:
