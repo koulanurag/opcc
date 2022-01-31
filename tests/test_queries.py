@@ -4,12 +4,13 @@ import pytest
 import torch
 
 import opcc
-from opcc.config import ENV_IDS
+from opcc.config import ENV_CONFIGS
 
 DATASET_ENV_PAIRS = []
-for _env_name in ENV_IDS.keys():
+for _env_name in ENV_CONFIGS.keys():
     DATASET_ENV_PAIRS += [(_env_name, dataset_name)
-                          for dataset_name in ENV_IDS[_env_name]['datasets']]
+                          for dataset_name in
+                          ENV_CONFIGS[_env_name]['datasets']]
 
 
 def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
@@ -32,10 +33,12 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
             for env_i, env in enumerate(envs):
                 if not dones[env_i]:
                     if step_count == 0:
-                        obs, reward, done, info = env.step(init_actions[sim_state_i])
+                        obs, reward, done, info = env.step(
+                            init_actions[sim_state_i])
                     else:
                         with torch.no_grad():
-                            obs = torch.tensor(obss[env_i]).unsqueeze(0).float()
+                            obs = torch.tensor(obss[env_i]).unsqueeze(
+                                0).float()
                             action = policy.actor(obs).data.cpu().numpy()[0]
                         obs, reward, done, info = env.step(action)
                     obss[env_i] = obs
@@ -50,7 +53,7 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
     return np.array(all_returns).mean(1)
 
 
-@pytest.mark.parametrize('env_name', ENV_IDS.keys())
+@pytest.mark.parametrize('env_name', ENV_CONFIGS.keys())
 def test_get_queries(env_name):
     keys = ['obs_a', 'obs_a', 'action_a', 'action_b',
             'horizon', 'target', 'info']
@@ -66,7 +69,8 @@ def test_get_queries(env_name):
             assert key in query_batch, '{} not in query_batch'.format(key)
 
         for key in info_keys:
-            assert key in query_batch['info'], '{} not in query_batch'.format(key)
+            assert key in query_batch['info'], \
+                '{} not in query_batch'.format(key)
 
         avg_batch_size = np.mean([len(query_batch[key])
                                   for key in keys if key != 'info']
@@ -76,7 +80,7 @@ def test_get_queries(env_name):
             ' batch sizes does not match'
 
 
-@pytest.mark.parametrize('env_name', ENV_IDS.keys())
+@pytest.mark.parametrize('env_name', ENV_CONFIGS.keys())
 def test_query_targets(env_name):
     queries = opcc.get_queries(env_name)
 

@@ -14,7 +14,7 @@ It requires:
 ### Setup Mujoco
 - Setup [mujoco 200](https://www.roboti.us/index.html) [No License required]
 - Add following to `.bashrc/.zshrc` and source it.
-    - `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
+    `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
 
 
 Python package and dependencies could be installed using:
@@ -95,11 +95,11 @@ while not done:
 - We borrow dataset's from [D4RL](https://arxiv.org/abs/2004.07219)
 - Queries can be visualized [**HERE**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx)
 
-#### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
+### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
 
 <img width="500" alt="maze2d-environments" src="https://github.com/rail-berkeley/offline_rl/raw/assets/assets/mazes_filmstrip.png">
 
-##### Datasets:
+#### Datasets:
 
 |    Environment Name     |    Datasets     |
 |:-----------------------:|:---------------:|
@@ -108,7 +108,7 @@ while not done:
 | `d4rl:maze2d-umaze-v1`  | `1k, 10k, 100k` |
 | `d4rl:maze2d-large-v1`  | `1k, 10k, 100k` |
 
-##### Pre-trained policy performance:
+#### Pre-trained policy performance:
 
 | Environment Name |`pre_trained=1` (best) |`pre_trained=2`  |`pre_trained=3`  |`pre_trained=4` (worst) |
 |:------: | :------: | :------: | :------: | :------: |
@@ -125,7 +125,7 @@ while not done:
     <img width="200" alt="mujoco-walker2d" src="assets/Walker2d-v2/walker2d.png" />
 </p>
 
-##### Datasets:
+#### Datasets:
 
 | Environment Name |                        Datasets                        |
 |:----------------:|:------------------------------------------------------:|
@@ -133,7 +133,7 @@ while not done:
 |   `Hopper-v2`    | `random, expert, medium, medium-replay, medium-expert` |
 |  `Walker2d-v2`   | `random, expert, medium, medium-replay, medium-expert` |
 
-##### Pre-trained Policy performance:
+#### Pre-trained Policy performance:
 
 | Environment Name |`pre_trained=1` (best) |`pre_trained=2`  |`pre_trained=3`  |`pre_trained=4` (worst) |
 |:------: | :------: | :------: | :------: | :------: |

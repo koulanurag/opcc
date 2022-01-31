@@ -4,14 +4,11 @@ import pickle
 import d4rl
 import gym
 import torch
+from .config import ENV_CONFIGS, ENV_PERFORMANCE_STATS
+from pathlib import Path
 
-from .config import ENV_IDS
-from .config import ENV_IDS
-
-MIN_PRE_TRAINED_LEVEL = 1
-MAX_PRE_TRAINED_LEVEL = 4
-
-ENV_CONFIGS = {''}
+from .config import MIN_PRE_TRAINED_LEVEL
+from .config import MAX_PRE_TRAINED_LEVEL
 
 
 def get_queries(env_name):
@@ -26,12 +23,13 @@ def get_queries(env_name):
     """
     assert env_name in ENV_CONFIGS, \
         ('`{}` not found. It should be among following: {}'
-         .format(env_name, list(ENV_IDS.keys())))
+         .format(env_name, list(ENV_CONFIGS.keys())))
 
-    env_dir = os.makedirs(os.path.dirname(__file__).parent.parent,
-                          'assets', env_name)
+    env_dir = os.path.join(Path(os.path.dirname(__file__)).parent,
+                           'assets', env_name)
     queries_path = os.path.join(env_dir, 'queries.p')
-    queries = pickle.load(queries_path, 'rb')
+
+    queries = pickle.load(open(queries_path, 'rb'))
     return queries
 
 
@@ -60,8 +58,8 @@ def get_policy(env_name: str, pre_trained: int = 1):
          .format(env_name, ENV_CONFIGS.keys()))
 
     # retrieve model
-    model_dir = os.makedirs(os.path.dirname(__file__).parent.parent,
-                            'assets', env_name, 'models')
+    model_dir = os.path.join(Path(os.path.dirname(__file__)).parent, 'assets',
+                             env_name, 'models')
     model_path = os.path.join(model_dir, 'model_{}.p'.format(pre_trained))
     assert os.path.exists(model_path), \
         'model not found @ {}'.format(model_path)
@@ -75,7 +73,7 @@ def get_policy(env_name: str, pre_trained: int = 1):
                                action_std=0.5)
     model.load_state_dict(state_dict)
 
-    return model, info
+    return model, ENV_PERFORMANCE_STATS[env_name][pre_trained]
 
 
 def get_sequence_dataset(env_name, dataset_name):
@@ -84,9 +82,9 @@ def get_sequence_dataset(env_name, dataset_name):
          .format(env_name, ENV_CONFIGS.keys()))
     assert dataset_name in ENV_CONFIGS[env_name]['datasets'][dataset_name], \
         ('`{}` not found. It should be among following: {}'.
-         format(dataset_name, list(ENV_IDS[env_name]['datasets'].keys())))
+         format(dataset_name, list(ENV_CONFIGS[env_name]['datasets'].keys())))
 
-    dataset_env = ENV_IDS[env_name]['datasets'][dataset_name]['name']
+    dataset_env = ENV_CONFIGS[env_name]['datasets'][dataset_name]['name']
     env = gym.make(dataset_env)
     dataset = env.get_dataset()
     # remove meta-data as the sequence dataset doesn't work with it.
@@ -94,7 +92,7 @@ def get_sequence_dataset(env_name, dataset_name):
     for k in metadata_keys:
         dataset.pop(k)
 
-    split = ENV_IDS[env_name]['datasets'][dataset_name]['split']
+    split = ENV_CONFIGS[env_name]['datasets'][dataset_name]['split']
     if split is not None:
         dataset = {k: v[:split] for k, v in dataset.items()}
 
@@ -102,8 +100,26 @@ def get_sequence_dataset(env_name, dataset_name):
     return dataset
 
 
-def get_dataset_names(env_name):
-    assert env_name in ENV_IDS, \
+def get_qlearning_dataset(env_name, dataset_name):
+    assert env_name in ENV_CONFIGS, \
+        ('{} is invalid. Expected values include {}'
+         .format(env_name, ENV_CONFIGS.keys()))
+    assert dataset_name in ENV_CONFIGS[env_name]['datasets'][dataset_name], \
         ('`{}` not found. It should be among following: {}'.
-         format(env_name, list(ENV_IDS.keys())))
-    return list(ENV_IDS[env_name]['datasets'].keys())
+         format(dataset_name, list(ENV_CONFIGS[env_name]['datasets'].keys())))
+
+    dataset_env = ENV_CONFIGS[env_name]['datasets'][dataset_name]['name']
+    env = gym.make(dataset_env)
+    dataset = d4rl.qlearning_dataset(env)
+
+    split = ENV_CONFIGS[env_name]['datasets'][dataset_name]['split']
+    if split is not None:
+        dataset = {k: v[:split] for k, v in dataset.items()}
+    return dataset
+
+
+def get_dataset_names(env_name):
+    assert env_name in ENV_CONFIGS, \
+        ('`{}` not found. It should be among following: {}'.
+         format(env_name, list(ENV_CONFIGS.keys())))
+    return list(ENV_CONFIGS[env_name]['datasets'].keys())
