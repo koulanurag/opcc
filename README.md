@@ -14,7 +14,8 @@ It requires:
 ### Setup Mujoco
 - Setup [mujoco 200](https://www.roboti.us/index.html) [No License required]
 - Add following to `.bashrc/.zshrc` and source it.
-    `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
+    
+- `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
 
 
 Python package and dependencies could be installed using:
@@ -101,12 +102,12 @@ while not done:
 
 #### Datasets:
 
-|    Environment Name     |    Datasets     |
-|:-----------------------:|:---------------:|
-|  `d4rl:maze2d-open-v0`  | `1k, 10k, 100k` |
-| `d4rl:maze2d-medium-v1` | `1k, 10k, 100k` |
-| `d4rl:maze2d-umaze-v1`  | `1k, 10k, 100k` |
-| `d4rl:maze2d-large-v1`  | `1k, 10k, 100k` |
+|    Environment Name     |      Datasets       |
+|:-----------------------:|:-------------------:|
+|  `d4rl:maze2d-open-v0`  | `1k, 10k, 100k, 1m` |
+| `d4rl:maze2d-medium-v1` | `1k, 10k, 100k, 1m` |
+| `d4rl:maze2d-umaze-v1`  | `1k, 10k, 100k, 1m` |
+| `d4rl:maze2d-large-v1`  | `1k, 10k, 100k, 1m` |
 
 #### Pre-trained policy performance:
 

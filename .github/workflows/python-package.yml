@@ -38,9 +38,10 @@ jobs:
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip setuptools wheel
-          python -m pip install flake8
-          pip install -e .
-          pip install -e ".[test]"
+          python3 -m pip install flake8
+          pip3 install -e .
+          pip3 install torch==1.10.2+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+          pip3 install -e ".[test]"
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
