@@ -1,5 +1,6 @@
-import setuptools
 from os import path
+
+import setuptools
 from setuptools import setup
 
 extras = {
@@ -22,7 +23,13 @@ setup(name='opcc',
       license=open(path.join(path.abspath(path.dirname(__file__)),
                              'LICENSE'), encoding='utf-8').read(),
       packages=setuptools.find_packages(),
-      install_requires=['absl-py'],
+      install_requires=['absl-py',
+
+                        # We use a fork of d4rl to resolve dm_control install
+                        # issues arising due to lack of versioning across d4rl
+                        # and dm_control packages.
+                        'd4rl @ git+https://github.com/koulanurag/d4rl@master#egg=d4rl'],
+      include_package_data=True,
       extras_require=extras,
       tests_require=extras['test'],
       python_requires='>=3.7',

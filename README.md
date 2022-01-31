@@ -8,10 +8,14 @@ learning. This work was introduced in the research paper "Offline Policy Compari
 ## Installation
 
 It requires:
-
 - [Python 3.7+](https://www.python.org/downloads/)
-- [mujoco-py](https://github.com/openai/mujoco-py) and [mujoco 210](https://www.roboti.us/index.html)
 - [Pytorch >= 1.8.0](https://pytorch.org/)
+
+### Setup Mujoco
+- Setup [mujoco 200](https://www.roboti.us/index.html) [No License required]
+- Add following to `.bashrc/.zshrc` and source it.
+    - `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
+
 
 Python package and dependencies could be installed using:
 
@@ -89,7 +93,7 @@ while not done:
 ## Info
 
 - We borrow dataset's from [D4RL](https://arxiv.org/abs/2004.07219)
-- Queries data can be visualized [**here**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx).
+- Queries can be visualized [**HERE**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx)
 
 #### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
 
@@ -116,9 +120,9 @@ while not done:
 ### :low_brightness: [mujoco(gym)](https://gym.openai.com/envs/#mujoco)
 
 <p float="left">
-    <img width="200" alt="mujoco-halfcheetah" src="assets/images/halfcheetah.png" /> 
-    <img width="200" alt="mujoco-hopper" src="assets/images/hopper.png" />
-    <img width="200" alt="mujoco-walker2d" src="assets/images/walker2d.png" />
+    <img width="200" alt="mujoco-halfcheetah" src="assets/HalfCheetah-v2/halfcheetah.png" /> 
+    <img width="200" alt="mujoco-hopper" src="assets/Hopper-v2/hopper.png" />
+    <img width="200" alt="mujoco-walker2d" src="assets/Walker2d-v2/walker2d.png" />
 </p>
 
 ##### Datasets:
