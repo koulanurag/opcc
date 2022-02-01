@@ -80,7 +80,7 @@ def get_sequence_dataset(env_name, dataset_name):
     assert env_name in ENV_CONFIGS, \
         ('{} is invalid. Expected values include {}'
          .format(env_name, ENV_CONFIGS.keys()))
-    assert dataset_name in ENV_CONFIGS[env_name]['datasets'][dataset_name], \
+    assert dataset_name in ENV_CONFIGS[env_name]['datasets'], \
         ('`{}` not found. It should be among following: {}'.
          format(dataset_name, list(ENV_CONFIGS[env_name]['datasets'].keys())))
 
@@ -104,7 +104,7 @@ def get_qlearning_dataset(env_name, dataset_name):
     assert env_name in ENV_CONFIGS, \
         ('{} is invalid. Expected values include {}'
          .format(env_name, ENV_CONFIGS.keys()))
-    assert dataset_name in ENV_CONFIGS[env_name]['datasets'][dataset_name], \
+    assert dataset_name in ENV_CONFIGS[env_name]['datasets'], \
         ('`{}` not found. It should be among following: {}'.
          format(dataset_name, list(ENV_CONFIGS[env_name]['datasets'].keys())))
 
