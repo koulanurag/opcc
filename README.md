@@ -4,19 +4,19 @@ It's a benchmark comprising **"policy comparison queries"(pcq)** to evaluate unc
 learning. This work was introduced in the research paper "Offline Policy Comparison with Confidence: Baseline and Benchmarks".
 
 ![Python package](https://github.com/koulanurag/opcc/workflows/Python%20package/badge.svg)
-
+![License](https://img.shields.io/github/license/koulanurag/opcc)
 ## Installation
 
-#### Mujoco
+#### 1. Mujoco
 - Setup [mujoco 200](https://www.roboti.us/index.html) [License can be downloaded from [here](https://www.roboti.us/license.html)]
 - Add following to `.bashrc/.zshrc` and source it.
   `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
 
-#### Pytorch
-- [Python 3.7+](https://www.python.org/downloads/)
-- [Pytorch >= 1.8.0](https://pytorch.org/)
+#### 2.  [Python 3.7+](https://www.python.org/downloads/)
 
-#### Python package and dependencies could be installed using:
+#### 3. Pytorch [\[>= 1.8.0\]](https://pytorch.org/)
+
+#### 4. Python package and dependencies could be installed using:
 ```bash
 python3 -m pip install --upgrade pip setuptools wheel
 pip install git+https://github.com/koulanurag/opcc@main#egg=opcc
