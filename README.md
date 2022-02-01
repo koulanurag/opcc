@@ -4,7 +4,7 @@ It's a benchmark comprising **"policy comparison queries"(pcq)** to evaluate unc
 learning. This work was introduced in the research paper "Offline Policy Comparison with Confidence: Baseline and Benchmarks".
 
 ![Python package](https://github.com/koulanurag/opcc/workflows/Python%20package/badge.svg)
-
+![License](https://img.shields.io/github/license/koulanurag/opcc)
 ## Installation
 
 #### 1. Setup Mujoco
