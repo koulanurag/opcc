@@ -7,14 +7,16 @@ learning. This work was introduced in the research paper "Offline Policy Compari
 
 ## Installation
 
-It requires:
+#### 1. Setup Mujoco
+- Setup [mujoco 200](https://www.roboti.us/index.html) [License can be downloaded from [here](https://www.roboti.us/license.html)]
+- Add following to `.bashrc/.zshrc` and source it.
+  `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
 
-- [Python 3.7+](https://www.python.org/downloads/)
-- [mujoco-py](https://github.com/openai/mujoco-py) and [mujoco 210](https://www.roboti.us/index.html)
-- [Pytorch >= 1.8.0](https://pytorch.org/)
+#### 2.  Setup [Python 3.7+](https://www.python.org/downloads/)
 
-Python package and dependencies could be installed using:
+#### 3. Install Pytorch [\[>= 1.8.0\]](https://pytorch.org/)
 
+#### 4. Python package and dependencies could be installed using:
 ```bash
 python3 -m pip install --upgrade pip setuptools wheel
 pip install git+https://github.com/koulanurag/opcc@main#egg=opcc
@@ -44,7 +46,7 @@ queries = opcc.get_queries(env_name)
 
 # Batch iteration through Queries :  
 for (policy_a_id, policy_b_id), query_batch in queries.items():
-  
+
     # retrieve policies
     policy_a, _ = opcc.get_policy(*policy_a_id)
     policy_b, _ = opcc.get_policy(*policy_b_id)
@@ -65,7 +67,8 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
 
 # Datasets:  
 # This is a very-slim wrapper over D4RL datasets  
-dataset = opcc.get_dataset(env_name, dataset_name)
+dataset = opcc.get_qlearning_dataset(env_name, dataset_name)
+
 ```
 
 ### Policy Usage:
@@ -89,22 +92,22 @@ while not done:
 ## Info
 
 - We borrow dataset's from [D4RL](https://arxiv.org/abs/2004.07219)
-- Queries data can be visualized [**here**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx).
+- Queries can be visualized [**HERE**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx)
 
-#### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
+### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
 
 <img width="500" alt="maze2d-environments" src="https://github.com/rail-berkeley/offline_rl/raw/assets/assets/mazes_filmstrip.png">
 
-##### Datasets:
+#### Datasets:
 
-|    Environment Name     |    Datasets     |
-|:-----------------------:|:---------------:|
-|  `d4rl:maze2d-open-v0`  | `1k, 10k, 100k` |
-| `d4rl:maze2d-medium-v1` | `1k, 10k, 100k` |
-| `d4rl:maze2d-umaze-v1`  | `1k, 10k, 100k` |
-| `d4rl:maze2d-large-v1`  | `1k, 10k, 100k` |
+|    Environment Name     |      Datasets       |
+|:-----------------------:|:-------------------:|
+|  `d4rl:maze2d-open-v0`  | `1k, 10k, 100k, 1m` |
+| `d4rl:maze2d-medium-v1` | `1k, 10k, 100k, 1m` |
+| `d4rl:maze2d-umaze-v1`  | `1k, 10k, 100k, 1m` |
+| `d4rl:maze2d-large-v1`  | `1k, 10k, 100k, 1m` |
 
-##### Pre-trained policy performance:
+#### Pre-trained policy performance:
 
 | Environment Name |`pre_trained=1` (best) |`pre_trained=2`  |`pre_trained=3`  |`pre_trained=4` (worst) |
 |:------: | :------: | :------: | :------: | :------: |
@@ -116,12 +119,12 @@ while not done:
 ### :low_brightness: [mujoco(gym)](https://gym.openai.com/envs/#mujoco)
 
 <p float="left">
-    <img width="200" alt="mujoco-halfcheetah" src="assets/images/halfcheetah.png" /> 
-    <img width="200" alt="mujoco-hopper" src="assets/images/hopper.png" />
-    <img width="200" alt="mujoco-walker2d" src="assets/images/walker2d.png" />
+    <img width="200" alt="mujoco-halfcheetah" src="assets/HalfCheetah-v2/halfcheetah.png" /> 
+    <img width="200" alt="mujoco-hopper" src="assets/Hopper-v2/hopper.png" />
+    <img width="200" alt="mujoco-walker2d" src="assets/Walker2d-v2/walker2d.png" />
 </p>
 
-##### Datasets:
+#### Datasets:
 
 | Environment Name |                        Datasets                        |
 |:----------------:|:------------------------------------------------------:|
@@ -129,7 +132,7 @@ while not done:
 |   `Hopper-v2`    | `random, expert, medium, medium-replay, medium-expert` |
 |  `Walker2d-v2`   | `random, expert, medium, medium-replay, medium-expert` |
 
-##### Pre-trained Policy performance:
+#### Pre-trained Policy performance:
 
 | Environment Name |`pre_trained=1` (best) |`pre_trained=2`  |`pre_trained=3`  |`pre_trained=4` (worst) |
 |:------: | :------: | :------: | :------: | :------: |
