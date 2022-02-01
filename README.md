@@ -121,9 +121,9 @@ while not done:
 ### :low_brightness: [mujoco(gym)](https://gym.openai.com/envs/#mujoco)
 
 <p float="left">
-    <img width="200" alt="mujoco-halfcheetah" src="assets/HalfCheetah-v2/halfcheetah.png" /> 
-    <img width="200" alt="mujoco-hopper" src="assets/Hopper-v2/hopper.png" />
-    <img width="200" alt="mujoco-walker2d" src="assets/Walker2d-v2/walker2d.png" />
+    <img width="160" alt="mujoco-halfcheetah" src="assets/HalfCheetah-v2/halfcheetah.png" /> 
+    <img width="160" alt="mujoco-hopper" src="assets/Hopper-v2/hopper.png" />
+    <img width="160" alt="mujoco-walker2d" src="assets/Walker2d-v2/walker2d.png" />
 </p>
 
 #### Datasets:
