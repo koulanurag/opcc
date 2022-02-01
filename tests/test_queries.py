@@ -108,5 +108,10 @@ def test_query_targets(env_name):
 
 
 @pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)
-def test_get_dataset(env_name, dataset_name):
-    dataset = opcc.get_dataset(env_name, dataset_name)
+def test_get_qlearning_dataset(env_name, dataset_name):
+    dataset = opcc.get_qlearning_dataset(env_name, dataset_name)
+
+
+@pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)
+def test_get_sequence_dataset(env_name, dataset_name):
+    dataset = opcc.get_sequence_dataset(env_name, dataset_name)
