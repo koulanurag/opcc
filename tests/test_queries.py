@@ -81,6 +81,7 @@ def test_get_queries(env_name):
 
 
 @pytest.mark.parametrize('env_name', ENV_CONFIGS.keys())
+@pytest.mark.skip(reason="takes too long on cpu")
 def test_query_targets(env_name):
     queries = opcc.get_queries(env_name)
 
