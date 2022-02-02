@@ -9,17 +9,16 @@ Baseline and Benchmarks".
 
 ## Installation
 
-#### 1. Setup Mujoco
+**1. Setup Mujoco**
 - Setup **[mujoco 200](https://www.roboti.us/index.html)** [free license can be downloaded from [here](https://www.roboti.us/license.html)]
-- Add following to `.bashrc/.zshrc` and source it.
-
+- Add following to `.bashrc/.zshrc` and source it.  
   `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
 
-#### 2. Setup [Python 3.7+](https://www.python.org/downloads/)
+**2. Setup [Python 3.7+](https://www.python.org/downloads/)** and  optionally(recommended) setup `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
 
-#### 3. Install Pytorch [\[>= 1.8.0\]](https://pytorch.org/)
+**3. Install Pytorch [\[>= 1.8.0\]](https://pytorch.org/)**
 
-#### 4. Python package and dependencies could be installed using:
+**4. Python package and dependencies could be installed using:**
 
 ```bash
 python3 -m pip install --upgrade pip setuptools wheel
