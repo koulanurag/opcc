@@ -10,8 +10,9 @@ Baseline and Benchmarks".
 ## Installation
 
 #### 1. Setup Mujoco
-- Setup [mujoco 200](https://www.roboti.us/index.html) [License can be downloaded from [here](https://www.roboti.us/license.html)]
+- Setup **[mujoco 200](https://www.roboti.us/index.html)** [free license can be downloaded from [here](https://www.roboti.us/license.html)]
 - Add following to `.bashrc/.zshrc` and source it.
+
   `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
 
 #### 2. Setup [Python 3.7+](https://www.python.org/downloads/)
