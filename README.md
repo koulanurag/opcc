@@ -95,6 +95,7 @@ while not done:
 
 - We borrow dataset's from [D4RL](https://arxiv.org/abs/2004.07219)
 - Queries can be visualized [**HERE**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx)
+- Baselines can be found here [*HERE*](https://github.com/koulanurag/opcc-baselines)
 
 ### :low_brightness: [d4rl:maze2d](https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d)
 
