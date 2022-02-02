@@ -91,7 +91,7 @@ while not done:
     env.render()
 ```
 
-## Info
+## Benchmark Information
 
 - We borrow dataset's from [D4RL](https://arxiv.org/abs/2004.07219)
 - Queries can be visualized [**HERE**](https://wandb.ai/koulanurag/cque/reports/Visualization-of-Queries--VmlldzoxMDkxMjcx)
