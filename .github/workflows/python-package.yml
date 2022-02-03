@@ -56,3 +56,5 @@ jobs:
           export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200/bin
           pytest -v
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
