@@ -1,14 +1,14 @@
 import os
 import pickle
+from pathlib import Path
 
 import d4rl
 import gym
 import torch
-from .config import ENV_CONFIGS, ENV_PERFORMANCE_STATS
-from pathlib import Path
 
-from .config import MIN_PRE_TRAINED_LEVEL
+from .config import ENV_CONFIGS, ENV_PERFORMANCE_STATS
 from .config import MAX_PRE_TRAINED_LEVEL
+from .config import MIN_PRE_TRAINED_LEVEL
 
 
 def get_queries(env_name):
