@@ -14,7 +14,7 @@ Baseline and Benchmarks".
 - Add following to `.bashrc/.zshrc` and source it.  
   `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`
 
-**2. Setup [Python 3.7+](https://www.python.org/downloads/)** and  optionally(recommended) setup `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
+**2. Setup [Python 3.7+](https://www.python.org/downloads/)** and  create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html) [optional, but recommended]
 
 **3. Install Pytorch [\[>= 1.8.0\]](https://pytorch.org/)**
 
