@@ -4,7 +4,7 @@ import setuptools
 from setuptools import setup
 
 extras = {
-    'test': ['pytest', 'pytest_cases'],
+    'test': ['pytest', 'pytest_cases', 'pytest-cov'],
     'dev': ['pandas==1.3.5', 'plotly==5.5.0', 'sklearn']
 }
 # Meta dependency groups.
