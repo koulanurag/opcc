@@ -1,6 +1,7 @@
 import gym
 import pytest
 import torch
+
 import opcc
 from opcc.config import ENV_CONFIGS
 from opcc.config import MAX_PRE_TRAINED_LEVEL, MIN_PRE_TRAINED_LEVEL

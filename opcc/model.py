@@ -63,7 +63,8 @@ class ActorNetwork(nn.Module):
 class ActorCriticNetwork(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_dim, action_std):
         super(ActorCriticNetwork, self).__init__()
-        self.actor = ActorNetwork(num_inputs, num_actions, hidden_dim, action_std)
+        self.actor = ActorNetwork(num_inputs, num_actions, hidden_dim,
+                                  action_std)
         self.critic = ValueNetwork(num_inputs, hidden_dim)
 
     def to(self, device):

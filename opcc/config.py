@@ -9,7 +9,7 @@ MAZE_ENV_CONFIGS = \
                        '100k': {'name': 'd4rl:maze2d-umaze-v1',
                                 'split': 100000},
                        '1m': {'name': 'd4rl:maze2d-umaze-v1',
-                                'split': 1000000},
+                              'split': 1000000},
                        }
           },
      'd4rl:maze2d-medium-v1':
