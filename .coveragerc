@@ -1,0 +1,7 @@
+[run]
+omit =
+    tests/*
+    # omit scripts
+    */scripts/*
+    # omit setup file
+    setup.py
