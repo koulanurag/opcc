@@ -35,6 +35,10 @@ python3 -m pip install --upgrade pip setuptools wheel
 pip install -e .
 ```
 
+## Testing Package:
+- Install : `pip install -e .['test']`
+- Run: `pytest -v`
+
 ## Usage
 
 ### Queries:
