@@ -41,9 +41,22 @@ pip install -e .
 
 ```python
 import opcc
+import numpy as np
+from sklearn import metrics
 
 env_name = 'HalfCheetah-v2'
 dataset_name = 'random'
+
+
+def random_predictor(obs_a, action_a, obs_b, action_b, horizon):
+    answer = np.random.randint(low=0, high=2, size=len(obs_a))  # sample binary flag
+    confidence = np.random.rand(len(obs_a))  # sample confidence 
+    return answer, confidence
+
+
+targets = []
+predictions = []
+confidences = []
 
 # Queries are dictionaries with policies as keys and corresponding queries as values.  
 queries = opcc.get_queries(env_name)
@@ -67,8 +80,43 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
 
     # binary vector q(obs_a, action_a, horizon) <  q(obs_b,action_b, horizon)
     target = query_batch['target']
+    targets += target
 
-# Datasets:  
+    # One can use any mechanism to predict the corresponding answer to queries.
+    # Over here, we use a random predictor
+    p, c = random_predictor(obs_a, action_a, obs_b, action_b, horizon)
+    predictions += p
+    confidences += c
+
+# #########################################
+# Evaluation Metrics (Section 3.3 in paper)
+# #########################################
+losses = np.zeros(10)
+selective_risks, coverages = [], []
+for tau in np.arange(0, 1, 0.1):
+    non_abstain_idxs = confidences >= tau
+    selective_risk = np.sum(losses[non_abstain_idxs]) / (np.sum(non_abstain_idxs))
+    coverage = np.mean(non_abstain_idxs)
+
+    selective_risks.append(selective_risk)
+    coverages.append(coverage)
+
+# AURCC ( Area Under Risk-Coverage Curve)
+# Ideally, we would like it to be 0
+aurcc = metrics.auc(selective_risks, coverages)
+
+# Risk-per-proportion
+rpp = 0
+
+# Ideally, we would like coverage resolution at k (cr_k) to be 1
+k = 10
+bins = [x for x in np.arange(0, 1 + 1e-5, 1 / k)]
+coverage_resolution = np.unique(np.digitize(coverages, bins)).size / len(bins)
+
+
+# ###########################################
+# Datasets: (Section 4 in paper - step (1) )
+# ###########################################
 # This is a very-slim wrapper over D4RL datasets  
 dataset = opcc.get_qlearning_dataset(env_name, dataset_name)
 
