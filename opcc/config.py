@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 MAZE_ENV_CONFIGS = \
     {'d4rl:maze2d-umaze-v1':
          {'observation_size': 4,
@@ -155,3 +158,4 @@ ENV_PERFORMANCE_STATS = {
 ENV_CONFIGS = {**MAZE_ENV_CONFIGS, **MUJOCO_ENV_CONFIGS}
 MIN_PRE_TRAINED_LEVEL = 1
 MAX_PRE_TRAINED_LEVEL = 4
+ASSETS_DIR = os.path.join(Path(os.path.dirname(__file__)).parent, 'assets')

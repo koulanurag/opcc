@@ -1,11 +1,11 @@
 import os
 import pickle
-from pathlib import Path
 
 import d4rl
 import gym
 import torch
 
+from .config import ASSETS_DIR
 from .config import ENV_CONFIGS, ENV_PERFORMANCE_STATS
 from .config import MAX_PRE_TRAINED_LEVEL
 from .config import MIN_PRE_TRAINED_LEVEL
@@ -25,8 +25,7 @@ def get_queries(env_name):
         ('`{}` not found. It should be among following: {}'
          .format(env_name, list(ENV_CONFIGS.keys())))
 
-    env_dir = os.path.join(Path(os.path.dirname(__file__)).parent,
-                           'assets', env_name)
+    env_dir = os.path.join(ASSETS_DIR, env_name)
     queries_path = os.path.join(env_dir, 'queries.p')
 
     queries = pickle.load(open(queries_path, 'rb'))
@@ -58,8 +57,7 @@ def get_policy(env_name: str, pre_trained: int = 1):
          .format(env_name, ENV_CONFIGS.keys()))
 
     # retrieve model
-    model_dir = os.path.join(Path(os.path.dirname(__file__)).parent, 'assets',
-                             env_name, 'models')
+    model_dir = os.path.join(ASSETS_DIR, env_name, 'models')
     model_path = os.path.join(model_dir, 'model_{}.p'.format(pre_trained))
     assert os.path.exists(model_path), \
         'model not found @ {}'.format(model_path)
