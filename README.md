@@ -47,8 +47,15 @@ from sklearn import metrics
 env_name = 'HalfCheetah-v2'
 dataset_name = 'random'
 
+# ########################################################
+# Policy Comparison Queries (PCQ) (Section : 3.1 in paper)
+# ########################################################
+# Queries are dictionaries with policies as keys and corresponding queries as values.  
+queries = opcc.get_queries(env_name)
 
-def random_predictor(obs_a, action_a, obs_b, action_b, horizon):
+
+def random_predictor(obs_a, obs_b, action_a, action_b, 
+                     policy_a, policy_b, horizon):
     answer = np.random.randint(low=0, high=2, size=len(obs_a))  # sample binary flag
     confidence = np.random.rand(len(obs_a))  # sample confidence 
     return answer, confidence
@@ -57,10 +64,6 @@ def random_predictor(obs_a, action_a, obs_b, action_b, horizon):
 targets = []
 predictions = []
 confidences = []
-
-# Queries are dictionaries with policies as keys and corresponding queries as values.  
-queries = opcc.get_queries(env_name)
-
 # Batch iteration through Queries :  
 for (policy_a_id, policy_b_id), query_batch in queries.items():
     # retrieve policies
@@ -78,13 +81,17 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
     # horizon for policy evaluation
     horizon = query_batch['horizon']
 
-    # binary vector q(obs_a, action_a, horizon) <  q(obs_b,action_b, horizon)
+    # ground truth binary vector:
+    # q(obs_a, action_a, policy_a, horizon) <  q(obs_b, action_b, policy_b, horizon)
     target = query_batch['target']
     targets += target
 
-    # One can use any mechanism to predict the corresponding answer to queries.
-    # Over here, we use a random predictor
-    p, c = random_predictor(obs_a, action_a, obs_b, action_b, horizon)
+    # Let's make predictions for the given queries.
+    # One can use any mechanism to predict the corresponding 
+    # answer to queries, and we simply use a random predictor
+    # over here for demonstration purposes
+    p, c = random_predictor(obs_a, obs_b, action_a, action_b,
+                            policy_a, policy_b, horizon)
     predictions += p
     confidences += c
 
@@ -101,14 +108,13 @@ for tau in np.arange(0, 1, 0.1):
     selective_risks.append(selective_risk)
     coverages.append(coverage)
 
-# AURCC ( Area Under Risk-Coverage Curve)
-# Ideally, we would like it to be 0
+# AURCC ( Area Under Risk-Coverage Curve): Ideally, we would like it to be 0
 aurcc = metrics.auc(selective_risks, coverages)
 
 # Risk-per-proportion
 rpp = 0
 
-# Ideally, we would like coverage resolution at k (cr_k) to be 1
+# Coverage Resolution (cr_k) : Ideally, we would like it to be 1
 k = 10
 bins = [x for x in np.arange(0, 1 + 1e-5, 1 / k)]
 coverage_resolution = np.unique(np.digitize(coverages, bins)).size / len(bins)
@@ -117,7 +123,7 @@ coverage_resolution = np.unique(np.digitize(coverages, bins)).size / len(bins)
 # ###########################################
 # Datasets: (Section 4 in paper - step (1) )
 # ###########################################
-# This is a very-slim wrapper over D4RL datasets  
+# This is a very-slim wrapper over D4RL datasets.
 dataset = opcc.get_qlearning_dataset(env_name, dataset_name)
 
 ```
