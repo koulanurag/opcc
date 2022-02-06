@@ -16,7 +16,7 @@ Baseline and Benchmarks".
   `export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_macos/bin" # mujoco200_linux for linux`  
   <br>*(You can also refer **[here](https://github.com/koulanurag/opcc/blob/main/.github/workflows/python-package.yml#L27)** for step-by-step instructions on mujoco installation)*
 
-**2. Setup [Python 3.7+](https://www.python.org/downloads/)** and create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html) [optional, but recommended]
+**2. Setup [Python 3.7+](https://www.python.org/downloads/)** and optionally(recommended) create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
 
 **3. Install Pytorch [\[>= 1.8.0\]](https://pytorch.org/)**
 
