@@ -4,7 +4,7 @@ It's a benchmark comprising **"policy comparison queries"(pcq)** to evaluate unc
 reinforcement learning. This work was introduced in the research paper "Offline Policy Comparison with Confidence:
 Baseline and Benchmarks".
 
-![Python package](https://github.com/koulanurag/opcc/workflows/Python%20package/badge.svg)
+[![Python package](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml/badge.svg)](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml)
 ![License](https://img.shields.io/github/license/koulanurag/opcc)
 [![codecov](https://codecov.io/gh/koulanurag/opcc/branch/main/graph/badge.svg?token=47LIB1CLI4)](https://codecov.io/gh/koulanurag/opcc)
 
