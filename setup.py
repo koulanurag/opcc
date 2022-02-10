@@ -24,7 +24,7 @@ setup(name='opcc',
                              'LICENSE'), encoding='utf-8').read(),
       packages=setuptools.find_packages(),
       install_requires=['absl-py',
-
+                        'sklearn',
                         # We use a fork of d4rl to resolve dm_control install
                         # issues arising due to lack of versioning across d4rl
                         # and dm_control packages.
