@@ -40,7 +40,8 @@ pip install -e .
 ```
 
 ## Testing Package:
-- Install : `pip install -e .['test']`
+
+- Install : `pip install -e ".[test]"`
 - Run: `pytest -v`
 
 ## Usage
@@ -51,7 +52,6 @@ pip install -e .
 import opcc
 import numpy as np
 from sklearn import metrics
-
 
 env_name = 'HalfCheetah-v2'
 dataset_name = 'random'
@@ -66,9 +66,9 @@ queries = opcc.get_queries(env_name)
 
 def random_predictor(obs_a, obs_b, action_a, action_b,
                      policy_a, policy_b, horizon):
-  answer = np.random.randint(low=0, high=2, size=len(obs_a)).tolist()
-  confidence = np.random.rand(len(obs_a)).tolist()
-  return answer, confidence
+    answer = np.random.randint(low=0, high=2, size=len(obs_a)).tolist()
+    confidence = np.random.rand(len(obs_a)).tolist()
+    return answer, confidence
 
 
 targets = []
@@ -76,35 +76,35 @@ predictions = []
 confidences = []
 # Batch iteration through Queries :
 for (policy_a_id, policy_b_id), query_batch in queries.items():
-  # retrieve policies
-  policy_a, _ = opcc.get_policy(*policy_a_id)
-  policy_b, _ = opcc.get_policy(*policy_b_id)
+    # retrieve policies
+    policy_a, _ = opcc.get_policy(*policy_a_id)
+    policy_b, _ = opcc.get_policy(*policy_b_id)
 
-  # query-a
-  obs_a = query_batch['obs_a']
-  action_a = query_batch['action_a']
+    # query-a
+    obs_a = query_batch['obs_a']
+    action_a = query_batch['action_a']
 
-  # query-b
-  obs_b = query_batch['obs_b']
-  action_b = query_batch['action_b']
+    # query-b
+    obs_b = query_batch['obs_b']
+    action_b = query_batch['action_b']
 
-  # horizon for policy evaluation
-  horizon = query_batch['horizon']
+    # horizon for policy evaluation
+    horizon = query_batch['horizon']
 
-  # ground truth binary vector:
-  # (Q(obs_a, action_a, policy_a, horizon)
-  # <  Q(obs_b, action_b, policy_b, horizon))
-  target = query_batch['target'].tolist()
-  targets += target
+    # ground truth binary vector:
+    # (Q(obs_a, action_a, policy_a, horizon)
+    # <  Q(obs_b, action_b, policy_b, horizon))
+    target = query_batch['target'].tolist()
+    targets += target
 
-  # Let's make predictions for the given queries.
-  # One can use any mechanism to predict the corresponding
-  # answer to queries, and we simply use a random predictor
-  # over here for demonstration purposes
-  p, c = random_predictor(obs_a, obs_b, action_a, action_b,
-                          policy_a, policy_b, horizon)
-  predictions += p
-  confidences += c
+    # Let's make predictions for the given queries.
+    # One can use any mechanism to predict the corresponding
+    # answer to queries, and we simply use a random predictor
+    # over here for demonstration purposes
+    p, c = random_predictor(obs_a, obs_b, action_a, action_b,
+                            policy_a, policy_b, horizon)
+    predictions += p
+    confidences += c
 
 # #########################################
 # Evaluation Metrics (Section 3.3 in paper)
@@ -112,11 +112,11 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
 loss = np.logical_xor(predictions, targets)  # we use 0-1 loss for demo
 selective_risks_coverage = []
 for tau in np.arange(0, 1, 0.1):
-  non_abstain_filter = confidences >= tau
-  selective_risk = np.sum(loss[non_abstain_filter])
-  selective_risk /= np.sum(non_abstain_filter)
-  coverage = np.mean(non_abstain_filter)
-  selective_risks_coverage.append((selective_risk, coverage))
+    non_abstain_filter = confidences >= tau
+    selective_risk = np.sum(loss[non_abstain_filter])
+    selective_risk /= np.sum(non_abstain_filter)
+    coverage = np.mean(non_abstain_filter)
+    selective_risks_coverage.append((selective_risk, coverage))
 
 # AURCC ( Area Under Risk-Coverage Curve): Ideally, we would like it to be 0
 selective_risks, coverages = list(zip(*sorted(selective_risks_coverage)))
@@ -132,9 +132,12 @@ rpp = np.logical_and(np.expand_dims(loss, 1)
 k = 10
 bins = [_ for _ in np.arange(0, 1 + 1e-5, 1 / k)]
 cr_k = np.unique(np.digitize(coverages, bins)).size / len(bins)
+
+print("aurcc: {}, rpp: {}, cr_{}:{}".format(aurcc, rpp, k, cr_k))
 ```
 
 ### Dataset:
+
 ```python
 
 # ###########################################
@@ -142,7 +145,8 @@ cr_k = np.unique(np.digitize(coverages, bins)).size / len(bins)
 # ###########################################
 
 import opcc
-env_name  = 'HalfCheetah-v2'
+
+env_name = 'HalfCheetah-v2'
 
 # list all dataset names corresponding to an env
 dataset_names = opcc.get_dataset_names(env_name)
