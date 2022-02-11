@@ -14,8 +14,8 @@ Baseline and Benchmarks".
 - Setup **[mujoco 200](https://www.roboti.us/index.html)** [free license can be downloaded from [here](https://www.roboti.us/license.html)]
 - Add following to `.bashrc/.zshrc` and source it.  
   ```bash
-  export MUJOCO_PY_MUJOCO_PATH="~/.mujoco/mujoco200_linux/bin" # or mujoco200_macos
-  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200_linux/bin  # or mujoco200_macos
+  export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200_linux/bin
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200_linux/bin
   ```
   <br>*(You can also refer **[here](https://github.com/koulanurag/opcc/blob/main/.github/workflows/python-package.yml#L27)** for step-by-step instructions on mujoco installation)*
 
