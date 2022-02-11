@@ -132,10 +132,22 @@ rpp = np.logical_and(np.expand_dims(loss, 1)
 k = 10
 bins = [_ for _ in np.arange(0, 1 + 1e-5, 1 / k)]
 cr_k = np.unique(np.digitize(coverages, bins)).size / len(bins)
+```
+
+### Dataset:
+```python
 
 # ###########################################
 # Datasets: (Section 4 in paper - step (1) )
 # ###########################################
+
+import opcc
+env_name  = 'HalfCheetah-v2'
+
+# list all dataset names corresponding to an env
+dataset_names = opcc.get_dataset_names(env_name)
+
+dataset_name = 'random'
 # This is a very-slim wrapper over D4RL datasets.
 dataset = opcc.get_qlearning_dataset(env_name, dataset_name)
 
