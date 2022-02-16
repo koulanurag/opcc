@@ -130,7 +130,7 @@ rpp = np.logical_and(np.expand_dims(loss, 1)
 
 # Coverage Resolution (cr_k) : Ideally, we would like it to be 1
 k = 10
-bins = [_ for _ in np.arange(0, 1 + 1e-5, 1 / k)]
+bins = [_ for _ in np.arange(0, 1, 1 / k)]
 cr_k = np.unique(np.digitize(coverages, bins)).size / len(bins)
 
 print("aurcc: {}, rpp: {}, cr_{}:{}".format(aurcc, rpp, k, cr_k))
@@ -230,4 +230,4 @@ while not done:
 
 ## Contact
 
-If you have any questions or suggestions , you can contact me at koulanurag@gmail.com or open an issue on this GitHub repository. 
+If you have any questions or suggestions , you can contact me at koulanurag@gmail.com or open an issue on this GitHub repository.
