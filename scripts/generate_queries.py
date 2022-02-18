@@ -62,8 +62,8 @@ def generate_query_states(env, policies, max_transaction_count,
         while not done:
             save = random.random() >= args.save_prob
             if save:
-                env_states.append(
-                    (obs, env.sim.get_state().flatten().tolist()))
+                env_states.append((obs.tolist(),
+                                   env.sim.get_state().flatten().tolist()))
             action = policy.actor(torch.tensor(obs).unsqueeze(0).float())
             noise = torch.normal(0, args.noise, size=action.shape)
             step_action = (action + noise).data.cpu().numpy()[0]
@@ -218,7 +218,9 @@ def main():
     # Process arguments
     args = parser.parse_args()
     if args.use_wandb:
-        wandb.init(project='opcc', config={'env_name': args.env_name})
+        wandb.init(project='opcc',
+                   config={'env_name': args.env_name},
+                   save_code=True)
 
     # seed
     np.random.seed(0)
@@ -227,6 +229,9 @@ def main():
 
     # generate queries
     env = gym.make(args.env_name)
+    env.action_space.seed(0)
+    env.seed(0)
+
     policies = {policy_id: opcc.get_policy(args.env_name, policy_id)[0]
                 for policy_id in args.policy_ids}
     candidate_states = generate_query_states(env, policies,
