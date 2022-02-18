@@ -1,9 +1,10 @@
+import os
+
 import gym
 import numpy as np
+import opcc
 import pytest
 import torch
-
-import opcc
 from opcc.config import ENV_CONFIGS
 
 DATASET_ENV_PAIRS = []
@@ -80,8 +81,9 @@ def test_get_queries(env_name):
             ' batch sizes does not match'
 
 
-@pytest.mark.parametrize('env_name', ENV_CONFIGS.keys())
-@pytest.mark.skip(reason="takes too long on cpu")
+@pytest.mark.parametrize('env_name', ['HalfCheetah-v2'])
+# @pytest.mark.skipif(os.environ.get('SKIP_QUERY_TARGET_TESTS', default=0) == 1,
+#                     reason="forcefully skipped by user")
 def test_query_targets(env_name):
     queries = opcc.get_queries(env_name)
 
@@ -102,19 +104,36 @@ def test_query_targets(env_name):
             return_b = mc_return(env_name, state_b, action_b, horizon,
                                  policy_b, query_batch['info']['runs'])
             predict = return_a < return_b
+
+            target_return_a = query_batch['info']['return_a'][_filter]
+            target_return_b = query_batch['info']['return_b'][_filter]
+
+            assert all((return_a - target_return_a) <= 4), \
+                ("Estimates of Query-A don't match for policies: {} and "
+                 "horizon: {}.\n Expected: {} Found: {}"
+                 .format((policy_a_id, policy_b_id), horizon, return_a,
+                         target_return_a))
+
+            assert all((return_b - target_return_b) <= 4), \
+                ("Estimates of Query-B don't match for policies: {} and "
+                 "horizon: {}.\n Expected: {} Found: {}"
+                 .format((policy_a_id, policy_b_id), horizon, return_b,
+                         target_return_b))
+
             assert all(target[_filter] == predict), \
-                'Query targets do not match for ' \
-                'policies: {} and horizon: {}'.format((policy_a_id,
-                                                       policy_b_id), horizon)
+                ('Query targets do not match for policies: {} and horizon: {}'
+                 .format((policy_a_id, policy_b_id), horizon))
 
 
 @pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)
-@pytest.mark.skip(reason="takes too long on cpu")
+@pytest.mark.skipif(os.environ.get('SKIP_Q_LEARNING_DATASET_TEST', 0) == 1,
+                    reason="forcefully skipped by user")
 def test_get_qlearning_dataset(env_name, dataset_name):
     dataset = opcc.get_qlearning_dataset(env_name, dataset_name)
 
 
 @pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)
-@pytest.mark.skip(reason="takes too long on cpu")
+@pytest.mark.skipif(os.environ.get('SKIP_SEQUENCE_DATASET_TEST', 0) == 1,
+                    reason="forcefully skipped by user")
 def test_get_sequence_dataset(env_name, dataset_name):
     dataset = opcc.get_sequence_dataset(env_name, dataset_name)
