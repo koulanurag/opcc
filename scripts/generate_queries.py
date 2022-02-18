@@ -247,7 +247,7 @@ def main():
                                          overall_data['action-a']), 1)
     query_obs_action_b = np.concatenate((overall_data['obs-b'],
                                          overall_data['action-b']), 1)
-    for dataset_name, dataset in opcc.get_dataset_names(args.env_name):
+    for dataset_name in opcc.get_dataset_names(args.env_name):
         dataset = opcc.get_qlearning_dataset(args.env_name,
                                              dataset_name)
         kd_tree = KDTree(np.concatenate((dataset['observations'],
