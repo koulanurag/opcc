@@ -38,7 +38,7 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
         while not done and step_count < horizon:
             with torch.no_grad():
                 obs = torch.tensor(obs).unsqueeze(0).float()
-                action = policy.actor(obs).data.cpu().numpy()[0]
+                action = policy.actor(obs).data.cpu().numpy()[0].tolist()
             obs, reward, done, info = env.step(action)
             step_count += 1
             score += reward
@@ -99,7 +99,7 @@ def evaluate_queries(env, candidate_states, policies, args):
             sim_states_a = []
             sim_states_b = []
 
-            query_count = 0
+            query_count =  0
             ignore_count = 0
 
             while (query_count < args.per_policy_comb_query
@@ -109,7 +109,7 @@ def evaluate_queries(env, candidate_states, policies, args):
 
                 # query-a attributes
                 (obs_a, sim_state_a) = random.choice(candidate_states)
-                action_a = env.action_space.sample()
+                action_a = env.action_space.sample().tolist()
 
                 # query-b attributes
                 if same_state:
@@ -117,7 +117,7 @@ def evaluate_queries(env, candidate_states, policies, args):
                     sim_state_b = deepcopy(sim_state_a)
                 else:
                     obs_b, sim_state_b = random.choice(candidate_states)
-                action_b = env.action_space.sample()
+                action_b = env.action_space.sample().tolist()
 
                 # evaluate
                 horizon = random.choice(args.horizons)
