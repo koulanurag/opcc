@@ -54,6 +54,13 @@ jobs:
         run: |
           export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200_linux
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200_linux/bin
+          
+          # disabling some tests as they take too long on github workflow
+          export SKIP_QUERY_TARGET_TESTS=1
+          export SKIP_Q_LEARNING_DATASET_TEST=1
+          export SKIP_SEQUENCE_DATASET_TEST=1
+          
+          # test
           pytest -v --cov=./ --cov-report=xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
