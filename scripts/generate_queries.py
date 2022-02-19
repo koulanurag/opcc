@@ -66,7 +66,7 @@ def generate_query_states(env, policies, max_transaction_count,
                                    env.sim.get_state().flatten().tolist()))
             action = policy.actor(torch.tensor(obs).unsqueeze(0).float())
             noise = torch.normal(0, args.noise, size=action.shape)
-            step_action = (action + noise).data.cpu().numpy()[0]
+            step_action = (action + noise).data.cpu().numpy()[0].tolist()
             obs, _, done, info = env.step(step_action)
     return env_states
 
