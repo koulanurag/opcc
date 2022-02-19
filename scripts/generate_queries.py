@@ -99,7 +99,7 @@ def evaluate_queries(env, candidate_states, policies, args):
             sim_states_a = []
             sim_states_b = []
 
-            query_count =  0
+            query_count = 0
             ignore_count = 0
 
             while (query_count < args.per_policy_comb_query
