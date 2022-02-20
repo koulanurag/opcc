@@ -39,11 +39,6 @@ python3 -m pip install --upgrade pip setuptools wheel
 pip install -e .
 ```
 
-## Testing Package:
-
-- Install : `pip install -e ".[test]"`
-- Run: `pytest -v`
-
 ## Usage
 
 ### Queries:
@@ -228,6 +223,18 @@ while not done:
 |  `Walker2d-v2`   |     2506.9±689.45      |  811.28±321.66  |  387.01±42.82   |      162.7±102.14       |
 
 
+## Testing Package:
+
+- Install : `pip install -e ".[test]"`
+- Run: `pytest -v`
+- Testing is computationally expensive as we validate ground truth value estimates and corresponding labels. These can
+  be disabled by setting following flags:
+  ```bash
+  export SKIP_QUERY_TARGET_TESTS=1 # disable target estimation and label validation  
+  export SKIP_Q_LEARNING_DATASET_TEST=1  # disable test for checking dataset existence
+  export SKIP_SEQUENCE_DATASET_TEST=1 # disables test for checking sequence dataset
+  ```
+  
 ## Contact
 
 If you have any questions or suggestions , you can contact me at koulanurag@gmail.com or open an issue on this GitHub repository.
