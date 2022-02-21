@@ -21,23 +21,23 @@ Baseline and Benchmarks".
 
 **2. Setup [Python 3.7+](https://www.python.org/downloads/)** and optionally(recommended) create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
 
-**3. Install Pytorch [\[>= 1.8.0\]](https://pytorch.org/)**
+**3. Python package and dependencies could be installed using:**
 
-**4. Python package and dependencies could be installed using:**
+  ```bash
+  python3 -m pip install --upgrade pip setuptools wheel
+  pip install git+https://github.com/koulanurag/opcc@main#egg=opcc
+  ```
+  
+  Or
+  
+  ```bash
+  git clone https://github.com/koulanurag/opcc.git
+  cd opcc
+  python3 -m pip install --upgrade pip setuptools wheel
+  pip install -e .
+  ```
 
-```bash
-python3 -m pip install --upgrade pip setuptools wheel
-pip install git+https://github.com/koulanurag/opcc@main#egg=opcc
-```
-
-Or
-
-```bash
-git clone https://github.com/koulanurag/opcc.git
-cd opcc
-python3 -m pip install --upgrade pip setuptools wheel
-pip install -e .
-```
+**4. Install Pytorch [\[>= 1.8.0\]](https://pytorch.org/)**
 
 ## Usage
 
