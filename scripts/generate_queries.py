@@ -14,15 +14,18 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import torch
-import wandb
 
 import opcc
+import wandb
 from kd import KDTree
 from opcc.config import ASSETS_DIR
 
 
 def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
     assert horizon <= env._max_episode_steps
+
+    sim_state = np.array(sim_state).astype('float64')
+    init_action = np.array(init_action).astype('float32')
 
     expected_score = []
     expected_step = []
@@ -38,8 +41,8 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
         while not done and step_count < horizon:
             with torch.no_grad():
                 obs = torch.tensor(obs).unsqueeze(0).float()
-                action = policy.actor(obs).data.cpu().numpy()[0].tolist()
-            obs, reward, done, info = env.step(action)
+                action = policy.actor(obs).data.cpu().numpy()[0]
+            obs, reward, done, info = env.step(action.astype('float32'))
             step_count += 1
             score += reward
 
@@ -49,8 +52,7 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
     return expected_score, expected_step
 
 
-def generate_query_states(env, policies, max_transaction_count,
-                          args):
+def generate_query_states(env, policies, max_transaction_count, args):
     # create collection of states
     env_states = []
     while len(env_states) < max_transaction_count:
@@ -109,7 +111,7 @@ def evaluate_queries(env, candidate_states, policies, args):
 
                 # query-a attributes
                 (obs_a, sim_state_a) = random.choice(candidate_states)
-                action_a = env.action_space.sample().tolist()
+                action_a = env.action_space.sample()
 
                 # query-b attributes
                 if same_state:
@@ -117,7 +119,7 @@ def evaluate_queries(env, candidate_states, policies, args):
                     sim_state_b = deepcopy(sim_state_a)
                 else:
                     obs_b, sim_state_b = random.choice(candidate_states)
-                action_b = env.action_space.sample().tolist()
+                action_b = env.action_space.sample()
 
                 # evaluate
                 horizon = random.choice(args.horizons)
