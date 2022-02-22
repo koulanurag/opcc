@@ -71,6 +71,18 @@ def get_policy(env_name: str, pre_trained: int = 1):
                                action_std=0.5)
     model.load_state_dict(state_dict)
 
+    # Note: Gym returns observations with numpy float64( or double) type.
+    # And, if the model is in "float" ( or float32) then we need to downcast
+    # the observation to float32 before feeding them to the network.
+    # However, this down-casting leads to miniscule differences in precision
+    # over different system (processors). Though, these differences are
+    # miniscule, they get propagated to the predicted actions which over longer
+    # horizons which when feedback back to the gym-environment lead to small
+    # but significant difference in trajectories as reflected in monte-carlo
+    # return.
+
+    # In order to prevent above scenario, we simply upcast our model to double.
+    model = model.double()
     return model, ENV_PERFORMANCE_STATS[env_name][pre_trained]
 
 
