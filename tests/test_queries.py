@@ -22,7 +22,8 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
         for _ in range(runs):
             env = gym.make(env_name)
             env.reset()
-            env.sim.set_state_from_flattened(sim_state)
+            env.sim.set_state_from_flattened(np.array(sim_state)
+                                             .astype('float64'))
             env.sim.forward()
             envs.append(env)
 
@@ -35,14 +36,17 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
             for env_i, env in enumerate(envs):
                 if not dones[env_i]:
                     if step_count == 0:
-                        obs, reward, done, info = env.step(
-                            init_actions[sim_state_i])
+                        step_action = np.array(init_actions[sim_state_i])
                     else:
                         with torch.no_grad():
-                            obs = torch.tensor(obss[env_i]).unsqueeze(
-                                0).float()
-                            action = policy.actor(obs).data.cpu().numpy()[0]
-                        obs, reward, done, info = env.step(action)
+                            obs = torch.tensor(obss[env_i]).unsqueeze(0)
+                            obs = obs.float()
+                            step_action = policy.actor(obs).data.cpu().numpy()
+                            step_action = step_action[0]
+
+                    step_action = step_action.astype('float32')
+                    obs, reward, done, info = env.step(step_action)
+
                     obss[env_i] = obs
                     dones[env_i] = done or dones[env_i]
                     returns[env_i] += reward
