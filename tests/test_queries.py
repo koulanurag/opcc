@@ -40,7 +40,6 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
                     else:
                         with torch.no_grad():
                             obs = torch.tensor(obss[env_i]).unsqueeze(0)
-                            obs = obs.float()
                             step_action = policy.actor(obs).data.cpu().numpy()
                             step_action = step_action[0]
 
@@ -86,7 +85,7 @@ def test_get_queries(env_name):
             ' batch sizes does not match'
 
 
-@pytest.mark.parametrize('env_name', ENV_CONFIGS.keys())
+@pytest.mark.parametrize('env_name',['HalfCheetah-v2'])
 @pytest.mark.skipif(os.environ.get('SKIP_QUERY_TARGET_TESTS',
                                    default='0') == '1',
                     reason="forcefully skipped by user")
@@ -99,7 +98,8 @@ def test_query_targets(env_name):
         target = query_batch['target']
         horizons = query_batch['horizon']
 
-        for horizon in np.unique(horizons, return_counts=False):
+        #for horizon in np.unique(horizons, return_counts=False):
+        for horizon in [40, 50]:
             _filter = horizons == horizon
             state_a = query_batch['info']['state_a'][_filter]
             state_b = query_batch['info']['state_b'][_filter]
@@ -121,13 +121,13 @@ def test_query_targets(env_name):
             # with long horizons.
             assert all((return_a - target_return_a) <= 4), \
                 ("Estimates of Query-A don't match for policies: {} and "
-                 "horizon: {}.\n Expected: {} Found: {}"
+                 "horizon: {}.\n Found: {} Expected: {}"
                  .format((policy_a_id, policy_b_id), horizon, return_a,
                          target_return_a))
 
             assert all((return_b - target_return_b) <= 4), \
                 ("Estimates of Query-B don't match for policies: {} and "
-                 "horizon: {}.\n Expected: {} Found: {}"
+                 "horizon: {}.\n Found: {} Expected: {}"
                  .format((policy_a_id, policy_b_id), horizon, return_b,
                          target_return_b))
 
