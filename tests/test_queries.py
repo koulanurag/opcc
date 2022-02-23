@@ -85,7 +85,7 @@ def test_get_queries(env_name):
             ' batch sizes does not match'
 
 
-@pytest.mark.parametrize('env_name',['HalfCheetah-v2'])
+@pytest.mark.parametrize('env_name', ENV_CONFIGS.keys())
 @pytest.mark.skipif(os.environ.get('SKIP_QUERY_TARGET_TESTS',
                                    default='0') == '1',
                     reason="forcefully skipped by user")
@@ -98,8 +98,7 @@ def test_query_targets(env_name):
         target = query_batch['target']
         horizons = query_batch['horizon']
 
-        #for horizon in np.unique(horizons, return_counts=False):
-        for horizon in [40, 50]:
+        for horizon in np.unique(horizons, return_counts=False):
             _filter = horizons == horizon
             state_a = query_batch['info']['state_a'][_filter]
             state_b = query_batch['info']['state_b'][_filter]
