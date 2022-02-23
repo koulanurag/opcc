@@ -18,7 +18,7 @@ def test_model_exists(env_name, pre_trained):
     env = gym.make(env_name)
     obs = env.reset()
     obs = torch.tensor(obs).unsqueeze(0)
-    action = model.actor(obs).data.cpu().numpy()[0]
+    action = model.actor(obs).data.cpu().numpy()[0].astype('float32')
     critic = model.critic(obs).data.cpu().item()
 
     env.step(action)
