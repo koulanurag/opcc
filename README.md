@@ -165,8 +165,9 @@ env = gym.make(env_name)
 
 obs = env.reset()
 while not done:
-    action = model.actor(torch.tensor(obs).unsqueeze(0).float())
-    obs, reward, done, step_info = env.step(action.data.cpu().numpy()[0])
+    action = model.actor(torch.tensor(obs).unsqueeze(0))
+    action = action.data.cpu().numpy()[0].astype('float32')
+    obs, reward, done, step_info = env.step(action)
     env.render()
 ```
 
