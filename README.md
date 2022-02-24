@@ -106,20 +106,26 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
 # #########################################
 loss = np.logical_xor(predictions, targets)  # we use 0-1 loss for demo
 
-# List of tuples (selective-risk, coverage)
-selective_risks_coverage = [(0,0)] # we begin with "0" selective risk for 0 coverage
-for tau in np.arange(0, 1, 0.1):
-    non_abstain_filter = confidences >= tau
+# List of tuples (coverage, selective_risks, tau)
+coverage_sr_tau = []
+tau_interval=0.01
+for tau in np.arange(0, 1 + 2 * tau_interval, tau_interval):
+  non_abstain_filter = confidences >= tau
+  if any(non_abstain_filter):
     selective_risk = np.sum(loss[non_abstain_filter])
     selective_risk /= np.sum(non_abstain_filter)
     coverage = np.mean(non_abstain_filter)
-    selective_risks_coverage.append((selective_risk, coverage))
+    coverage_sr_tau.append((coverage, selective_risk, tau))
+  else:
+    # 0 risk for 0 coverage
+    coverage_sr_tau.append((0, 0, tau))
+
+coverages, selective_risks, taus = list(zip(*sorted(coverage_sr_tau)))
+assert selective_risks[0] == 0 and coverages[0] == 0 , "no coverage not found"
+assert coverages[-1] == 1, 'complete coverage not found'
 
 # AURCC ( Area Under Risk-Coverage Curve): Ideally, we would like it to be 0
-selective_risks, coverages = list(zip(*sorted(selective_risks_coverage)))
-assert (0, 0) in selective_risks_coverage, "no coverage not found"
-assert 1 in coverages, 'complete coverage not found'
-aurcc = metrics.auc(selective_risks, coverages)
+aurcc = metrics.auc(x=coverages,y=selective_risks)
 
 # Reverse-pair-proportion
 rpp = np.logical_and(np.expand_dims(loss, 1)
@@ -239,7 +245,11 @@ while not done:
   export SKIP_Q_LEARNING_DATASET_TEST=1  # disable test for checking dataset existence
   export SKIP_SEQUENCE_DATASET_TEST=1 # disables test for checking sequence dataset
   ```
-  
+
+## Development:
+- Install : `pip install -e ".[all]"`
+
+
 ## Contact
 
 If you have any questions or suggestions , you can contact me at koulanurag@gmail.com or open an issue on this GitHub repository.
