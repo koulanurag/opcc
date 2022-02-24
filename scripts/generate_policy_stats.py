@@ -36,8 +36,8 @@ def generate_env_stats(env_name, test_episodes, stats_dir, no_cache=False,
             while not done:
                 if render:
                     env.render()
-                action = model.actor(torch.tensor(obs).unsqueeze(0).float())
-                action = action.data.numpy()[0]
+                action = model.actor(torch.tensor(obs).unsqueeze(0))
+                action = action.data.numpy()[0].astype('float32')
                 obs, reward, done, step_info = env.step(action)
                 episode_reward += reward
             episode_rewards.append(episode_reward)
