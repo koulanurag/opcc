@@ -105,7 +105,9 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
 # Evaluation Metrics (Section 3.3 in paper)
 # #########################################
 loss = np.logical_xor(predictions, targets)  # we use 0-1 loss for demo
-selective_risks_coverage = []
+
+# List of tuples (selective-risk, coverage)
+selective_risks_coverage = [(0,0)] # we begin with "0" selective risk for 0 coverage
 for tau in np.arange(0, 1, 0.1):
     non_abstain_filter = confidences >= tau
     selective_risk = np.sum(loss[non_abstain_filter])
@@ -115,6 +117,8 @@ for tau in np.arange(0, 1, 0.1):
 
 # AURCC ( Area Under Risk-Coverage Curve): Ideally, we would like it to be 0
 selective_risks, coverages = list(zip(*sorted(selective_risks_coverage)))
+assert (0, 0) in selective_risks_coverage, "no coverage not found"
+assert 1 in coverages, 'complete coverage not found'
 aurcc = metrics.auc(selective_risks, coverages)
 
 # Reverse-pair-proportion
