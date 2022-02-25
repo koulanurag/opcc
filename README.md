@@ -248,7 +248,14 @@ while not done:
 
 ## Development:
 - Install : `pip install -e ".[all]"`
-
+- Generate-Queries:
+  ```bash
+  python scripts/generate_queries.py --env-name HalfCheetah-v2 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
+  ```
+- Generate policy performance stats for readme:
+  ```bash
+  python scripts/generate_policy_stats.py --all-envs
+  ```
 
 ## Contact
 
