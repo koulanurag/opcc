@@ -21,7 +21,11 @@ Baseline and Benchmarks".
 
 **2. Setup [Python 3.7+](https://www.python.org/downloads/)** and optionally(recommended) create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
 
-**3. Python package and dependencies could be installed using:**
+**3. Setup Git config
+  ```bash
+  echo -e '[url "https://github.com/"]\n  insteadOf = "git://github.com/"' >> ~/.gitconfig
+  ```
+**4. Python package and dependencies could be installed using:**
 
   ```bash
   python3 -m pip install --upgrade pip setuptools wheel
