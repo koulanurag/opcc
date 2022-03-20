@@ -35,6 +35,10 @@ jobs:
           unzip -o mujoco200_linux.zip -d .
           rm -rf *.zip*
           wget https://www.roboti.us/file/mjkey.txt
+
+      - name: Fix up git URLs
+        run: echo -e '[url "https://github.com/"]\n  insteadOf = "git://github.com/"' >> ~/.gitconfig
+
       - name: Install dependencies
         run: |
           export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200_linux
