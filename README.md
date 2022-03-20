@@ -21,7 +21,7 @@ Baseline and Benchmarks".
 
 **2. Setup [Python 3.7+](https://www.python.org/downloads/)** and optionally(recommended) create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
 
-**3. Setup Git config
+**3. Setup Git config**
   ```bash
   echo -e '[url "https://github.com/"]\n  insteadOf = "git://github.com/"' >> ~/.gitconfig
   ```
