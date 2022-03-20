@@ -30,7 +30,7 @@ setup(name='opcc',
                         # We use a fork of d4rl to resolve dm_control install
                         # issues arising due to lack of versioning across d4rl
                         # and dm_control packages.
-                        'd4rl @ git@github.com/koulanurag/d4rl@master#egg=d4rl'],
+                        'd4rl @ git+https://github.com/koulanurag/d4rl@master#egg=d4rl'],
       include_package_data=True,
       extras_require=extras,
       tests_require=extras['test'],
