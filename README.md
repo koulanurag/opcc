@@ -109,7 +109,7 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
 
 ### Evaluation Metrics:
 
-```
+```python
 # #########################################
 # (Section 3.3 in paper)
 # #########################################
