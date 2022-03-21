@@ -1,8 +1,9 @@
 # Offline Policy Comparison with Confidence (opcc)
 
 It's a benchmark comprising **"policy comparison queries"(pcq)** to evaluate uncertainty estimation in offline
-reinforcement learning. This work was introduced in the research paper "Offline Policy Comparison with Confidence:
-Baseline and Benchmarks".
+reinforcement learning. 
+
+_(research paper to be released soon)_
 
 [![Python package](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml/badge.svg)](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml)
 ![License](https://img.shields.io/github/license/koulanurag/opcc)
