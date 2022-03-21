@@ -105,9 +105,13 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
                             policy_a, policy_b, horizon)
     predictions += p
     confidences += c
+```
 
+### Evaluation Metrics:
+
+```
 # #########################################
-# Evaluation Metrics (Section 3.3 in paper)
+# (Section 3.3 in paper)
 # #########################################
 loss = np.logical_xor(predictions, targets)  # we use 0-1 loss for demo
 
