@@ -1,8 +1,9 @@
 # Offline Policy Comparison with Confidence (opcc)
 
 It's a benchmark comprising **"policy comparison queries"(pcq)** to evaluate uncertainty estimation in offline
-reinforcement learning. This work was introduced in the research paper "Offline Policy Comparison with Confidence:
-Baseline and Benchmarks".
+reinforcement learning. 
+
+_(research paper to be released soon)_
 
 [![Python package](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml/badge.svg)](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml)
 ![License](https://img.shields.io/github/license/koulanurag/opcc)
@@ -21,7 +22,7 @@ Baseline and Benchmarks".
 
 **2. Setup [Python 3.7+](https://www.python.org/downloads/)** and optionally(recommended) create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
 
-**3. Setup Git config
+**3. Setup Git config**
   ```bash
   echo -e '[url "https://github.com/"]\n  insteadOf = "git://github.com/"' >> ~/.gitconfig
   ```
@@ -104,9 +105,13 @@ for (policy_a_id, policy_b_id), query_batch in queries.items():
                             policy_a, policy_b, horizon)
     predictions += p
     confidences += c
+```
 
+### Evaluation Metrics:
+
+```python
 # #########################################
-# Evaluation Metrics (Section 3.3 in paper)
+# (Section 3.3 in paper)
 # #########################################
 loss = np.logical_xor(predictions, targets)  # we use 0-1 loss for demo
 
