@@ -158,4 +158,4 @@ ENV_PERFORMANCE_STATS = {
 ENV_CONFIGS = {**MAZE_ENV_CONFIGS, **MUJOCO_ENV_CONFIGS}
 MIN_PRE_TRAINED_LEVEL = 1
 MAX_PRE_TRAINED_LEVEL = 4
-ASSETS_DIR = os.path.join(Path(os.path.dirname(__file__)).parent, 'assets')
+ASSETS_DIR = os.path.join(Path(os.path.dirname(__file__)), 'assets')
