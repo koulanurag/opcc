@@ -202,12 +202,12 @@ while not done:
 
 #### Datasets:
 
-|    Environment Name     |      Datasets       |
-|:-----------------------:|:-------------------:|
-|  `d4rl:maze2d-open-v0`  | `1k, 10k, 100k, 1m` |
-| `d4rl:maze2d-medium-v1` | `1k, 10k, 100k, 1m` |
-| `d4rl:maze2d-umaze-v1`  | `1k, 10k, 100k, 1m` |
-| `d4rl:maze2d-large-v1`  | `1k, 10k, 100k, 1m` |
+|    Environment Name     |      Datasets       |    Query-Count    |
+|:-----------------------:|:-------------------:|:-----------------:|
+|  `d4rl:maze2d-open-v0`  | `1k, 10k, 100k, 1m` |      `1500`       |
+| `d4rl:maze2d-medium-v1` | `1k, 10k, 100k, 1m` |      `1500`       |
+| `d4rl:maze2d-umaze-v1`  | `1k, 10k, 100k, 1m` |      `1500`       |
+| `d4rl:maze2d-large-v1`  | `1k, 10k, 100k, 1m` | `121`<sup><strong>*</strong></sup> |
 
 #### Pre-trained policy performance:
 
@@ -228,11 +228,11 @@ while not done:
 
 #### Datasets:
 
-| Environment Name |                        Datasets                        |
-|:----------------:|:------------------------------------------------------:|
-| `HalfCheetah-v2` | `random, expert, medium, medium-replay, medium-expert` |
-|   `Hopper-v2`    | `random, expert, medium, medium-replay, medium-expert` |
-|  `Walker2d-v2`   | `random, expert, medium, medium-replay, medium-expert` |
+| Environment Name |                        Datasets                        |    Query-Count    |
+|:----------------:|:------------------------------------------------------:|:-----------------:|
+| `HalfCheetah-v2` | `random, expert, medium, medium-replay, medium-expert` |      `1500`       |
+|   `Hopper-v2`    | `random, expert, medium, medium-replay, medium-expert` |      `1500`       |
+|  `Walker2d-v2`   | `random, expert, medium, medium-replay, medium-expert` |      `1500`       |
 
 #### Pre-trained Policy performance:
 
