@@ -3,7 +3,7 @@
 It's a benchmark comprising **"policy comparison queries"(pcq)** to evaluate uncertainty estimation in offline
 reinforcement learning. 
 
-_(research paper to be released soon)_
+__Reserach Paper:__ [https://arxiv.org/abs/2205.10739](https://arxiv.org/abs/2205.10739)
 
 [![Python package](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml/badge.svg)](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml)
 ![License](https://img.shields.io/github/license/koulanurag/opcc)
