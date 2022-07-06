@@ -12,7 +12,7 @@ __Reserach Paper:__ [https://arxiv.org/abs/2205.10739](https://arxiv.org/abs/220
 ## Installation
 
 **1. Setup Mujoco**
-- Setup **[mujoco 200](https://www.roboti.us/index.html)** [free license can be downloaded from [here](https://www.roboti.us/license.html)]
+- Setup **[mujoco 200](http://www.roboti.us/index.html)** [free license can be downloaded from [here](http://www.roboti.us/license.html)]
 - Add following to `.bashrc/.zshrc` and source it.  
   ```bash
   export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200_linux/
