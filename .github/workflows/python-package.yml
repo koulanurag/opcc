@@ -45,7 +45,7 @@ jobs:
           sudo apt install -y xpra xserver-xorg-dev patchelf
           mkdir -p "$HOME/.mujoco"
           cd $HOME/.mujoco
-          wget https://www.roboti.us/download/mujoco200_linux.zip
+          wget http://www.roboti.us/download/mujoco200_linux.zip
           unzip -o mujoco200_linux.zip -d .
           rm -rf *.zip*
           wget https://www.roboti.us/file/mjkey.txt
