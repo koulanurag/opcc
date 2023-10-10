@@ -34,7 +34,8 @@ setup(name='opcc',
                         # and dm_control packages.
                         # 'd4rl @ git+https://github.com/koulanurag/d4rl@master#egg=d4rl'
                         'd4rl @ git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl',
-                        'cython<3'
+                        'cython<3',
+                        'entry_points<5'
                         ],
       include_package_data=True,
       extras_require=extras,
