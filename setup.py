@@ -5,7 +5,9 @@ from setuptools import setup
 
 extras = {
     'test': ['pytest', 'pytest_cases', 'pytest-cov'],
-    'dev': ['pandas==1.3.5', 'plotly==5.5.0', 'wandb']
+    'dev': ['pandas==1.3.5', 'plotly==5.5.0', 'wandb'],
+    'docs': ['sphinx', 'furo', 'sphinxcontrib-katex',
+             'sphinx-copybutton', 'sphinx_design', 'myst-parser']
 }
 # Meta dependency groups.
 extras['all'] = [item for group in extras.values() for item in group]
@@ -30,7 +32,7 @@ setup(name='opcc',
                         # We use a fork of d4rl to resolve dm_control install
                         # issues arising due to lack of versioning across d4rl
                         # and dm_control packages.
-                        #'d4rl @ git+https://github.com/koulanurag/d4rl@master#egg=d4rl'
+                        # 'd4rl @ git+https://github.com/koulanurag/d4rl@master#egg=d4rl'
                         'd4rl @ git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl',
                         'cython<3'
                         ],
