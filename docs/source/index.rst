@@ -5,15 +5,30 @@
 
 Welcome to opcc's documentation!
 ================================
+It's a benchmark comprising **"policy comparison queries"(pcq)** to evaluate uncertainty estimation in offline
+reinforcement learning.
 
+----------------
+Contents:
+----------------
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+
+   installation
+   quick-start
+   benchmark-information
+   api
 
 
+----------------
+Contact
+----------------
 
+If you have any questions or suggestions , please open an issue on this GitHub repository.
+
+------------------
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

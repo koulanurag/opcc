@@ -275,4 +275,4 @@ while not done:
 
 ## Contact
 
-If you have any questions or suggestions , you can contact me at koulanurag@gmail.com or open an issue on this GitHub repository.
+If you have any questions or suggestions , please open an issue on this GitHub repository.
