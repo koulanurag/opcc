@@ -48,8 +48,6 @@ jobs:
           wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
           tar -xf mujoco210-linux-x86_64.tar.gz -C "$HOME/.mujoco"
           rm -rf mujoco210-linux-x86_64.tar.gz
-     - name: Fix up git URLs
-        run: echo -e '[url "https://github.com/"]\n  insteadOf = "git://github.com/"' >> ~/.gitconfig
 
       - name: Install dependencies
         run: |
