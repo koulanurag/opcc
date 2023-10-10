@@ -25,12 +25,15 @@ setup(name='opcc',
       packages=setuptools.find_packages(),
       install_requires=['absl-py==1.0.0',
                         'numpy==1.21.5',
-                        'sklearn',
+                        'scikit-learn',
                         'gym==0.21.0',
                         # We use a fork of d4rl to resolve dm_control install
                         # issues arising due to lack of versioning across d4rl
                         # and dm_control packages.
-                        'd4rl @ git+https://github.com/koulanurag/d4rl@master#egg=d4rl'],
+                        #'d4rl @ git+https://github.com/koulanurag/d4rl@master#egg=d4rl'
+                        'd4rl @ git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl',
+                        'cython<3'
+                        ],
       include_package_data=True,
       extras_require=extras,
       tests_require=extras['test'],

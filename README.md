@@ -12,11 +12,11 @@ __Reserach Paper:__ [https://arxiv.org/abs/2205.10739](https://arxiv.org/abs/220
 ## Installation
 
 **1. Setup Mujoco**
-- Setup **[mujoco 200](http://www.roboti.us/index.html)** [free license can be downloaded from [here](http://www.roboti.us/license.html)]
+- Download **[mujoco 210](https://github.com/google-deepmind/mujoco/releases/tag/2.1.0)** and unzip in `~/.mujoco`
 - Add following to `.bashrc/.zshrc` and source it.  
   ```bash
-  export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200_linux/
-  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200_linux/bin
+  export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210/
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
   ```
   <br>*(You can also refer **[here](https://github.com/koulanurag/opcc/blob/main/.github/workflows/python-package.yml#L27)** for step-by-step instructions on mujoco installation)*
 

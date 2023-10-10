@@ -42,21 +42,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt install -y  libosmesa6-dev  libglew-dev  libgl1-mesa-glx libgl1-mesa-dev libgl1-mesa-glx libglfw3
-          sudo apt install -y xpra xserver-xorg-dev patchelf
+          sudo apt install -y xpra xserver-xorg-dev patchelf gcc-multilib
           mkdir -p "$HOME/.mujoco"
           cd $HOME/.mujoco
-          wget http://www.roboti.us/download/mujoco200_linux.zip
-          unzip -o mujoco200_linux.zip -d .
-          rm -rf *.zip*
-          wget http://www.roboti.us/file/mjkey.txt
-
-      - name: Fix up git URLs
+          wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
+          tar -xf mujoco210-linux-x86_64.tar.gz -C "$HOME/.mujoco"
+          rm -rf mujoco210-linux-x86_64.tar.gz
+     - name: Fix up git URLs
         run: echo -e '[url "https://github.com/"]\n  insteadOf = "git://github.com/"' >> ~/.gitconfig
 
       - name: Install dependencies
         run: |
-          export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200_linux
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200_linux/bin
+          export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
           python3 -m pip install --upgrade pip setuptools wheel
           python3 -m pip install flake8
           pip3 install -e .
@@ -70,8 +68,8 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest and generate coverage report
         run: |
-          export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco200_linux
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco200_linux/bin
+          export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
           
           # disabling some tests as they take too long on github workflow
           export SKIP_QUERY_TARGET_TESTS=1
