@@ -53,7 +53,8 @@ jobs:
         run: |
           export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
-          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install --upgrade pip wheel
+          pip3 install 'setuptools<=66' 
           python3 -m pip install flake8
           pip3 install -e .
           pip3 install torch==1.10.2+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
