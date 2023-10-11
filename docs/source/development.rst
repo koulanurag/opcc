@@ -41,3 +41,25 @@ Testing Package:
        export SKIP_QUERY_TARGET_TESTS=1 # disable target estimation and label validation
        export SKIP_Q_LEARNING_DATASET_TEST=1  # disable test for checking dataset existence
        export SKIP_SEQUENCE_DATASET_TEST=1 # disables test for checking sequence dataset
+
+----------------
+Generate Docs:
+----------------
+
+#. Install dependencies:
+
+    .. code-block:: console
+
+        pip install -e ".[docs]"
+
+#. Generate API Doc:
+
+    .. code-block:: console
+
+        sphinx-apidoc -f -o docs/source/api opcc --ext-viewcode --ext-autodoc
+
+#. Generate Sphinx Doc:
+
+    .. code-block:: console
+
+        sphinx-build html
