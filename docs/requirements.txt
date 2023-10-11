@@ -3,4 +3,4 @@ furo
 sphinxcontrib-katex
 sphinx-copybutton
 sphinx_design
-myst-parse
+myst-parser
