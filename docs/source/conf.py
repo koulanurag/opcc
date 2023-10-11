@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
 project = 'opcc'
 copyright = '2023, Anurag Koul'
 author = 'Anurag Koul'
+version = '0.0.1'
 release = '0.0.1'
 
 # -- General configuration ---------------------------------------------------
@@ -48,4 +49,31 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'furo'
+html_title = "opcc"
+html_logo = "logo.png"
 html_static_path = ['_static']
+
+html_theme_options = {
+    "source_repository": "https://github.com/koulanurag/opcc/",
+    "source_branch": "main",
+    "source_directory": "docs/source",
+}
+
+# -- Options for autodoc ----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#configuration
+
+autoclass_content = "both"
+
+# Automatically extract typehints when specified and place them in
+# descriptions of the relevant function/method.
+autodoc_typehints = "description"
+
+# Don't show class signature with the class' name.
+autodoc_class_signature = "mixed"
+
+autodoc_default_options = {
+    'member-order': 'alphabetical',
+    'special-members': '__init__',
+    'undoc-members': True,
+    'exclude-members': '__weakref__'
+}
