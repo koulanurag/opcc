@@ -62,4 +62,4 @@ Generate Docs:
 
     .. code-block:: console
 
-        sphinx-build html
+        sphinx-build -M html docs/source/ docs/build/ -a
