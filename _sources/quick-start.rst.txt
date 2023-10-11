@@ -3,7 +3,7 @@ Quick Start
 ============
 
 ---------
-Queries:
+Queries
 ---------
 
 .. code-block:: python
@@ -68,7 +68,7 @@ Queries:
 
 
 -------------------
-Evaluation Metrics:
+Evaluation Metrics
 -------------------
 
 .. code-block:: python
@@ -114,7 +114,7 @@ Evaluation Metrics:
 
 
 ---------
-Dataset:
+Dataset
 ---------
 
 .. code-block:: python
@@ -136,7 +136,7 @@ Dataset:
 
 
 --------------------
-Policy Usage:
+Policy Usage
 --------------------
 
 .. code-block:: python
