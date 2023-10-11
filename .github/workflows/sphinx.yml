@@ -19,22 +19,20 @@ jobs:
         wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
         tar -xf mujoco210-linux-x86_64.tar.gz -C "$HOME/.mujoco"
         rm -rf mujoco210-linux-x86_64.tar.gz
-    - name: Install dependencies
-      run: |
-        export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
-        pip3 install --upgrade 'pip<=23.0.1'
-        pip3 install --upgrade 'setuptools<=66' 
-        pip3 install --upgrade 'wheel<=0.38.4'
-        python3 -m pip install flake8
-        pip3 install torch==1.11.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
-        pip3 install -e ".[docs]"
-    - name: Build HTML
+    - name: Install Dependencies and build HTML
       uses: ammaraskar/sphinx-action@master
       with:
-        docs-folder: "docs/"
+        docs-folder: "/"
         build-command: |
-          sphinx-build -M html source/ build/ -a
+          export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
+          pip3 install --upgrade 'pip<=23.0.1'
+          pip3 install --upgrade 'setuptools<=66' 
+          pip3 install --upgrade 'wheel<=0.38.4'
+          python3 -m pip install flake8
+          pip3 install torch==1.11.0+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+          pip3 install -e ".[docs]"
+          sphinx-build -M html docs/source/ docs/build/ -a
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
