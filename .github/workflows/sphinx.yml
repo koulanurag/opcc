@@ -9,11 +9,29 @@ jobs:
       contents: write
     steps:
     - uses: actions/checkout@v4
+    - name: Setup Mujoco
+      run: |
+        sudo apt-get update
+        sudo apt install -y  libosmesa6-dev  libglew-dev  libgl1-mesa-glx libgl1-mesa-dev libgl1-mesa-glx libglfw3
+        sudo apt install -y xpra xserver-xorg-dev patchelf gcc-multilib
+        mkdir -p "$HOME/.mujoco"
+        cd $HOME/.mujoco
+        wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
+        tar -xf mujoco210-linux-x86_64.tar.gz -C "$HOME/.mujoco"
+        rm -rf mujoco210-linux-x86_64.tar.gz
     - name: Build HTML
       uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
-        pre-build-command: "sphinx-apidoc -f -o source/api ../opcc --ext-viewcode --ext-autodoc"
+        pre-build-command: |
+          export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
+          pip3 install --upgrade 'pip<=23.0.1'
+          pip3 install --upgrade 'setuptools<=66' 
+          pip3 install --upgrade 'wheel<=0.38.4'
+          pip3 install -e ".[docs]"
+          pip3 install torch==1.10.2+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
+          sphinx-apidoc -f -o source/api ../opcc --ext-viewcode --ext-autodoc
         build-command: "sphinx-build -M html source/ build/ -a"
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
