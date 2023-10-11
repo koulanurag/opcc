@@ -50,7 +50,7 @@ exclude_patterns = []
 
 html_theme = 'furo'
 html_title = "opcc"
-html_logo = "logo.png"
+# html_logo = "logo.png"
 html_static_path = ['_static']
 
 html_theme_options = {
