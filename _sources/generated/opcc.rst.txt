@@ -1,0 +1,33 @@
+﻿opcc
+====
+
+.. automodule:: opcc
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_dataset_names
+      get_policy
+      get_qlearning_dataset
+      get_queries
+      get_sequence_dataset
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
