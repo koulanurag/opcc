@@ -1,7 +1,7 @@
 API Reference
-==============
+=============
 
-.. toctree::
-   :maxdepth: 1
+.. autosummary::
+   :toctree: generated
 
-   api/modules
+   opcc

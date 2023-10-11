@@ -33,8 +33,6 @@ jobs:
       uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
-        pre-build-command: |
-          sphinx-apidoc -f -o source/api ../opcc --ext-viewcode --ext-autodoc
         build-command: |
           sphinx-build -M html source/ build/ -a
     - name: Upload artifacts
