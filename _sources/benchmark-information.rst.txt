@@ -7,9 +7,9 @@ Benchmark Information
 + Baselines can be found `HERE <https://github.com/koulanurag/opcc-baselines>`_.
 
 
-----------------------------------------
-1. `d4rl:maze2d <https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d>`_
-----------------------------------------
+----------------------------------------------------------------------------
+`d4rl:maze2d <https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d>`_
+----------------------------------------------------------------------------
 
 ~~~~~~~~~~~~~
 Datasets
@@ -19,9 +19,9 @@ Datasets
 Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-----------------------------------------
-2. `mujoco(gym) <https://gym.openai.com/envs/#mujoco>`_
-----------------------------------------
+----------------------------------------------------
+`mujoco(gym) <https://gym.openai.com/envs/#mujoco>`_
+----------------------------------------------------
 
 ~~~~~~~~~~~~~
 Datasets
