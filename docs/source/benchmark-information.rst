@@ -1,5 +1,5 @@
 =======================
-Benchmark Information:
+Benchmark Information
 =======================
 
 + We borrow dataset's from `D4RL <https://arxiv.org/abs/2004.07219>`_.
@@ -8,27 +8,27 @@ Benchmark Information:
 
 
 ----------------------------------------
-1. `d4rl:maze2d <https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d>`_.
+1. `d4rl:maze2d <https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d>`_
 ----------------------------------------
 
 ~~~~~~~~~~~~~
-Datasets:
+Datasets
 ~~~~~~~~~~~~~
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Pre-trained policy performance:
+Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ----------------------------------------
-2. `mujoco(gym) <https://gym.openai.com/envs/#mujoco>`_.
+2. `mujoco(gym) <https://gym.openai.com/envs/#mujoco>`_
 ----------------------------------------
 
 ~~~~~~~~~~~~~
-Datasets:
+Datasets
 ~~~~~~~~~~~~~
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Pre-trained policy performance:
+Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 

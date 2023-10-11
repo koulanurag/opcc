@@ -14,7 +14,7 @@ reinforcement learning.
    :alt: codecov
 
 ----------
-Contents:
+Contents
 ----------
 .. toctree::
    :maxdepth: 2
@@ -27,13 +27,13 @@ Contents:
 
 
 ----------------
-Contact:
+Contact
 ----------------
 
 If you have any questions or suggestions , please open an issue on this GitHub repository.
 
 -------------------
-Indices and tables:
+Indices and tables
 -------------------
 
 * :ref:`genindex`

@@ -1,11 +1,11 @@
 =============
-Development:
+Development
 =============
 
 - Install : `pip install -e ".[all]"`
 
 -----------------
-Generate-Queries:
+Generate-Queries
 -----------------
 
 .. code-block:: console
@@ -20,7 +20,7 @@ Generate-Queries:
     python scripts/generate_queries.py --env-name d4rl:maze2d-open-v0 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.5 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
 
 ---------------------------------------------
-Generate policy performance stats for readme:
+Generate policy performance stats for readme
 ---------------------------------------------
 
 .. code-block:: console
@@ -29,7 +29,7 @@ Generate policy performance stats for readme:
 
 
 ----------------
-Testing Package:
+Testing Package
 ----------------
 
 #. Install : `pip install -e ".[test]"`
@@ -43,22 +43,22 @@ Testing Package:
        export SKIP_SEQUENCE_DATASET_TEST=1 # disables test for checking sequence dataset
 
 ----------------
-Generate Docs:
+Generate Docs
 ----------------
 
-#. Install dependencies:
+#. Install dependencies
 
     .. code-block:: console
 
         pip install -e ".[docs]"
 
-#. Generate API Doc:
+#. Generate API Doc
 
     .. code-block:: console
 
         sphinx-apidoc -f -o docs/source/api opcc --ext-viewcode --ext-autodoc
 
-#. Generate Sphinx Doc:
+#. Generate Sphinx Doc
 
     .. code-block:: console
 
