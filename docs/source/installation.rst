@@ -25,3 +25,5 @@ Install package
    .. code-block:: console
 
        $ pip install git+https://github.com/koulanurag/opcc@main#egg=opcc
+
+#. Install `Pytorch>=1.8.0 <https://pytorch.org/>`_.
