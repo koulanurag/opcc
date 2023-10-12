@@ -91,12 +91,21 @@ def get_policy(env_name: str, pre_trained: int = 1):
 
 def get_sequence_dataset(env_name, dataset_name):
     """
-    Retrieves policies for the environment with the pre-trained quality marker.
+    Retrieves episodic dataset for the given environment and dataset_name
 
     :param env_name:  name of the environment
     :param dataset_name: name of the dataset
 
 
+    Example:
+        >>> import opcc
+        >>> dataset = opcc.get_sequence_dataset('Hopper-v2', 'medium') # list of episodes dictionaries
+        >>> len(dataset)
+        2186
+        >>> dataset[0].keys()
+        dict_keys(['actions', 'infos/action_log_probs', 'infos/qpos', 'infos/qvel', 'next_observations', 'observations', 'rewards', 'terminals', 'timeouts'])
+        >>> len(dataset[0]['observations']) # episode length
+        470
     """
     assert env_name in ENV_CONFIGS, \
         ('{} is invalid. Expected values include {}'
@@ -123,11 +132,18 @@ def get_sequence_dataset(env_name, dataset_name):
 
 def get_qlearning_dataset(env_name, dataset_name):
     """
-    Retrieves policies for the environment with the pre-trained quality marker.
+    Retrieves list of episodic transitions for the given environment and dataset_name
 
     :param env_name:  name of the environment
     :param dataset_name: name of the dataset
 
+    Example:
+        >>> import opcc
+        >>> dataset = opcc.get_qlearning_dataset('Hopper-v2', 'medium') # dictionaries
+        >>> dataset.keys()
+        dict_keys(['observations', 'actions', 'next_observations', 'rewards', 'terminals'])
+        >>> len(dataset['observations']) # length of dataset
+        999998
     """
     assert env_name in ENV_CONFIGS, \
         ('{} is invalid. Expected values include {}'
@@ -148,10 +164,14 @@ def get_qlearning_dataset(env_name, dataset_name):
 
 def get_dataset_names(env_name):
     """
-    Retrieves policies for the environment with the pre-trained quality marker.
+    Retrieves list of dataset-names available for an environment
 
     :param env_name:  name of the environment
 
+    Example:
+        >>> import opcc
+        >>> opcc.get_dataset_names('Hopper-v2')
+        ['random', 'expert', 'medium', 'medium-replay', 'medium-expert']
     """
     assert env_name in ENV_CONFIGS, \
         ('`{}` not found. It should be among following: {}'.
