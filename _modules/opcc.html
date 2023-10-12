@@ -209,6 +209,7 @@
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">ENV_CONFIGS</span><span class="p">,</span> <span class="n">ENV_PERFORMANCE_STATS</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">MAX_PRE_TRAINED_LEVEL</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">MIN_PRE_TRAINED_LEVEL</span>
+<span class="kn">from</span> <span class="nn">.model</span> <span class="kn">import</span> <span class="n">ActorCriticNetwork</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;get_queries&#39;</span><span class="p">,</span> <span class="s1">&#39;get_policy&#39;</span><span class="p">,</span> <span class="s1">&#39;get_sequence_dataset&#39;</span><span class="p">,</span>
            <span class="s1">&#39;get_qlearning_dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;get_dataset_names&#39;</span><span class="p">]</span>
@@ -220,6 +221,19 @@
 
 <span class="sd">    :param env_name:  name of the environment</span>
 <span class="sd">    :type env_name: str</span>
+
+<span class="sd">    :return: A nested dictionary with the following structure:</span>
+<span class="sd">             {</span>
+<span class="sd">                (policy_a_args, policy_b_args): {</span>
+<span class="sd">                    &#39;obs_a&#39;: list</span>
+<span class="sd">                    &#39;obs_b&#39;: list</span>
+<span class="sd">                    &#39;action_a&#39;: list</span>
+<span class="sd">                    &#39;action_b&#39;: list</span>
+<span class="sd">                    &#39;target&#39;: list</span>
+<span class="sd">                    &#39;horizon&#39;: list</span>
+<span class="sd">                }</span>
+<span class="sd">             }</span>
+<span class="sd">    :rtype: dict</span>
 
 <span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>
@@ -248,6 +262,11 @@
 <span class="sd">                        level.</span>
 <span class="sd">    :type pre_trained: int</span>
 
+<span class="sd">    :return: A tuple containing two objects:</span>
+<span class="sd">             - policy.</span>
+<span class="sd">             - a dictionary of performance stats of the policy for the given env_name</span>
+<span class="sd">    :rtype: tuple of (ActorCriticNetwork, dict)</span>
+
 <span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>
 <span class="sd">        &gt;&gt;&gt; opcc.get_policy(&#39;d4rl:maze2d-open-v0&#39;,pre_trained=1)</span>
@@ -271,7 +290,6 @@
     <span class="n">state_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
 
     <span class="c1"># create model</span>
-    <span class="kn">from</span> <span class="nn">.model</span> <span class="kn">import</span> <span class="n">ActorCriticNetwork</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">ActorCriticNetwork</span><span class="p">(</span><span class="n">ENV_CONFIGS</span><span class="p">[</span><span class="n">env_name</span><span class="p">][</span><span class="s1">&#39;observation_size&#39;</span><span class="p">],</span>
                                <span class="n">ENV_CONFIGS</span><span class="p">[</span><span class="n">env_name</span><span class="p">][</span><span class="s1">&#39;action_size&#39;</span><span class="p">],</span>
                                <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
@@ -302,6 +320,10 @@
 
 <span class="sd">    :param dataset_name: name of the dataset</span>
 <span class="sd">    :type dataset_name: str</span>
+
+<span class="sd">    :return: A list of dictionaries. Each dictionary is an episode containing</span>
+<span class="sd">             keys :&#39;next_observations&#39;, &#39;observations&#39;, &#39;rewards&#39;, &#39;terminals&#39;, &#39;timeouts&#39;</span>
+<span class="sd">    :rtype: list[dict]</span>
 
 <span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>
@@ -377,6 +399,9 @@
 
 <span class="sd">    :param env_name:  name of the environment</span>
 <span class="sd">    :type env_name: str</span>
+
+<span class="sd">    :return: A list of dataset-names</span>
+<span class="sd">    :rtype: list[str]</span>
 
 <span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>

@@ -231,6 +231,12 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>env_name</strong> (<em>str</em>) – name of the environment</p>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of dataset-names</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
 <dt class="field-even">Example<span class="colon">:</span></dt>
 <dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">opcc</span><span class="o">.</span><span class="n">get_dataset_names</span><span class="p">(</span><span class="s1">&#39;Hopper-v2&#39;</span><span class="p">)</span>
@@ -253,6 +259,14 @@
 where 1 indicates best model and 5 indicates worst
 level.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing two objects:
+- policy.
+- a dictionary of performance stats of the policy for the given env_name</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of (ActorCriticNetwork, dict)</p>
 </dd>
 <dt class="field-even">Example<span class="colon">:</span></dt>
 <dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span>
@@ -295,6 +309,27 @@ level.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>env_name</strong> (<em>str</em>) – name of the environment</p>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A nested dictionary with the following structure:
+{</p>
+<blockquote>
+<div><dl class="simple">
+<dt>(policy_a_args, policy_b_args): {</dt><dd><p>‘obs_a’: list
+‘obs_b’: list
+‘action_a’: list
+‘action_b’: list
+‘target’: list
+‘horizon’: list</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
 <dt class="field-even">Example<span class="colon">:</span></dt>
 <dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">opcc</span><span class="o">.</span><span class="n">get_queries</span><span class="p">(</span><span class="s1">&#39;Hopper-v2&#39;</span><span class="p">)</span>
@@ -314,6 +349,13 @@ level.</p></li>
 <li><p><strong>env_name</strong> (<em>str</em>) – name of the environment</p></li>
 <li><p><strong>dataset_name</strong> (<em>str</em>) – name of the dataset</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of dictionaries. Each dictionary is an episode containing
+keys :’next_observations’, ‘observations’, ‘rewards’, ‘terminals’, ‘timeouts’</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
 </dd>
 <dt class="field-even">Example<span class="colon">:</span></dt>
 <dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span>
