@@ -10,7 +10,8 @@ from .config import ENV_CONFIGS, ENV_PERFORMANCE_STATS
 from .config import MAX_PRE_TRAINED_LEVEL
 from .config import MIN_PRE_TRAINED_LEVEL
 
-__all__ = ['get_queries', 'get_policy', 'get_sequence_dataset', 'get_qlearning_dataset', 'get_dataset_names']
+__all__ = ['get_queries', 'get_policy', 'get_sequence_dataset',
+           'get_qlearning_dataset', 'get_dataset_names']
 
 
 def get_queries(env_name):
@@ -89,6 +90,14 @@ def get_policy(env_name: str, pre_trained: int = 1):
 
 
 def get_sequence_dataset(env_name, dataset_name):
+    """
+    Retrieves policies for the environment with the pre-trained quality marker.
+
+    :param env_name:  name of the environment
+    :param dataset_name: name of the dataset
+
+
+    """
     assert env_name in ENV_CONFIGS, \
         ('{} is invalid. Expected values include {}'
          .format(env_name, ENV_CONFIGS.keys()))
@@ -113,6 +122,13 @@ def get_sequence_dataset(env_name, dataset_name):
 
 
 def get_qlearning_dataset(env_name, dataset_name):
+    """
+    Retrieves policies for the environment with the pre-trained quality marker.
+
+    :param env_name:  name of the environment
+    :param dataset_name: name of the dataset
+
+    """
     assert env_name in ENV_CONFIGS, \
         ('{} is invalid. Expected values include {}'
          .format(env_name, ENV_CONFIGS.keys()))
@@ -131,6 +147,12 @@ def get_qlearning_dataset(env_name, dataset_name):
 
 
 def get_dataset_names(env_name):
+    """
+    Retrieves policies for the environment with the pre-trained quality marker.
+
+    :param env_name:  name of the environment
+
+    """
     assert env_name in ENV_CONFIGS, \
         ('`{}` not found. It should be among following: {}'.
          format(env_name, list(ENV_CONFIGS.keys())))

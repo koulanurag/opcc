@@ -1,7 +1,6 @@
 API Reference
 =============
 
-.. autosummary::
-   :toctree: generated
-
-   opcc
+.. automodule:: opcc
+   :members:
+   :undoc-members:
