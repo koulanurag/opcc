@@ -53,6 +53,12 @@ html_title = "opcc"
 # html_logo = "logo.png"
 html_static_path = ['_static']
 
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'custom.css',
+]
+
 html_theme_options = {
     "source_repository": "https://github.com/koulanurag/opcc/",
     "source_branch": "main",
