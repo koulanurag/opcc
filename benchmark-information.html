@@ -216,8 +216,38 @@
 </ul>
 <section id="id2">
 <h2><a class="reference external" href="https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d">d4rl:maze2d</a><a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<a class="reference internal image-reference" href="https://github.com/rail-berkeley/offline_rl/raw/assets/assets/mazes_filmstrip.png"><img alt="maze2d-environments" src="https://github.com/rail-berkeley/offline_rl/raw/assets/assets/mazes_filmstrip.png" style="width: 500px;" /></a>
 <section id="datasets">
 <h3>Datasets<a class="headerlink" href="#datasets" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper colwidths-auto docutils container" id="id6">
+<table class="docutils align-left" id="id6">
+<caption><span class="caption-text">Maze2d-Datasets</span><a class="headerlink" href="#id6" title="Permalink to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Environment Name</p></th>
+<th class="head"><p>Datasets</p></th>
+<th class="head"><p>Query-Count</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>d4rl:maze2d-open-v0</cite></p></td>
+<td><p><cite>1k, 10k, 100k, 1m</cite></p></td>
+<td><p><cite>1500</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>d4rl:maze2d-medium-v1</cite></p></td>
+<td><p><cite>1k, 10k, 100k, 1m</cite></p></td>
+<td><p><cite>1500</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>d4rl:maze2d-umaze-v1</cite></p></td>
+<td><p><cite>1k, 10k, 100k, 1m</cite></p></td>
+<td><p><cite>1500</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>d4rl:maze2d-large-v1</cite></p></td>
+<td><p><cite>1k, 10k, 100k, 1m</cite></p></td>
+<td><p><cite>121</cite></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="pre-trained-policy-performance">
 <h3>Pre-trained policy performance<a class="headerlink" href="#pre-trained-policy-performance" title="Permalink to this heading">#</a></h3>
@@ -225,11 +255,47 @@
 </section>
 <section id="id3">
 <h2><a class="reference external" href="https://gym.openai.com/envs/#mujoco">mujoco(gym)</a><a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
-<section id="id4">
+<p float="left">
+    <img width="160" alt="mujoco-halfcheetah" src="opcc/assets/HalfCheetah-v2/halfcheetah.png" />
+    <img width="160" alt="mujoco-hopper" src="opcc/assets/Hopper-v2/hopper.png" />
+    <img width="160" alt="mujoco-walker2d" src="opcc/assets/Walker2d-v2/walker2d.png" />
+</p><section id="id4">
 <h3>Datasets<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper colwidths-auto docutils container" id="id7">
+<table class="docutils align-left" id="id7">
+<caption><span class="caption-text">Mujoco-Datasets</span><a class="headerlink" href="#id7" title="Permalink to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Environment Name</p></th>
+<th class="head"><p>Datasets</p></th>
+<th class="head"><p>Query-Count</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>HalfCheetah-v2</cite></p></td>
+<td><p><cite>random, expert, medium, medium-replay, medium-expert</cite></p></td>
+<td><p><cite>1500</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>Hopper-v2</cite></p></td>
+<td><p><cite>random, expert, medium, medium-replay, medium-expert</cite></p></td>
+<td><p><cite>1500</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>Walker2d-v2</cite></p></td>
+<td><p><cite>random, expert, medium, medium-replay, medium-expert</cite></p></td>
+<td><p><cite>1500</cite></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="id5">
 <h3>Pre-trained policy performance<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<div class="line-block">
+<div class="line">Environment Name | <cite>pre_trained=1</cite> (best) | <cite>pre_trained=2</cite> | <cite>pre_trained=3</cite> | <cite>pre_trained=4</cite> (worst) |</div>
+</div>
+<p><a href="#id8"><span class="problematic" id="id9">|:----------------:|</span></a>:———————-:<a href="#id10"><span class="problematic" id="id11">|:---------------:|</span></a>:—————:<a href="#id12"><span class="problematic" id="id13">|:-----------------------:|</span></a>
+| <cite>HalfCheetah-v2</cite> |     1169.13±80.45      | 1044.39±112.61  |  785.88±303.59  |       94.79±40.88       |
+|   <cite>Hopper-v2</cite>    |     1995.84±794.71     |  1466.71±497.1  | 1832.43±560.86  |       236.51±1.09       |
+|  <cite>Walker2d-v2</cite>   |     2506.9±689.45      |  811.28±321.66  |  387.01±42.82   |      162.7±102.14       |</p>
 </section>
 </section>
 </section>

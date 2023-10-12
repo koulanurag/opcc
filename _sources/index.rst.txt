@@ -1,4 +1,4 @@
-Offline Policy Comparison with Confidence : Benchmarks and Baselines
+Offline Policy Comparison with Confidence : Benchmark and Baselines
 ====================================================================
 
 .. admonition:: TL;DR

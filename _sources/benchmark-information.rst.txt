@@ -11,25 +11,83 @@ Benchmark Information
 `d4rl:maze2d <https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d>`_
 ----------------------------------------------------------------------------
 
+.. image:: https://github.com/rail-berkeley/offline_rl/raw/assets/assets/mazes_filmstrip.png
+  :width: 500
+  :alt: maze2d-environments
+
+
 ~~~~~~~~~~~~~
 Datasets
 ~~~~~~~~~~~~~
 
+.. list-table:: Maze2d-Datasets
+   :widths: auto
+   :header-rows: 1
+   :align: left
+
+   * - Environment Name
+     - Datasets
+     - Query-Count
+   * - `d4rl:maze2d-open-v0`
+     - `1k, 10k, 100k, 1m`
+     - `1500`
+   * - `d4rl:maze2d-medium-v1`
+     - `1k, 10k, 100k, 1m`
+     - `1500`
+   * - `d4rl:maze2d-umaze-v1`
+     - `1k, 10k, 100k, 1m`
+     - `1500`
+   * - `d4rl:maze2d-large-v1`
+     - `1k, 10k, 100k, 1m`
+     - `121`
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 ----------------------------------------------------
 `mujoco(gym) <https://gym.openai.com/envs/#mujoco>`_
 ----------------------------------------------------
+.. raw:: html
+
+    <p float="left">
+        <img width="160" alt="mujoco-halfcheetah" src="opcc/assets/HalfCheetah-v2/halfcheetah.png" />
+        <img width="160" alt="mujoco-hopper" src="opcc/assets/Hopper-v2/hopper.png" />
+        <img width="160" alt="mujoco-walker2d" src="opcc/assets/Walker2d-v2/walker2d.png" />
+    </p>
 
 ~~~~~~~~~~~~~
 Datasets
 ~~~~~~~~~~~~~
+
+
+.. list-table:: Mujoco-Datasets
+   :widths: auto
+   :header-rows: 1
+   :align: left
+
+   * - Environment Name
+     - Datasets
+     - Query-Count
+   * - `HalfCheetah-v2`
+     - `random, expert, medium, medium-replay, medium-expert`
+     - `1500`
+   * - `Hopper-v2`
+     - `random, expert, medium, medium-replay, medium-expert`
+     - `1500`
+   * - `Walker2d-v2`
+     - `random, expert, medium, medium-replay, medium-expert`
+     - `1500`
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+| Environment Name | `pre_trained=1` (best) | `pre_trained=2` | `pre_trained=3` | `pre_trained=4` (worst) |
+|:----------------:|:----------------------:|:---------------:|:---------------:|:-----------------------:|
+| `HalfCheetah-v2` |     1169.13±80.45      | 1044.39±112.61  |  785.88±303.59  |       94.79±40.88       |
+|   `Hopper-v2`    |     1995.84±794.71     |  1466.71±497.1  | 1832.43±560.86  |       236.51±1.09       |
+|  `Walker2d-v2`   |     2506.9±689.45      |  811.28±321.66  |  387.01±42.82   |      162.7±102.14       |
 

@@ -219,8 +219,9 @@
 <span class="sd">    Retrieves queries for the environment.</span>
 
 <span class="sd">    :param env_name:  name of the environment</span>
+<span class="sd">    :type env_name: str</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>
 <span class="sd">        &gt;&gt;&gt; opcc.get_queries(&#39;Hopper-v2&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -240,11 +241,14 @@
 <span class="sd">    Retrieves policies for the environment with the pre-trained quality marker.</span>
 
 <span class="sd">    :param env_name:  name of the environment</span>
+<span class="sd">    :type env_name: str</span>
+
 <span class="sd">    :param pre_trained: pre_trained level . It should be between 1 and 5 ,</span>
 <span class="sd">                        where 1 indicates best model and 5 indicates worst</span>
 <span class="sd">                        level.</span>
+<span class="sd">    :type pre_trained: int</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>
 <span class="sd">        &gt;&gt;&gt; opcc.get_policy(&#39;d4rl:maze2d-open-v0&#39;,pre_trained=1)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -294,10 +298,12 @@
 <span class="sd">    Retrieves episodic dataset for the given environment and dataset_name</span>
 
 <span class="sd">    :param env_name:  name of the environment</span>
+<span class="sd">    :type env_name: str</span>
+
 <span class="sd">    :param dataset_name: name of the dataset</span>
+<span class="sd">    :type dataset_name: str</span>
 
-
-<span class="sd">    Example:</span>
+<span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>
 <span class="sd">        &gt;&gt;&gt; dataset = opcc.get_sequence_dataset(&#39;Hopper-v2&#39;, &#39;medium&#39;) # list of episodes dictionaries</span>
 <span class="sd">        &gt;&gt;&gt; len(dataset)</span>
@@ -335,9 +341,12 @@
 <span class="sd">    Retrieves list of episodic transitions for the given environment and dataset_name</span>
 
 <span class="sd">    :param env_name:  name of the environment</span>
-<span class="sd">    :param dataset_name: name of the dataset</span>
+<span class="sd">    :type env_name: str</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    :param dataset_name: name of the dataset</span>
+<span class="sd">    :type dataset_name: str</span>
+
+<span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>
 <span class="sd">        &gt;&gt;&gt; dataset = opcc.get_qlearning_dataset(&#39;Hopper-v2&#39;, &#39;medium&#39;) # dictionaries</span>
 <span class="sd">        &gt;&gt;&gt; dataset.keys()</span>
@@ -367,8 +376,9 @@
 <span class="sd">    Retrieves list of dataset-names available for an environment</span>
 
 <span class="sd">    :param env_name:  name of the environment</span>
+<span class="sd">    :type env_name: str</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>
 <span class="sd">        &gt;&gt;&gt; opcc.get_dataset_names(&#39;Hopper-v2&#39;)</span>
 <span class="sd">        [&#39;random&#39;, &#39;expert&#39;, &#39;medium&#39;, &#39;medium-replay&#39;, &#39;medium-expert&#39;]</span>
