@@ -21,16 +21,13 @@ __Reserach Paper:__ [https://arxiv.org/abs/2205.10739](https://arxiv.org/abs/220
   <br>*(You can also refer **[here](https://github.com/koulanurag/opcc/blob/main/.github/workflows/python-package.yml#L27)** for step-by-step instructions on mujoco installation)*
 
 **2. Setup [Python 3.7+](https://www.python.org/downloads/)** and optionally(recommended) create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
-
-**3. Setup Git config**
-  ```bash
-  echo -e '[url "https://github.com/"]\n  insteadOf = "git://github.com/"' >> ~/.gitconfig
-  ```
-**4. Python package and dependencies could be installed using:**
+**3. Python package and dependencies could be installed using:**
 
   ```bash
-  python3 -m pip install --upgrade pip setuptools wheel
-  pip install git+https://github.com/koulanurag/opcc@main#egg=opcc
+  pip3 install --upgrade 'pip<=23.0.1'
+  pip3 install --upgrade 'setuptools<=66'
+  pip3 install --upgrade 'wheel<=0.38.4'
+  pip3 install git+https://github.com/koulanurag/opcc@main#egg=opcc
   ```
   
   Or
