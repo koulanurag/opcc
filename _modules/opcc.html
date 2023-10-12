@@ -9,10 +9,11 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
     <link rel="stylesheet" type="text/css" href="../_static/katex-math.css?v=91adb8b6" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=dc163d8b" />
     
     
 
@@ -290,12 +291,21 @@
 
 <div class="viewcode-block" id="get_sequence_dataset"><a class="viewcode-back" href="../api.html#opcc.get_sequence_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_sequence_dataset</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieves policies for the environment with the pre-trained quality marker.</span>
+<span class="sd">    Retrieves episodic dataset for the given environment and dataset_name</span>
 
 <span class="sd">    :param env_name:  name of the environment</span>
 <span class="sd">    :param dataset_name: name of the dataset</span>
 
 
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import opcc</span>
+<span class="sd">        &gt;&gt;&gt; dataset = opcc.get_sequence_dataset(&#39;Hopper-v2&#39;, &#39;medium&#39;) # list of episodes dictionaries</span>
+<span class="sd">        &gt;&gt;&gt; len(dataset)</span>
+<span class="sd">        2186</span>
+<span class="sd">        &gt;&gt;&gt; dataset[0].keys()</span>
+<span class="sd">        dict_keys([&#39;actions&#39;, &#39;infos/action_log_probs&#39;, &#39;infos/qpos&#39;, &#39;infos/qvel&#39;, &#39;next_observations&#39;, &#39;observations&#39;, &#39;rewards&#39;, &#39;terminals&#39;, &#39;timeouts&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; len(dataset[0][&#39;observations&#39;]) # episode length</span>
+<span class="sd">        470</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">env_name</span> <span class="ow">in</span> <span class="n">ENV_CONFIGS</span><span class="p">,</span> \
         <span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is invalid. Expected values include </span><span class="si">{}</span><span class="s1">&#39;</span>
@@ -322,11 +332,18 @@
 
 <div class="viewcode-block" id="get_qlearning_dataset"><a class="viewcode-back" href="../api.html#opcc.get_qlearning_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_qlearning_dataset</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieves policies for the environment with the pre-trained quality marker.</span>
+<span class="sd">    Retrieves list of episodic transitions for the given environment and dataset_name</span>
 
 <span class="sd">    :param env_name:  name of the environment</span>
 <span class="sd">    :param dataset_name: name of the dataset</span>
 
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import opcc</span>
+<span class="sd">        &gt;&gt;&gt; dataset = opcc.get_qlearning_dataset(&#39;Hopper-v2&#39;, &#39;medium&#39;) # dictionaries</span>
+<span class="sd">        &gt;&gt;&gt; dataset.keys()</span>
+<span class="sd">        dict_keys([&#39;observations&#39;, &#39;actions&#39;, &#39;next_observations&#39;, &#39;rewards&#39;, &#39;terminals&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; len(dataset[&#39;observations&#39;]) # length of dataset</span>
+<span class="sd">        999998</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">env_name</span> <span class="ow">in</span> <span class="n">ENV_CONFIGS</span><span class="p">,</span> \
         <span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is invalid. Expected values include </span><span class="si">{}</span><span class="s1">&#39;</span>
@@ -347,10 +364,14 @@
 
 <div class="viewcode-block" id="get_dataset_names"><a class="viewcode-back" href="../api.html#opcc.get_dataset_names">[docs]</a><span class="k">def</span> <span class="nf">get_dataset_names</span><span class="p">(</span><span class="n">env_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieves policies for the environment with the pre-trained quality marker.</span>
+<span class="sd">    Retrieves list of dataset-names available for an environment</span>
 
 <span class="sd">    :param env_name:  name of the environment</span>
 
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import opcc</span>
+<span class="sd">        &gt;&gt;&gt; opcc.get_dataset_names(&#39;Hopper-v2&#39;)</span>
+<span class="sd">        [&#39;random&#39;, &#39;expert&#39;, &#39;medium&#39;, &#39;medium-replay&#39;, &#39;medium-expert&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">env_name</span> <span class="ow">in</span> <span class="n">ENV_CONFIGS</span><span class="p">,</span> \
         <span class="p">(</span><span class="s1">&#39;`</span><span class="si">{}</span><span class="s1">` not found. It should be among following: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span>
@@ -394,7 +415,7 @@
     <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/katex.min.js?v=deb2f140"></script>
+    <script src="../_static/katex.min.js?v=48ec3933"></script>
     <script src="../_static/auto-render.min.js?v=8b9f325c"></script>
     <script src="../_static/katex_autorenderer.js?v=bebc588a"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
