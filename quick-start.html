@@ -210,143 +210,143 @@
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading">#</a></h1>
 <section id="queries">
 <h2>Queries<a class="headerlink" href="#queries" title="Permalink to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">opcc</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
-
-<span class="n">env_name</span> <span class="o">=</span> <span class="s1">&#39;HalfCheetah-v2&#39;</span>
-<span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;random&#39;</span>
-
-<span class="c1"># ########################################################</span>
-<span class="c1"># Policy Comparison Queries (PCQ) (Section : 3.1 in paper)</span>
-<span class="c1"># ########################################################</span>
-<span class="c1"># Queries are dictionaries with policies as keys and</span>
-<span class="c1"># corresponding queries as values.</span>
-<span class="n">queries</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_queries</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">random_predictor</span><span class="p">(</span><span class="n">obs_a</span><span class="p">,</span> <span class="n">obs_b</span><span class="p">,</span> <span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">,</span>
-                     <span class="n">policy_a</span><span class="p">,</span> <span class="n">policy_b</span><span class="p">,</span> <span class="n">horizon</span><span class="p">):</span>
-    <span class="n">answer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">obs_a</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">obs_a</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">confidence</span>
-
-
-<span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">confidences</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="c1"># Batch iteration through Queries :</span>
-<span class="k">for</span> <span class="p">(</span><span class="n">policy_a_id</span><span class="p">,</span> <span class="n">policy_b_id</span><span class="p">),</span> <span class="n">query_batch</span> <span class="ow">in</span> <span class="n">queries</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="c1"># retrieve policies</span>
-    <span class="n">policy_a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_a_id</span><span class="p">)</span>
-    <span class="n">policy_b</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_b_id</span><span class="p">)</span>
-
-    <span class="c1"># query-a</span>
-    <span class="n">obs_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_a&#39;</span><span class="p">]</span>
-    <span class="n">action_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_a&#39;</span><span class="p">]</span>
-
-    <span class="c1"># query-b</span>
-    <span class="n">obs_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_b&#39;</span><span class="p">]</span>
-    <span class="n">action_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_b&#39;</span><span class="p">]</span>
-
-    <span class="c1"># horizon for policy evaluation</span>
-    <span class="n">horizon</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;horizon&#39;</span><span class="p">]</span>
-
-    <span class="c1"># ground truth binary vector:</span>
-    <span class="c1"># (Q(obs_a, action_a, policy_a, horizon)</span>
-    <span class="c1"># &lt;  Q(obs_b, action_b, policy_b, horizon))</span>
-    <span class="n">target</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="n">targets</span> <span class="o">+=</span> <span class="n">target</span>
-
-    <span class="c1"># Let&#39;s make predictions for the given queries.</span>
-    <span class="c1"># One can use any mechanism to predict the corresponding</span>
-    <span class="c1"># answer to queries, and we simply use a random predictor</span>
-    <span class="c1"># over here for demonstration purposes</span>
-    <span class="n">p</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">random_predictor</span><span class="p">(</span><span class="n">obs_a</span><span class="p">,</span> <span class="n">obs_b</span><span class="p">,</span> <span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">,</span>
-                            <span class="n">policy_a</span><span class="p">,</span> <span class="n">policy_b</span><span class="p">,</span> <span class="n">horizon</span><span class="p">)</span>
-    <span class="n">predictions</span> <span class="o">+=</span> <span class="n">p</span>
-    <span class="n">confidences</span> <span class="o">+=</span> <span class="n">c</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">opcc</span>
+<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">env_name</span> <span class="o">=</span> <span class="s1">&#39;HalfCheetah-v2&#39;</span>
+<span class="linenos"> 6</span><span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;random&#39;</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="c1"># ########################################################</span>
+<span class="linenos"> 9</span><span class="c1"># Policy Comparison Queries (PCQ) (Section : 3.1 in paper)</span>
+<span class="linenos">10</span><span class="c1"># ########################################################</span>
+<span class="linenos">11</span><span class="c1"># Queries are dictionaries with policies as keys and</span>
+<span class="linenos">12</span><span class="c1"># corresponding queries as values.</span>
+<span class="linenos">13</span><span class="n">queries</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_queries</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="k">def</span> <span class="nf">random_predictor</span><span class="p">(</span><span class="n">obs_a</span><span class="p">,</span> <span class="n">obs_b</span><span class="p">,</span> <span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">,</span>
+<span class="linenos">17</span>                     <span class="n">policy_a</span><span class="p">,</span> <span class="n">policy_b</span><span class="p">,</span> <span class="n">horizon</span><span class="p">):</span>
+<span class="linenos">18</span>    <span class="n">answer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">obs_a</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="linenos">19</span>    <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">obs_a</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="linenos">20</span>    <span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">confidence</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">24</span><span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">25</span><span class="n">confidences</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">26</span><span class="c1"># Batch iteration through Queries :</span>
+<span class="linenos">27</span><span class="k">for</span> <span class="p">(</span><span class="n">policy_a_id</span><span class="p">,</span> <span class="n">policy_b_id</span><span class="p">),</span> <span class="n">query_batch</span> <span class="ow">in</span> <span class="n">queries</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="linenos">28</span>    <span class="c1"># retrieve policies</span>
+<span class="linenos">29</span>    <span class="n">policy_a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_a_id</span><span class="p">)</span>
+<span class="linenos">30</span>    <span class="n">policy_b</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_b_id</span><span class="p">)</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span>    <span class="c1"># query-a</span>
+<span class="linenos">33</span>    <span class="n">obs_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_a&#39;</span><span class="p">]</span>
+<span class="linenos">34</span>    <span class="n">action_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_a&#39;</span><span class="p">]</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>    <span class="c1"># query-b</span>
+<span class="linenos">37</span>    <span class="n">obs_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_b&#39;</span><span class="p">]</span>
+<span class="linenos">38</span>    <span class="n">action_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_b&#39;</span><span class="p">]</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span>    <span class="c1"># horizon for policy evaluation</span>
+<span class="linenos">41</span>    <span class="n">horizon</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;horizon&#39;</span><span class="p">]</span>
+<span class="linenos">42</span>
+<span class="linenos">43</span>    <span class="c1"># ground truth binary vector:</span>
+<span class="linenos">44</span>    <span class="c1"># (Q(obs_a, action_a, policy_a, horizon)</span>
+<span class="linenos">45</span>    <span class="c1"># &lt;  Q(obs_b, action_b, policy_b, horizon))</span>
+<span class="linenos">46</span>    <span class="n">target</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="linenos">47</span>    <span class="n">targets</span> <span class="o">+=</span> <span class="n">target</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span>    <span class="c1"># Let&#39;s make predictions for the given queries.</span>
+<span class="linenos">50</span>    <span class="c1"># One can use any mechanism to predict the corresponding</span>
+<span class="linenos">51</span>    <span class="c1"># answer to queries, and we simply use a random predictor</span>
+<span class="linenos">52</span>    <span class="c1"># over here for demonstration purposes</span>
+<span class="linenos">53</span>    <span class="n">p</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">random_predictor</span><span class="p">(</span><span class="n">obs_a</span><span class="p">,</span> <span class="n">obs_b</span><span class="p">,</span> <span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">,</span>
+<span class="linenos">54</span>                            <span class="n">policy_a</span><span class="p">,</span> <span class="n">policy_b</span><span class="p">,</span> <span class="n">horizon</span><span class="p">)</span>
+<span class="linenos">55</span>    <span class="n">predictions</span> <span class="o">+=</span> <span class="n">p</span>
+<span class="linenos">56</span>    <span class="n">confidences</span> <span class="o">+=</span> <span class="n">c</span>
 </pre></div>
 </div>
 </section>
 <section id="evaluation-metrics">
 <h2>Evaluation Metrics<a class="headerlink" href="#evaluation-metrics" title="Permalink to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># #########################################</span>
-<span class="c1"># (Section 3.3 in paper)</span>
-<span class="c1"># #########################################</span>
-<span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_xor</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>  <span class="c1"># we use 0-1 loss for demo</span>
-
-<span class="c1"># List of tuples (coverage, selective_risks, tau)</span>
-<span class="n">coverage_sr_tau</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">tau_interval</span><span class="o">=</span><span class="mf">0.01</span>
-<span class="k">for</span> <span class="n">tau</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tau_interval</span><span class="p">,</span> <span class="n">tau_interval</span><span class="p">):</span>
-  <span class="n">non_abstain_filter</span> <span class="o">=</span> <span class="n">confidences</span> <span class="o">&gt;=</span> <span class="n">tau</span>
-  <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">non_abstain_filter</span><span class="p">):</span>
-    <span class="n">selective_risk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">loss</span><span class="p">[</span><span class="n">non_abstain_filter</span><span class="p">])</span>
-    <span class="n">selective_risk</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">non_abstain_filter</span><span class="p">)</span>
-    <span class="n">coverage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">non_abstain_filter</span><span class="p">)</span>
-    <span class="n">coverage_sr_tau</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">coverage</span><span class="p">,</span> <span class="n">selective_risk</span><span class="p">,</span> <span class="n">tau</span><span class="p">))</span>
-  <span class="k">else</span><span class="p">:</span>
-    <span class="c1"># 0 risk for 0 coverage</span>
-    <span class="n">coverage_sr_tau</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tau</span><span class="p">))</span>
-
-<span class="n">coverages</span><span class="p">,</span> <span class="n">selective_risks</span><span class="p">,</span> <span class="n">taus</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">coverage_sr_tau</span><span class="p">)))</span>
-<span class="k">assert</span> <span class="n">selective_risks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">coverages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">,</span> <span class="s2">&quot;no coverage not found&quot;</span>
-<span class="k">assert</span> <span class="n">coverages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;complete coverage not found&#39;</span>
-
-<span class="c1"># AURCC ( Area Under Risk-Coverage Curve): Ideally, we would like it to be 0</span>
-<span class="n">aurcc</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">auc</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">coverages</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">selective_risks</span><span class="p">)</span>
-
-<span class="c1"># Reverse-pair-proportion</span>
-<span class="n">rpp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-                     <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
-                     <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">confidences</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-                     <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">confidences</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-
-<span class="c1"># Coverage Resolution (cr_k) : Ideally, we would like it to be 1</span>
-<span class="n">k</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="n">_</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">k</span><span class="p">)]</span>
-<span class="n">cr_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">coverages</span><span class="p">,</span> <span class="n">bins</span><span class="p">))</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;aurcc: </span><span class="si">{}</span><span class="s2">, rpp: </span><span class="si">{}</span><span class="s2">, cr_</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aurcc</span><span class="p">,</span> <span class="n">rpp</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cr_k</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># #########################################</span>
+<span class="linenos"> 2</span><span class="c1"># (Section 3.3 in paper)</span>
+<span class="linenos"> 3</span><span class="c1"># #########################################</span>
+<span class="linenos"> 4</span><span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_xor</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>  <span class="c1"># we use 0-1 loss for demo</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># List of tuples (coverage, selective_risks, tau)</span>
+<span class="linenos"> 7</span><span class="n">coverage_sr_tau</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos"> 8</span><span class="n">tau_interval</span><span class="o">=</span><span class="mf">0.01</span>
+<span class="linenos"> 9</span><span class="k">for</span> <span class="n">tau</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tau_interval</span><span class="p">,</span> <span class="n">tau_interval</span><span class="p">):</span>
+<span class="linenos">10</span>  <span class="n">non_abstain_filter</span> <span class="o">=</span> <span class="n">confidences</span> <span class="o">&gt;=</span> <span class="n">tau</span>
+<span class="linenos">11</span>  <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">non_abstain_filter</span><span class="p">):</span>
+<span class="linenos">12</span>    <span class="n">selective_risk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">loss</span><span class="p">[</span><span class="n">non_abstain_filter</span><span class="p">])</span>
+<span class="linenos">13</span>    <span class="n">selective_risk</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">non_abstain_filter</span><span class="p">)</span>
+<span class="linenos">14</span>    <span class="n">coverage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">non_abstain_filter</span><span class="p">)</span>
+<span class="linenos">15</span>    <span class="n">coverage_sr_tau</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">coverage</span><span class="p">,</span> <span class="n">selective_risk</span><span class="p">,</span> <span class="n">tau</span><span class="p">))</span>
+<span class="linenos">16</span>  <span class="k">else</span><span class="p">:</span>
+<span class="linenos">17</span>    <span class="c1"># 0 risk for 0 coverage</span>
+<span class="linenos">18</span>    <span class="n">coverage_sr_tau</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tau</span><span class="p">))</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="n">coverages</span><span class="p">,</span> <span class="n">selective_risks</span><span class="p">,</span> <span class="n">taus</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">coverage_sr_tau</span><span class="p">)))</span>
+<span class="linenos">21</span><span class="k">assert</span> <span class="n">selective_risks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">coverages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">,</span> <span class="s2">&quot;no coverage not found&quot;</span>
+<span class="linenos">22</span><span class="k">assert</span> <span class="n">coverages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;complete coverage not found&#39;</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="c1"># AURCC ( Area Under Risk-Coverage Curve): Ideally, we would like it to be 0</span>
+<span class="linenos">25</span><span class="n">aurcc</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">auc</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">coverages</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">selective_risks</span><span class="p">)</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="c1"># Reverse-pair-proportion</span>
+<span class="linenos">28</span><span class="n">rpp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">29</span>                     <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
+<span class="linenos">30</span>                     <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">confidences</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">31</span>                     <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">confidences</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="c1"># Coverage Resolution (cr_k) : Ideally, we would like it to be 1</span>
+<span class="linenos">34</span><span class="n">k</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="linenos">35</span><span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="n">_</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">k</span><span class="p">)]</span>
+<span class="linenos">36</span><span class="n">cr_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">coverages</span><span class="p">,</span> <span class="n">bins</span><span class="p">))</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;aurcc: </span><span class="si">{}</span><span class="s2">, rpp: </span><span class="si">{}</span><span class="s2">, cr_</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aurcc</span><span class="p">,</span> <span class="n">rpp</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cr_k</span><span class="p">))</span>
 </pre></div>
 </div>
 </section>
 <section id="dataset">
 <h2>Dataset<a class="headerlink" href="#dataset" title="Permalink to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ###########################################</span>
-<span class="c1"># Datasets: (Section 4 in paper - step (1) )</span>
-<span class="c1"># ###########################################</span>
-
-<span class="kn">import</span> <span class="nn">opcc</span>
-
-<span class="n">env_name</span> <span class="o">=</span> <span class="s1">&#39;HalfCheetah-v2&#39;</span>
-
-<span class="c1"># list all dataset names corresponding to an env</span>
-<span class="n">dataset_names</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_dataset_names</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
-
-<span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;random&#39;</span>
-<span class="c1"># This is a very-slim wrapper over D4RL datasets.</span>
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_qlearning_dataset</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># ###########################################</span>
+<span class="linenos"> 2</span><span class="c1"># Datasets: (Section 4 in paper - step (1) )</span>
+<span class="linenos"> 3</span><span class="c1"># ###########################################</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">import</span> <span class="nn">opcc</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">env_name</span> <span class="o">=</span> <span class="s1">&#39;HalfCheetah-v2&#39;</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="c1"># list all dataset names corresponding to an env</span>
+<span class="linenos">10</span><span class="n">dataset_names</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_dataset_names</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="n">dataset_name</span> <span class="o">=</span> <span class="s1">&#39;random&#39;</span>
+<span class="linenos">13</span><span class="c1"># This is a very-slim wrapper over D4RL datasets.</span>
+<span class="linenos">14</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_qlearning_dataset</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="policy-usage">
 <h2>Policy Usage<a class="headerlink" href="#policy-usage" title="Permalink to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">opcc</span><span class="o">,</span> <span class="nn">gym</span><span class="o">,</span> <span class="nn">torch</span>
-
-<span class="n">env_name</span> <span class="o">=</span> <span class="s2">&quot;HalfCheetah-v2&quot;</span>
-<span class="n">model</span><span class="p">,</span> <span class="n">model_info</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">pre_trained</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
-
-<span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-<span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-    <span class="n">action</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">actor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-    <span class="n">action</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
-    <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">step_info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">opcc</span><span class="o">,</span> <span class="nn">gym</span><span class="o">,</span> <span class="nn">torch</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">env_name</span> <span class="o">=</span> <span class="s2">&quot;HalfCheetah-v2&quot;</span>
+<span class="linenos"> 4</span><span class="n">model</span><span class="p">,</span> <span class="n">model_info</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">pre_trained</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos"> 7</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="linenos">10</span><span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+<span class="linenos">11</span>    <span class="n">action</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">actor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="linenos">12</span>    <span class="n">action</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+<span class="linenos">13</span>    <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">step_info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+<span class="linenos">14</span>    <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
