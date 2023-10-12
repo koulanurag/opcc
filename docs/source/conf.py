@@ -40,6 +40,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_design",
     "myst_parser",
+    "sphinxext.opengraph",
 ]
 
 templates_path = ['_templates']

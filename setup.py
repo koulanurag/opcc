@@ -7,7 +7,8 @@ extras = {
     'test': ['pytest', 'pytest_cases', 'pytest-cov'],
     'dev': ['pandas==1.3.5', 'plotly==5.5.0', 'wandb'],
     'docs': ['sphinx', 'furo', 'sphinxcontrib-katex',
-             'sphinx-copybutton', 'sphinx_design', 'myst-parser']
+             'sphinx-copybutton', 'sphinx_design', 'myst-parser',
+             'sphinx-autobuild', 'sphinxext-opengraph']
 }
 # Meta dependency groups.
 extras['all'] = [item for group in extras.values() for item in group]
