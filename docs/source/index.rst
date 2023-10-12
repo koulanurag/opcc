@@ -3,9 +3,12 @@ Offline Policy Comparison with Confidence : Benchmark and Baselines
 
 .. raw:: html
 
-    <div class="author-section">
-        <p class="author-name"> Anurag Koul<sup>*</sup>, Mariano Phillepe<sup>**</sup>, Alan Fern<sup>*</sup></p>
-        <p class="autor-association"> <sup>*</sup>Oregon State University, <sup>**</sup>Intel Labs</p>
+    <div class="info admonition author-section">
+        <p class="admonition-title">Authors</p>
+        <blockquote>
+             <p class="author-name"> Anurag Koul<sup>*</sup>, Mariano Phillepe<sup>**</sup>, Alan Fern<sup>*</sup></p>
+            <p class="autor-association"> <sup>*</sup>Oregon State University, <sup>**</sup>Intel Labs</p>
+        </blockquote>
     </div>
 
 .. admonition:: TL;DR
