@@ -9,6 +9,7 @@ from .config import ASSETS_DIR
 from .config import ENV_CONFIGS, ENV_PERFORMANCE_STATS
 from .config import MAX_PRE_TRAINED_LEVEL
 from .config import MIN_PRE_TRAINED_LEVEL
+from .model import ActorCriticNetwork
 
 __all__ = ['get_queries', 'get_policy', 'get_sequence_dataset',
            'get_qlearning_dataset', 'get_dataset_names']
@@ -20,6 +21,19 @@ def get_queries(env_name):
 
     :param env_name:  name of the environment
     :type env_name: str
+
+    :return: A nested dictionary with the following structure:
+             {
+                (policy_a_args, policy_b_args): {
+                    'obs_a': list
+                    'obs_b': list
+                    'action_a': list
+                    'action_b': list
+                    'target': list
+                    'horizon': list
+                }
+             }
+    :rtype: dict
 
     :example:
         >>> import opcc
@@ -48,6 +62,11 @@ def get_policy(env_name: str, pre_trained: int = 1):
                         level.
     :type pre_trained: int
 
+    :return: A tuple containing two objects:
+             - policy.
+             - a dictionary of performance stats of the policy for the given env_name
+    :rtype: tuple of (ActorCriticNetwork, dict)
+
     :example:
         >>> import opcc
         >>> opcc.get_policy('d4rl:maze2d-open-v0',pre_trained=1)
@@ -71,7 +90,6 @@ def get_policy(env_name: str, pre_trained: int = 1):
     state_dict = torch.load(model_path, map_location=torch.device('cpu'))
 
     # create model
-    from .model import ActorCriticNetwork
     model = ActorCriticNetwork(ENV_CONFIGS[env_name]['observation_size'],
                                ENV_CONFIGS[env_name]['action_size'],
                                hidden_dim=64,
@@ -102,6 +120,10 @@ def get_sequence_dataset(env_name, dataset_name):
 
     :param dataset_name: name of the dataset
     :type dataset_name: str
+
+    :return: A list of dictionaries. Each dictionary is an episode containing
+             keys :'next_observations', 'observations', 'rewards', 'terminals', 'timeouts'
+    :rtype: list[dict]
 
     :example:
         >>> import opcc
@@ -177,6 +199,9 @@ def get_dataset_names(env_name):
 
     :param env_name:  name of the environment
     :type env_name: str
+
+    :return: A list of dataset-names
+    :rtype: list[str]
 
     :example:
         >>> import opcc
