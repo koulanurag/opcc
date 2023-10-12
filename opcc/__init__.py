@@ -19,8 +19,9 @@ def get_queries(env_name):
     Retrieves queries for the environment.
 
     :param env_name:  name of the environment
+    :type env_name: str
 
-    Example:
+    :example:
         >>> import opcc
         >>> opcc.get_queries('Hopper-v2')
     """
@@ -40,11 +41,14 @@ def get_policy(env_name: str, pre_trained: int = 1):
     Retrieves policies for the environment with the pre-trained quality marker.
 
     :param env_name:  name of the environment
+    :type env_name: str
+
     :param pre_trained: pre_trained level . It should be between 1 and 5 ,
                         where 1 indicates best model and 5 indicates worst
                         level.
+    :type pre_trained: int
 
-    Example:
+    :example:
         >>> import opcc
         >>> opcc.get_policy('d4rl:maze2d-open-v0',pre_trained=1)
     """
@@ -94,10 +98,12 @@ def get_sequence_dataset(env_name, dataset_name):
     Retrieves episodic dataset for the given environment and dataset_name
 
     :param env_name:  name of the environment
+    :type env_name: str
+
     :param dataset_name: name of the dataset
+    :type dataset_name: str
 
-
-    Example:
+    :example:
         >>> import opcc
         >>> dataset = opcc.get_sequence_dataset('Hopper-v2', 'medium') # list of episodes dictionaries
         >>> len(dataset)
@@ -135,9 +141,12 @@ def get_qlearning_dataset(env_name, dataset_name):
     Retrieves list of episodic transitions for the given environment and dataset_name
 
     :param env_name:  name of the environment
-    :param dataset_name: name of the dataset
+    :type env_name: str
 
-    Example:
+    :param dataset_name: name of the dataset
+    :type dataset_name: str
+
+    :example:
         >>> import opcc
         >>> dataset = opcc.get_qlearning_dataset('Hopper-v2', 'medium') # dictionaries
         >>> dataset.keys()
@@ -167,8 +176,9 @@ def get_dataset_names(env_name):
     Retrieves list of dataset-names available for an environment
 
     :param env_name:  name of the environment
+    :type env_name: str
 
-    Example:
+    :example:
         >>> import opcc
         >>> opcc.get_dataset_names('Hopper-v2')
         ['random', 'expert', 'medium', 'medium-replay', 'medium-expert']
