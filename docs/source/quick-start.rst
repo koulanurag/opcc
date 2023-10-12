@@ -7,6 +7,7 @@ Queries
 ---------
 
 .. code-block:: python
+    :linenos:
 
     import opcc
     import numpy as np
@@ -72,6 +73,7 @@ Evaluation Metrics
 -------------------
 
 .. code-block:: python
+    :linenos:
 
     # #########################################
     # (Section 3.3 in paper)
@@ -118,6 +120,7 @@ Dataset
 ---------
 
 .. code-block:: python
+    :linenos:
 
     # ###########################################
     # Datasets: (Section 4 in paper - step (1) )
@@ -140,6 +143,7 @@ Policy Usage
 --------------------
 
 .. code-block:: python
+    :linenos:
 
     import opcc, gym, torch
 
