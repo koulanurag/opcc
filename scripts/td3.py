@@ -22,16 +22,17 @@ class TD3:
             state_dim,
             action_dim,
             max_action,
+            hidden_dim=64,
             discount=0.99,
             tau=0.005,
             policy_noise=0.2,
             noise_clip=0.5,
             policy_freq=2,
-            alpha=2.5,
             device="cpu"
     ):
 
-        self.actor = ActorNetwork(state_dim, action_dim, max_action).to(device)
+        self.actor = ActorNetwork(state_dim, action_dim, hidden_dim, max_action)
+        self.actor = self.actor.to(device)
         self.actor_target = copy.deepcopy(self.actor)
         self.actor_optimizer = torch.optim.Adam(self.actor.parameters(), lr=3e-4)
 
@@ -51,7 +52,6 @@ class TD3:
         self.policy_noise = policy_noise
         self.noise_clip = noise_clip
         self.policy_freq = policy_freq
-        self.alpha = alpha
 
         self.total_it = 0
 
@@ -111,10 +111,7 @@ class TD3:
 
             # Compute actor loss
             pi = self.actor(state)
-            Q = self.critic_1(state, pi)
-            lmbda = self.alpha / Q.abs().mean().detach()
-
-            actor_loss = -lmbda * Q.mean() + F.mse_loss(pi, action)
+            actor_loss = -self.critic_1(state, self.actor(state)).mean()
             loss_info['actor'] = actor_loss.item()
 
             # Optimize the actor
@@ -492,8 +489,6 @@ def main():
         "policy_noise": args.policy_noise * max_action,
         "noise_clip": args.noise_clip * max_action,
         "policy_freq": args.policy_frequency,
-        # TD3 + BC
-        "alpha": args.alpha
     }
 
     model = TD3(**kwargs)
