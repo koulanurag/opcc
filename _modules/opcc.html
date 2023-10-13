@@ -222,10 +222,10 @@
 <span class="sd">    :param env_name:  name of the environment</span>
 <span class="sd">    :type env_name: str</span>
 
-<span class="sd">    :return: A nested dictionary with the following structure:</span>
-
-<span class="sd">             {</span>
-<span class="sd">                (policy_a_args, policy_b_args): {</span>
+<span class="sd">    :return:</span>
+<span class="sd">        A nested dictionary with the following structure:</span>
+<span class="sd">        {</span>
+<span class="sd">            (policy_a_args, policy_b_args): {</span>
 <span class="sd">                    &#39;obs_a&#39;: list</span>
 <span class="sd">                    &#39;obs_b&#39;: list</span>
 <span class="sd">                    &#39;action_a&#39;: list</span>
@@ -233,13 +233,14 @@
 <span class="sd">                    &#39;target&#39;: list</span>
 <span class="sd">                    &#39;horizon&#39;: list</span>
 <span class="sd">                }</span>
-<span class="sd">             }</span>
+<span class="sd">        }</span>
 
 <span class="sd">    :rtype: dict</span>
 
 <span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc</span>
 <span class="sd">        &gt;&gt;&gt; opcc.get_queries(&#39;Hopper-v2&#39;)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">env_name</span> <span class="ow">in</span> <span class="n">ENV_CONFIGS</span><span class="p">,</span> \
         <span class="p">(</span><span class="s1">&#39;`</span><span class="si">{}</span><span class="s1">` not found. It should be among following: </span><span class="si">{}</span><span class="s1">&#39;</span>
@@ -264,9 +265,10 @@
 <span class="sd">                        worst level.</span>
 <span class="sd">    :type pre_trained: int</span>
 
-<span class="sd">    :return: A tuple containing two objects:</span>
-<span class="sd">             - policy.</span>
-<span class="sd">             - a dictionary of performance stats of the policy for the given env_name</span>
+<span class="sd">    :return:</span>
+<span class="sd">        A tuple containing two objects:</span>
+<span class="sd">        - policy.</span>
+<span class="sd">        - a dictionary of performance stats of the policy for the given env_name</span>
 <span class="sd">    :rtype: tuple of (ActorCriticNetwork, dict)</span>
 
 <span class="sd">    :example:</span>
