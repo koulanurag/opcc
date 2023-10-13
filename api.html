@@ -261,9 +261,12 @@ worst level.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple containing two objects:
-- policy.
-- a dictionary of performance stats of the policy for the given env_name</p>
+<dd class="field-even"><p><p>A tuple containing two objects:</p>
+<ul class="simple">
+<li><p>policy.</p></li>
+<li><p>a dictionary of performance stats of the policy for the given env_name</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple of (ActorCriticNetwork, dict)</p>
@@ -312,17 +315,17 @@ worst level.</p></li>
 <dd class="field-odd"><p><strong>env_name</strong> (<em>str</em>) – name of the environment</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>A nested dictionary with the following structure:
-{</p>
+<dd class="field-even"><p><p>A nested dictionary with the following structure:</p>
+<p>{</p>
 <blockquote>
 <div><dl>
 <dt>(policy_a_args, policy_b_args): {</dt><dd><blockquote>
-<div><p>‘obs_a’: list
-‘obs_b’: list
-‘action_a’: list
-‘action_b’: list
-‘target’: list
-‘horizon’: list</p>
+<div><p>‘obs_a’: list,</p>
+<p>’obs_b’: list,</p>
+<p>’action_a’: list,</p>
+<p>’action_b’: list,</p>
+<p>’target’: list,</p>
+<p>’horizon’: list,</p>
 </div></blockquote>
 <p>}</p>
 </dd>
@@ -355,8 +358,9 @@ worst level.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of dictionaries. Each dictionary is an episode containing
-keys :’next_observations’, ‘observations’, ‘rewards’, ‘terminals’, ‘timeouts’</p>
+<dd class="field-even"><p><p>A list of dictionaries. Each dictionary is an episode containing</p>
+<p>keys :’next_observations’, ‘observations’, ‘rewards’, ‘terminals’, ‘timeouts’</p>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list[dict]</p>
