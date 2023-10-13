@@ -20,7 +20,7 @@ Benchmark Information
 Datasets
 ~~~~~~~~~
 
-.. list-table:: Maze2d-Datasets
+.. list-table::
    :widths: auto
    :header-rows: 1
    :align: left
@@ -45,8 +45,7 @@ Datasets
 Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-.. list-table:: Maze2d-Policies Performance stats
+.. list-table::
    :widths: auto
    :header-rows: 1
    :align: left
@@ -97,7 +96,7 @@ Datasets
 ~~~~~~~~~
 
 
-.. list-table:: Mujoco-Datasets
+.. list-table::
    :widths: auto
    :header-rows: 1
    :align: left
@@ -119,7 +118,7 @@ Datasets
 Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. list-table:: Mujoco-Policies Performance stats
+.. list-table::
    :widths: auto
    :header-rows: 1
    :align: left
