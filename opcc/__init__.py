@@ -12,7 +12,7 @@ from .config import MIN_PRE_TRAINED_LEVEL
 from .model import ActorCriticNetwork
 
 __all__ = ['get_queries', 'get_policy', 'get_sequence_dataset',
-           'get_qlearning_dataset', 'get_dataset_names']
+           'get_qlearning_dataset', 'get_dataset_names', 'get_env_names']
 
 
 def get_queries(env_name):
@@ -229,3 +229,18 @@ def get_dataset_names(env_name):
         ('`{}` not found. It should be among following: {}'.
          format(env_name, list(ENV_CONFIGS.keys())))
     return list(ENV_CONFIGS[env_name]['datasets'].keys())
+
+
+def get_env_names():
+    """
+    Retrieves list of environment for which queries are available
+
+    :return: A list of env-names
+    :rtype: list[str]
+
+    :example:
+        >>> import opcc
+        >>> opcc.get_env_names()
+        ['HalfCheetah-v2', 'Hopper-v2', 'Walker2d-v2', 'd4rl:maze2d-large-v1', 'd4rl:maze2d-medium-v1', 'd4rl:maze2d-open-v0', 'd4rl:maze2d-umaze-v1']
+    """
+    return sorted(list(ENV_CONFIGS.keys()))
