@@ -24,15 +24,23 @@ def get_queries(env_name):
 
     :return:
         A nested dictionary with the following structure:
+
         {
+            
             (policy_a_args, policy_b_args): {
-                    'obs_a': list
-                    'obs_b': list
-                    'action_a': list
-                    'action_b': list
-                    'target': list
-                    'horizon': list
+                    'obs_a': list,
+
+                    'obs_b': list,
+
+                    'action_a': list,
+
+                    'action_b': list,
+
+                    'target': list,
+
+                    'horizon': list,
                 }
+            
         }
 
     :rtype: dict
@@ -67,8 +75,11 @@ def get_policy(env_name: str, pre_trained: int = 1):
 
     :return:
         A tuple containing two objects:
+
         - policy.
+
         - a dictionary of performance stats of the policy for the given env_name
+
     :rtype: tuple of (ActorCriticNetwork, dict)
 
     :example:
@@ -127,8 +138,11 @@ def get_sequence_dataset(env_name, dataset_name):
     :param dataset_name: name of the dataset
     :type dataset_name: str
 
-    :return: A list of dictionaries. Each dictionary is an episode containing
-             keys :'next_observations', 'observations', 'rewards', 'terminals', 'timeouts'
+    :return: 
+        A list of dictionaries. Each dictionary is an episode containing
+        
+        keys :'next_observations', 'observations', 'rewards', 'terminals', 'timeouts'
+
     :rtype: list[dict]
 
     :example:
