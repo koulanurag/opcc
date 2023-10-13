@@ -16,6 +16,64 @@ import copy
 import torch.nn.functional as F
 
 
+def estimate_task_reward(args, env, state, action, step_reward,
+                         next_state, done, step_info):
+    if args.env in ['HalfCheetah-v2', 'HalfCheetah-v4']:
+        delta_x = next_state.qpos[0] - state.qpos[0]
+        sign = np.sign(delta_x)
+        dt = env.unwrapped.dt
+        reward = sign * (min(np.abs(delta_x), args.distance_threshold)
+                         + max(0, np.abs(delta_x) - args.distance_threshold))
+        reward /= dt
+        if args.env_mode == 'default':
+            return reward
+        elif args.env_mode == 'backward':
+            return - reward
+        else:
+            raise ValueError
+	
+    elif args.env in ['maze2d-open-dense-v0', 'maze2d-umaze-dense-v1',
+                      'maze2d-medium-dense-v1', 'maze2d-large-dense-v1']:
+        pass
+    else:
+        raise NotImplementedError('custom reward fun. not defined for ')
+    
+class ReplayBuffer(object):
+    def __init__(self, state_dim, action_dim, max_size=int(1e6)):
+        self.max_size = max_size
+        self.ptr = 0
+        self.size = 0
+
+        self.state = np.zeros((max_size, state_dim))
+        self.action = np.zeros((max_size, action_dim))
+        self.next_state = np.zeros((max_size, state_dim))
+        self.reward = np.zeros((max_size, 1))
+        self.not_done = np.zeros((max_size, 1))
+
+        self.device = torch.device(
+            "cuda" if torch.cuda.is_available() else "cpu")
+
+    def add(self, state, action, next_state, reward, done):
+        self.state[self.ptr] = state
+        self.action[self.ptr] = action
+        self.next_state[self.ptr] = next_state
+        self.reward[self.ptr] = reward
+        self.not_done[self.ptr] = 1. - done
+
+        self.ptr = (self.ptr + 1) % self.max_size
+        self.size = min(self.size + 1, self.max_size)
+
+    def sample(self, batch_size):
+        ind = np.random.randint(0, self.size, size=batch_size)
+
+        return (
+            torch.FloatTensor(self.state[ind]).to(self.device),
+            torch.FloatTensor(self.action[ind]).to(self.device),
+            torch.FloatTensor(self.next_state[ind]).to(self.device),
+            torch.FloatTensor(self.reward[ind]).to(self.device),
+            torch.FloatTensor(self.not_done[ind]).to(self.device)
+        )
+
 class TD3:
     def __init__(
             self,
@@ -41,8 +99,8 @@ class TD3:
         self.critic_target_1 = copy.deepcopy(self.critic_1)
         self.critic_target_2 = copy.deepcopy(self.critic_2)
         self.critic_optimizer = torch.optim.Adam(
-            [{'parameters': self.critic_1.parameters()},
-             {'parameters': self.critic_2.parameters()}],
+            [{'params': self.critic_1.parameters()},
+             {'params': self.critic_2.parameters()}],
             lr=3e-4
         )
 
@@ -162,11 +220,8 @@ class TD3:
 
 
 class Trainer(object):
-    def __init__(self, model, expr_dir, mean, std, use_wandb):
+    def __init__(self, model, expr_dir, use_wandb):
         self.model = model
-
-        self.mean = mean
-        self.std = std
 
         # paths
         self.expr_dir = expr_dir
@@ -183,7 +238,6 @@ class Trainer(object):
     def train(
             self,
             num_updates,
-            dataloader,
             env_fn,
             seed,
             num_test_episodes=1,
@@ -192,8 +246,111 @@ class Trainer(object):
             eval_interval=1,
             device='cpu',
     ):
+
+        replay_buffer = ReplayBuffer(state_dim, action_dim)
+
+        # Evaluate untrained policy
+        eval_info = eval_policy(args, policy, args.env, args.seed)
+        evaluations = {}
+        evaluations['original-task-score'] = [np.mean([np.sum(_) 
+                       for _ in eval_info['original-task-reward']])]
+        evaluations['task-score'] = [np.mean([np.sum(_) 
+                                 for _ in eval_info['task-reward']])] 
+
+        state, done = env.reset(), False
+        mj_state = env.sim.get_state()
+        episode_reward = {'original-task': 0., 'task': 0.}
+        episode_timesteps = 0
+        episode_num = 0
+
         dataloader_iter = iter(dataloader)
         loss_interval_info = defaultdict(lambda: 0)
+
+        for t in range(int(args.max_timesteps)):
+
+            episode_timesteps += 1
+
+            # Select action randomly or according to policy
+            if t < args.start_timesteps:
+                action = env.action_space.sample()
+            else:
+                action = policy.select_action(np.array(state))
+                action_noise = np.random.normal(0,
+                                                max_action * args.expl_noise,
+                                                size=action_dim)
+                action = (action + action_noise).clip(-max_action, max_action)
+
+            # Perform action
+            next_state, reward, done, info = env.step(action)
+            mj_next_state = env.sim.get_state()
+            if episode_timesteps < env._max_episode_steps:
+                done_bool = float(done)
+            else:
+                done_bool = 0
+
+            # Store data in replay buffer
+            task_reward = estimate_task_reward(args, env, mj_state, action,
+                                               reward,
+                                               mj_next_state, done, info)
+            replay_buffer.add(state, action, next_state, task_reward,
+                              done_bool)
+
+            state = next_state
+            mj_state = mj_next_state
+            episode_reward['original-task'] += reward
+            episode_reward['task'] += task_reward
+
+            # Train agent after collecting sufficient data
+            if t >= args.start_timesteps:
+                policy.train(replay_buffer, args.batch_size)
+
+            if done:
+                # +1 to account for 0 indexing.
+                # +0 on ep_timesteps since it will increment +1
+                # even if done=True
+                print(f"Total T: {t + 1} "
+                      f"Episode Num: {episode_num + 1} "
+                      f"Episode T: {episode_timesteps} "
+                      f"Score: {episode_reward['task']:.3f}"
+                      f"Original Score: {episode_reward['original-task']:.3f}")
+
+                # Reset environment
+                state, done = env.reset(), False
+                episode_reward = {'original-task': 0., 'task': 0.}
+                episode_timesteps = 0
+                episode_num += 1
+
+            # Evaluate episode
+            if (t + 1) % args.eval_freq == 0:
+                eval_info = eval_policy(args, policy, args.env,
+                                        args.seed)
+                evaluations['original-task-score'].append(
+                               np.mean([np.sum(_) for _ in
+                               eval_info['original-task-reward']]))
+                evaluations['task-score'].append(
+                 np.mean([np.sum(_) for _ in eval_info['task-reward']]))
+
+                np.save(os.path.join(expr_dir, 'evaluations'),
+                        evaluations)
+
+                # msg
+                print("---------------------------------------")
+                print(f"Evaluation over {len(eval_info['task-reward'])}"
+                      f" episodes =>"
+                      f" Score : {evaluations['task-score'][-1]:.3f}"
+                      f" Original Score : "
+                      f"{evaluations['original-task-score'][-1]:.3f}")
+                print("---------------------------------------")
+
+                # save model
+                policy.save(model_path)
+
+                # log and save  to wandb
+                if args.use_wandb:
+                    wandb.log({**{'time-step': t + 1},
+                               **{k: v[-1] for k, v in evaluations.items()}})
+                    wandb.save(glob_str=model_path, policy='now')
+                    
 
         # perform training
         for update_iter in tqdm(range(num_updates), desc="Update Iter"):
@@ -503,7 +660,6 @@ def main():
     if args.job == "train":
         trainer.train(
             num_updates=args.max_updates,
-            dataloader=dataloader,
             env_fn=lambda: gym.make(args.env),
             seed=args.seed,
             num_test_episodes=args.num_test_episodes,
