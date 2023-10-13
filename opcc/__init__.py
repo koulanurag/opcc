@@ -25,23 +25,23 @@ def get_queries(env_name):
     :return:
         A nested dictionary with the following structure:
 
-        {
-            
-            (policy_a_args, policy_b_args): {
-                    'obs_a': list,
+        .. code-block:: python
+        
+            {   (policy_a_args, policy_b_args): {
+                        'obs_a': list,
 
-                    'obs_b': list,
+                        'obs_b': list,
 
-                    'action_a': list,
+                        'action_a': list,
 
-                    'action_b': list,
+                        'action_b': list,
 
-                    'target': list,
+                        'target': list,
 
-                    'horizon': list,
-                }
-            
-        }
+                        'horizon': list,
+                    }
+                
+            }
 
     :rtype: dict
 
@@ -74,11 +74,8 @@ def get_policy(env_name: str, pre_trained: int = 1):
     :type pre_trained: int
 
     :return:
-        A tuple containing two objects:
-
-        - policy.
-
-        - a dictionary of performance stats of the policy for the given env_name
+        A tuple containing two objects: 1) policy. 2) a dictionary of performance 
+        stats of the policy for the given env_name
 
     :rtype: tuple of (ActorCriticNetwork, dict)
 
