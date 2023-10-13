@@ -255,9 +255,9 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env_name</strong> (<em>str</em>) – name of the environment</p></li>
-<li><p><strong>pre_trained</strong> (<em>int</em>) – pre_trained level . It should be between 1 and 5 ,
-where 1 indicates best model and 5 indicates worst
-level.</p></li>
+<li><p><strong>pre_trained</strong> (<em>int</em>) – pre_trained level of the policy . It should be between 1 and
+4(inclusive) , where 1 indicates best model and 5 indicates
+worst level.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -269,8 +269,10 @@ level.</p></li>
 <dd class="field-odd"><p>tuple of (ActorCriticNetwork, dict)</p>
 </dd>
 <dt class="field-even">Example<span class="colon">:</span></dt>
-<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="s1">&#39;d4rl:maze2d-open-v0&#39;</span><span class="p">,</span><span class="n">pre_trained</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span><span class="o">,</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">policy</span><span class="p">,</span> <span class="n">policy_stats</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="s1">&#39;d4rl:maze2d-open-v0&#39;</span><span class="p">,</span><span class="n">pre_trained</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">actor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">())</span>
+<span class="go">tensor([[0.9754, 0.9998]], dtype=torch.float64, grad_fn=&lt;TanhBackward0&gt;)</span>
 </pre></div>
 </div>
 </dd>
@@ -310,10 +312,9 @@ level.</p></li>
 <dd class="field-odd"><p><strong>env_name</strong> (<em>str</em>) – name of the environment</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>A nested dictionary with the following structure:
-{</p>
-<blockquote>
-<div><dl class="simple">
+<dd class="field-even"><p><p>A nested dictionary with the following structure:</p>
+<dl>
+<dt>{</dt><dd><dl class="simple">
 <dt>(policy_a_args, policy_b_args): {</dt><dd><p>‘obs_a’: list
 ‘obs_b’: list
 ‘action_a’: list
@@ -323,7 +324,8 @@ level.</p></li>
 </dd>
 </dl>
 <p>}</p>
-</div></blockquote>
+</dd>
+</dl>
 <p>}</p>
 </p>
 </dd>

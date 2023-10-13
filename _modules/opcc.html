@@ -223,6 +223,7 @@
 <span class="sd">    :type env_name: str</span>
 
 <span class="sd">    :return: A nested dictionary with the following structure:</span>
+
 <span class="sd">             {</span>
 <span class="sd">                (policy_a_args, policy_b_args): {</span>
 <span class="sd">                    &#39;obs_a&#39;: list</span>
@@ -233,6 +234,7 @@
 <span class="sd">                    &#39;horizon&#39;: list</span>
 <span class="sd">                }</span>
 <span class="sd">             }</span>
+
 <span class="sd">    :rtype: dict</span>
 
 <span class="sd">    :example:</span>
@@ -257,9 +259,9 @@
 <span class="sd">    :param env_name:  name of the environment</span>
 <span class="sd">    :type env_name: str</span>
 
-<span class="sd">    :param pre_trained: pre_trained level . It should be between 1 and 5 ,</span>
-<span class="sd">                        where 1 indicates best model and 5 indicates worst</span>
-<span class="sd">                        level.</span>
+<span class="sd">    :param pre_trained: pre_trained level of the policy . It should be between 1 and</span>
+<span class="sd">                        4(inclusive) , where 1 indicates best model and 5 indicates</span>
+<span class="sd">                        worst level.</span>
 <span class="sd">    :type pre_trained: int</span>
 
 <span class="sd">    :return: A tuple containing two objects:</span>
@@ -268,8 +270,10 @@
 <span class="sd">    :rtype: tuple of (ActorCriticNetwork, dict)</span>
 
 <span class="sd">    :example:</span>
-<span class="sd">        &gt;&gt;&gt; import opcc</span>
-<span class="sd">        &gt;&gt;&gt; opcc.get_policy(&#39;d4rl:maze2d-open-v0&#39;,pre_trained=1)</span>
+<span class="sd">        &gt;&gt;&gt; import opcc, torch</span>
+<span class="sd">        &gt;&gt;&gt; policy, policy_stats = opcc.get_policy(&#39;d4rl:maze2d-open-v0&#39;,pre_trained=1)</span>
+<span class="sd">        &gt;&gt;&gt; action = policy.actor(torch.randn(1,4).double())</span>
+<span class="sd">        tensor([[0.9754, 0.9998]], dtype=torch.float64, grad_fn=&lt;TanhBackward0&gt;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">assert</span> <span class="n">MIN_PRE_TRAINED_LEVEL</span> <span class="o">&lt;=</span> <span class="n">pre_trained</span> <span class="o">&lt;=</span> <span class="n">MAX_PRE_TRAINED_LEVEL</span><span class="p">,</span> \
