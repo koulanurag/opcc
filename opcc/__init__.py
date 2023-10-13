@@ -23,6 +23,7 @@ def get_queries(env_name):
     :type env_name: str
 
     :return: A nested dictionary with the following structure:
+
              {
                 (policy_a_args, policy_b_args): {
                     'obs_a': list
@@ -33,6 +34,7 @@ def get_queries(env_name):
                     'horizon': list
                 }
              }
+
     :rtype: dict
 
     :example:
@@ -57,9 +59,9 @@ def get_policy(env_name: str, pre_trained: int = 1):
     :param env_name:  name of the environment
     :type env_name: str
 
-    :param pre_trained: pre_trained level . It should be between 1 and 5 ,
-                        where 1 indicates best model and 5 indicates worst
-                        level.
+    :param pre_trained: pre_trained level of the policy . It should be between 1 and
+                        4(inclusive) , where 1 indicates best model and 5 indicates
+                        worst level.
     :type pre_trained: int
 
     :return: A tuple containing two objects:
@@ -68,8 +70,10 @@ def get_policy(env_name: str, pre_trained: int = 1):
     :rtype: tuple of (ActorCriticNetwork, dict)
 
     :example:
-        >>> import opcc
-        >>> opcc.get_policy('d4rl:maze2d-open-v0',pre_trained=1)
+        >>> import opcc, torch
+        >>> policy, policy_stats = opcc.get_policy('d4rl:maze2d-open-v0',pre_trained=1)
+        >>> action = policy.actor(torch.randn(1,4).double())
+        tensor([[0.9754, 0.9998]], dtype=torch.float64, grad_fn=<TanhBackward0>)
     """
 
     assert MIN_PRE_TRAINED_LEVEL <= pre_trained <= MAX_PRE_TRAINED_LEVEL, \
