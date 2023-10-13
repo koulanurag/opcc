@@ -22,10 +22,10 @@ def get_queries(env_name):
     :param env_name:  name of the environment
     :type env_name: str
 
-    :return: A nested dictionary with the following structure:
-
-             {
-                (policy_a_args, policy_b_args): {
+    :return:
+        A nested dictionary with the following structure:
+        {
+            (policy_a_args, policy_b_args): {
                     'obs_a': list
                     'obs_b': list
                     'action_a': list
@@ -33,13 +33,14 @@ def get_queries(env_name):
                     'target': list
                     'horizon': list
                 }
-             }
+        }
 
     :rtype: dict
 
     :example:
         >>> import opcc
         >>> opcc.get_queries('Hopper-v2')
+
     """
     assert env_name in ENV_CONFIGS, \
         ('`{}` not found. It should be among following: {}'
@@ -64,9 +65,10 @@ def get_policy(env_name: str, pre_trained: int = 1):
                         worst level.
     :type pre_trained: int
 
-    :return: A tuple containing two objects:
-             - policy.
-             - a dictionary of performance stats of the policy for the given env_name
+    :return:
+        A tuple containing two objects:
+        - policy.
+        - a dictionary of performance stats of the policy for the given env_name
     :rtype: tuple of (ActorCriticNetwork, dict)
 
     :example:
