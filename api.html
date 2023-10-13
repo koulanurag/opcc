@@ -248,6 +248,27 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="opcc.get_env_names">
+<span class="sig-prename descclassname"><span class="pre">opcc.</span></span><span class="sig-name descname"><span class="pre">get_env_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opcc.html#get_env_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opcc.get_env_names" title="Permalink to this definition">#</a></dt>
+<dd><p>Retrieves list of environment for which queries are available</p>
+<dl class="field-list">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of env-names</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opcc</span><span class="o">.</span><span class="n">get_env_names</span><span class="p">()</span>
+<span class="go">[&#39;HalfCheetah-v2&#39;, &#39;Hopper-v2&#39;, &#39;Walker2d-v2&#39;, &#39;d4rl:maze2d-large-v1&#39;, &#39;d4rl:maze2d-medium-v1&#39;, &#39;d4rl:maze2d-open-v0&#39;, &#39;d4rl:maze2d-umaze-v1&#39;]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="opcc.get_policy">
 <span class="sig-prename descclassname"><span class="pre">opcc.</span></span><span class="sig-name descname"><span class="pre">get_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_trained</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opcc.html#get_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#opcc.get_policy" title="Permalink to this definition">#</a></dt>
 <dd><p>Retrieves policies for the environment with the pre-trained quality marker.</p>
@@ -428,6 +449,7 @@ stats of the policy for the given env_name</p>
             <ul>
 <li><a class="reference internal" href="#">API Reference</a><ul>
 <li><a class="reference internal" href="#opcc.get_dataset_names"><code class="docutils literal notranslate"><span class="pre">get_dataset_names()</span></code></a></li>
+<li><a class="reference internal" href="#opcc.get_env_names"><code class="docutils literal notranslate"><span class="pre">get_env_names()</span></code></a></li>
 <li><a class="reference internal" href="#opcc.get_policy"><code class="docutils literal notranslate"><span class="pre">get_policy()</span></code></a></li>
 <li><a class="reference internal" href="#opcc.get_qlearning_dataset"><code class="docutils literal notranslate"><span class="pre">get_qlearning_dataset()</span></code></a></li>
 <li><a class="reference internal" href="#opcc.get_queries"><code class="docutils literal notranslate"><span class="pre">get_queries()</span></code></a></li>

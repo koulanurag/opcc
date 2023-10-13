@@ -212,7 +212,7 @@
 <span class="kn">from</span> <span class="nn">.model</span> <span class="kn">import</span> <span class="n">ActorCriticNetwork</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;get_queries&#39;</span><span class="p">,</span> <span class="s1">&#39;get_policy&#39;</span><span class="p">,</span> <span class="s1">&#39;get_sequence_dataset&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;get_qlearning_dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;get_dataset_names&#39;</span><span class="p">]</span>
+           <span class="s1">&#39;get_qlearning_dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;get_dataset_names&#39;</span><span class="p">,</span> <span class="s1">&#39;get_env_names&#39;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="get_queries"><a class="viewcode-back" href="../api.html#opcc.get_queries">[docs]</a><span class="k">def</span> <span class="nf">get_queries</span><span class="p">(</span><span class="n">env_name</span><span class="p">):</span>
@@ -429,6 +429,21 @@
         <span class="p">(</span><span class="s1">&#39;`</span><span class="si">{}</span><span class="s1">` not found. It should be among following: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span>
          <span class="nb">format</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">ENV_CONFIGS</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ENV_CONFIGS</span><span class="p">[</span><span class="n">env_name</span><span class="p">][</span><span class="s1">&#39;datasets&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="get_env_names"><a class="viewcode-back" href="../api.html#opcc.get_env_names">[docs]</a><span class="k">def</span> <span class="nf">get_env_names</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves list of environment for which queries are available</span>
+
+<span class="sd">    :return: A list of env-names</span>
+<span class="sd">    :rtype: list[str]</span>
+
+<span class="sd">    :example:</span>
+<span class="sd">        &gt;&gt;&gt; import opcc</span>
+<span class="sd">        &gt;&gt;&gt; opcc.get_env_names()</span>
+<span class="sd">        [&#39;HalfCheetah-v2&#39;, &#39;Hopper-v2&#39;, &#39;Walker2d-v2&#39;, &#39;d4rl:maze2d-large-v1&#39;, &#39;d4rl:maze2d-medium-v1&#39;, &#39;d4rl:maze2d-open-v0&#39;, &#39;d4rl:maze2d-umaze-v1&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">ENV_CONFIGS</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span></div>
 </pre></div>
         </article>
       </div>
