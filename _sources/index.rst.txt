@@ -32,6 +32,17 @@ Slides
     <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRtwZFzF081XdGn8jFUIXkdMrRmtQMLIOqgw1ivh6a554KwmtlnWi9zWfjw1fh5WsSQMEiVU0s8RyzN/embed?start=false&loop=false&delayms=3000" frameborder="0" width="480" height="299" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
     </div>
 
+------------
+Source Code
+------------
+
+.. raw:: html
+
+    <div class="source-code-container">
+    <div><a href="https://github.com/koulanurag/opcc"> Benchmark</a></div>
+    <div><a href="https://github.com/koulanurag/opcc-baselines"> Baselines</a> </div>
+    </div>
+
 ----------
 Contents
 ----------

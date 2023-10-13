@@ -34,3 +34,19 @@
     text-align: justify;
     font-family: monospace;
 }
+
+.source-code-container{
+    text-align: center;
+}
+.source-code-container div{
+    font-size: 15px;
+    border: 1px solid rgb(201, 200, 200);
+    border-radius: 5px;
+    padding: 10px 25px;
+    font-family: monospace;
+    background: rgb(246, 245, 245);
+    display: inline-block;
+    margin: 0px 20px;
+
+}
+
