@@ -225,23 +225,23 @@
 <span class="sd">    :return:</span>
 <span class="sd">        A nested dictionary with the following structure:</span>
 
-<span class="sd">        {</span>
-<span class="sd">            </span>
-<span class="sd">            (policy_a_args, policy_b_args): {</span>
-<span class="sd">                    &#39;obs_a&#39;: list,</span>
+<span class="sd">        .. code-block:: python</span>
+<span class="sd">        </span>
+<span class="sd">            {   (policy_a_args, policy_b_args): {</span>
+<span class="sd">                        &#39;obs_a&#39;: list,</span>
 
-<span class="sd">                    &#39;obs_b&#39;: list,</span>
+<span class="sd">                        &#39;obs_b&#39;: list,</span>
 
-<span class="sd">                    &#39;action_a&#39;: list,</span>
+<span class="sd">                        &#39;action_a&#39;: list,</span>
 
-<span class="sd">                    &#39;action_b&#39;: list,</span>
+<span class="sd">                        &#39;action_b&#39;: list,</span>
 
-<span class="sd">                    &#39;target&#39;: list,</span>
+<span class="sd">                        &#39;target&#39;: list,</span>
 
-<span class="sd">                    &#39;horizon&#39;: list,</span>
-<span class="sd">                }</span>
-<span class="sd">            </span>
-<span class="sd">        }</span>
+<span class="sd">                        &#39;horizon&#39;: list,</span>
+<span class="sd">                    }</span>
+<span class="sd">                </span>
+<span class="sd">            }</span>
 
 <span class="sd">    :rtype: dict</span>
 
@@ -274,11 +274,8 @@
 <span class="sd">    :type pre_trained: int</span>
 
 <span class="sd">    :return:</span>
-<span class="sd">        A tuple containing two objects:</span>
-
-<span class="sd">        - policy.</span>
-
-<span class="sd">        - a dictionary of performance stats of the policy for the given env_name</span>
+<span class="sd">        A tuple containing two objects: 1) policy. 2) a dictionary of performance </span>
+<span class="sd">        stats of the policy for the given env_name</span>
 
 <span class="sd">    :rtype: tuple of (ActorCriticNetwork, dict)</span>
 
