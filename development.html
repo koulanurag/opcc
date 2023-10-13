@@ -7,12 +7,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="development.html" />
 <meta property="og:site_name" content="opcc" />
-<meta property="og:description" content="Install : pip install -e “.[all]”. Generate-Queries: Generate policy performance stats for readme: Testing Package: Install : pip install -e “.[test]”, Run: pytest -v, Testing is computationally ex..." />
+<meta property="og:description" content="Install :,,. Generate-Queries: Generate pre-trained policy performance stats for README: Testing Package:- Install :,,., Testing is computationally expensive as we validate ground truth value estim..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="/_images/social_previews/summary_development_5577e6a6.png" />
-<meta property="og:image:alt" content="Install : pip install -e “.[all]”. Generate-Queries: Generate policy performance stats for readme: Testing Package: Install : pip install -e “.[test]”, Run:..." />
-<meta name="description" content="Install : pip install -e “.[all]”. Generate-Queries: Generate policy performance stats for readme: Testing Package: Install : pip install -e “.[test]”, Run: pytest -v, Testing is computationally ex..." />
+<meta property="og:image" content="/_images/social_previews/summary_development_050b6f0a.png" />
+<meta property="og:image:alt" content="Install :,,. Generate-Queries: Generate pre-trained policy performance stats for README: Testing Package:- Install :,,., Testing is computationally expensive..." />
+<meta name="description" content="Install :,,. Generate-Queries: Generate pre-trained policy performance stats for README: Testing Package:- Install :,,., Testing is computationally expensive as we validate ground truth value estim..." />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="api.html" /><link rel="prev" title="Benchmark Information" href="benchmark-information.html" />
 
@@ -220,9 +220,12 @@
         <article role="main">
           <section id="development">
 <h1>Development<a class="headerlink" href="#development" title="Permalink to this heading">#</a></h1>
-<ul class="simple">
-<li><p>Install : <cite>pip install -e “.[all]”</cite></p></li>
-</ul>
+<dl>
+<dt>Install :</dt><dd><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e &quot;.[dev]&quot;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 <section id="generate-queries">
 <h2>Generate-Queries<a class="headerlink" href="#generate-queries" title="Permalink to this heading">#</a></h2>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">% </span>following<span class="w"> </span>commands<span class="w"> </span>were<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>generate<span class="w"> </span>queries
@@ -236,8 +239,8 @@
 </pre></div>
 </div>
 </section>
-<section id="generate-policy-performance-stats-for-readme">
-<h2>Generate policy performance stats for readme<a class="headerlink" href="#generate-policy-performance-stats-for-readme" title="Permalink to this heading">#</a></h2>
+<section id="generate-pre-trained-policy-performance-stats-for-readme">
+<h2>Generate pre-trained policy performance stats for README<a class="headerlink" href="#generate-pre-trained-policy-performance-stats-for-readme" title="Permalink to this heading">#</a></h2>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python scripts/generate_policy_stats.py --all-envs</span>
 </pre></div>
 </div>
@@ -245,8 +248,13 @@
 <section id="testing-package">
 <h2>Testing Package<a class="headerlink" href="#testing-package" title="Permalink to this heading">#</a></h2>
 <ol class="arabic">
-<li><p>Install : <cite>pip install -e “.[test]”</cite></p></li>
-<li><p>Run: <cite>pytest -v</cite></p></li>
+<li><dl>
+<dt>Install :</dt><dd><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e &quot;.[test]&quot;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
 <li><p>Testing is computationally expensive as we validate ground truth value estimates and corresponding labels. These can be disabled by setting following flags:</p>
 <blockquote>
 <div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export SKIP_QUERY_TARGET_TESTS=1 # disable target estimation and label validation</span>
@@ -256,6 +264,13 @@
 </div>
 </div></blockquote>
 </li>
+<li><dl>
+<dt>Run:</dt><dd><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest -v</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
 </ol>
 </section>
 <section id="generate-docs">
@@ -264,13 +279,6 @@
 <li><p>Install dependencies</p>
 <blockquote>
 <div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e &quot;.[docs]&quot;</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-<li><p>Generate API Doc</p>
-<blockquote>
-<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sphinx-apidoc -f -o docs/source/api opcc --ext-viewcode --ext-autodoc</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -343,7 +351,7 @@
             <ul>
 <li><a class="reference internal" href="#">Development</a><ul>
 <li><a class="reference internal" href="#generate-queries">Generate-Queries</a></li>
-<li><a class="reference internal" href="#generate-policy-performance-stats-for-readme">Generate policy performance stats for readme</a></li>
+<li><a class="reference internal" href="#generate-pre-trained-policy-performance-stats-for-readme">Generate pre-trained policy performance stats for README</a></li>
 <li><a class="reference internal" href="#testing-package">Testing Package</a></li>
 <li><a class="reference internal" href="#generate-docs">Generate Docs</a></li>
 </ul>
