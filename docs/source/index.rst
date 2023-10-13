@@ -6,7 +6,7 @@ Offline Policy Comparison with Confidence : Benchmark and Baselines
     <div class="info admonition author-section">
         <p class="admonition-title">Authors</p>
         <blockquote>
-             <p class="author-name"> Anurag Koul<sup>*</sup>, Mariano Phillepe<sup>**</sup>, Alan Fern<sup>*</sup></p>
+             <p class="author-name"> <a href="https://koulanurag.dev" target="_blank" >Anurag Koul<sup>*</sup></a>, <a href="https://www.intel.com/content/www/us/en/research/featured-researchers/mariano-phielipp.html?wapkw=mariano%20phielipp" target="_blank" >Mariano Phielipp<sup>**</sup></a>, <a href="https://engineering.oregonstate.edu/people/alan-fern" target="_blank" >Alan Fern<sup>*</sup></p></a>
             <p class="autor-association"> <sup>*</sup>Oregon State University, <sup>**</sup>Intel Labs</p>
         </blockquote>
     </div>
