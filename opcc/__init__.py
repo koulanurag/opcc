@@ -9,10 +9,16 @@ from .config import ASSETS_DIR
 from .config import ENV_CONFIGS, ENV_PERFORMANCE_STATS
 from .config import MAX_PRE_TRAINED_LEVEL
 from .config import MIN_PRE_TRAINED_LEVEL
-from .model import ActorCriticNetwork
+from .model import ActorNetwork
 
-__all__ = ['get_queries', 'get_policy', 'get_sequence_dataset',
-           'get_qlearning_dataset', 'get_dataset_names', 'get_env_names']
+__all__ = [
+    "get_queries",
+    "get_policy",
+    "get_sequence_dataset",
+    "get_qlearning_dataset",
+    "get_dataset_names",
+    "get_env_names",
+]
 
 
 def get_queries(env_name):
@@ -26,8 +32,9 @@ def get_queries(env_name):
         A nested dictionary with the following structure:
 
         .. code-block:: python
-        
-            {   (policy_a_args, policy_b_args): {
+
+            {
+                (policy_a_args, policy_b_args): {
                         'obs_a': list,
 
                         'obs_b': list,
@@ -40,7 +47,7 @@ def get_queries(env_name):
 
                         'horizon': list,
                     }
-                
+
             }
 
     :rtype: dict
@@ -50,14 +57,16 @@ def get_queries(env_name):
         >>> opcc.get_queries('Hopper-v2')
 
     """
-    assert env_name in ENV_CONFIGS, \
-        ('`{}` not found. It should be among following: {}'
-         .format(env_name, list(ENV_CONFIGS.keys())))
+    assert (
+        env_name in ENV_CONFIGS
+    ), "`{}` not found. It should be among following: {}".format(
+        env_name, list(ENV_CONFIGS.keys())
+    )
 
     env_dir = os.path.join(ASSETS_DIR, env_name)
-    queries_path = os.path.join(env_dir, 'queries.p')
+    queries_path = os.path.join(env_dir, "queries.p")
 
-    queries = pickle.load(open(queries_path, 'rb'))
+    queries = pickle.load(open(queries_path, "rb"))
     return queries
 
 
@@ -74,7 +83,7 @@ def get_policy(env_name: str, pre_trained: int = 1):
     :type pre_trained: int
 
     :return:
-        A tuple containing two objects: 1) policy. 2) a dictionary of performance 
+        A tuple containing two objects: 1) policy. 2) a dictionary of performance
         stats of the policy for the given env_name
 
     :rtype: tuple of (ActorCriticNetwork, dict)
@@ -82,33 +91,42 @@ def get_policy(env_name: str, pre_trained: int = 1):
     :example:
         >>> import opcc, torch
         >>> policy, policy_stats = opcc.get_policy('d4rl:maze2d-open-v0',pre_trained=1)
-        >>> action = policy.actor(torch.randn(1,4).double())
+        >>> action = policy(torch.randn(1,4).double())
         tensor([[0.9754, 0.9998]], dtype=torch.float64, grad_fn=<TanhBackward0>)
     """
 
-    assert MIN_PRE_TRAINED_LEVEL <= pre_trained <= MAX_PRE_TRAINED_LEVEL, \
-        ('pre_trained marker should be between [{},{}] where {} indicates '
-         'the best model and {} indicates the worst model'
-         .format(MIN_PRE_TRAINED_LEVEL, MAX_PRE_TRAINED_LEVEL,
-                 MIN_PRE_TRAINED_LEVEL, MAX_PRE_TRAINED_LEVEL))
+    assert MIN_PRE_TRAINED_LEVEL <= pre_trained <= MAX_PRE_TRAINED_LEVEL, (
+        "pre_trained marker should be between [{},{}] where {} indicates "
+        "the best model and {} indicates the worst model".format(
+            MIN_PRE_TRAINED_LEVEL,
+            MAX_PRE_TRAINED_LEVEL,
+            MIN_PRE_TRAINED_LEVEL,
+            MAX_PRE_TRAINED_LEVEL,
+        )
+    )
 
-    assert env_name in ENV_CONFIGS, \
-        ('{} is invalid. Expected values include {}'
-         .format(env_name, ENV_CONFIGS.keys()))
+    assert env_name in ENV_CONFIGS, "{} is invalid. Expected values include {}".format(
+        env_name, ENV_CONFIGS.keys()
+    )
 
     # retrieve model
-    model_dir = os.path.join(ASSETS_DIR, env_name, 'models')
-    model_path = os.path.join(model_dir, 'model_{}.p'.format(pre_trained))
-    assert os.path.exists(model_path), \
-        'model not found @ {}'.format(model_path)
-    state_dict = torch.load(model_path, map_location=torch.device('cpu'))
+    model_dir = os.path.join(ASSETS_DIR, env_name, "models")
+    model_path = os.path.join(model_dir, "model_{}.p".format(pre_trained))
+    assert os.path.exists(model_path), f"model not found @ {model_path}"
+
+    state_dict = torch.load(model_path, map_location=torch.device("cpu"))
+    actor_state_dict = {
+        k.replace("actor.", ""): v for k, v in state_dict.items() if "actor" in k
+    }
 
     # create model
-    model = ActorCriticNetwork(ENV_CONFIGS[env_name]['observation_size'],
-                               ENV_CONFIGS[env_name]['action_size'],
-                               hidden_dim=64,
-                               action_std=0.5)
-    model.load_state_dict(state_dict)
+    model = ActorNetwork(
+        ENV_CONFIGS[env_name]["observation_size"],
+        ENV_CONFIGS[env_name]["action_size"],
+        hidden_dim=64,
+        max_action=ENV_CONFIGS[env_name]["max_action"],
+    )
+    model.load_state_dict(actor_state_dict)
 
     # Note: Gym returns observations with numpy float64( or double) type.
     # And, if the model is in "float" ( or float32) then we need to downcast
@@ -116,7 +134,7 @@ def get_policy(env_name: str, pre_trained: int = 1):
     # However, this down-casting leads to miniscule differences in precision
     # over different system (processors). Though, these differences are
     # miniscule, they get propagated to the predicted actions which over longer
-    # horizons which when feedback back to the gym-environment lead to small
+    # horizons when feedback back to the gym-environment lead to small
     # but significant difference in trajectories as reflected in monte-carlo
     # return.
 
@@ -135,10 +153,12 @@ def get_sequence_dataset(env_name, dataset_name):
     :param dataset_name: name of the dataset
     :type dataset_name: str
 
-    :return: 
-        A list of dictionaries. Each dictionary is an episode containing
-        
-        keys :'next_observations', 'observations', 'rewards', 'terminals', 'timeouts'
+    :return:
+        A list of dictionaries. Each dictionary is an episode containing keys
+
+        .. code-block:: python
+
+            ['next_observations', 'observations', 'rewards', 'terminals', 'timeouts']`
 
     :rtype: list[dict]
 
@@ -148,26 +168,30 @@ def get_sequence_dataset(env_name, dataset_name):
         >>> len(dataset)
         2186
         >>> dataset[0].keys()
-        dict_keys(['actions', 'infos/action_log_probs', 'infos/qpos', 'infos/qvel', 'next_observations', 'observations', 'rewards', 'terminals', 'timeouts'])
+        dict_keys(['actions', 'infos/action_log_probs', 'infos/qpos',
+         'infos/qvel', 'next_observations', 'observations', 'rewards',
+          'terminals', 'timeouts'])
         >>> len(dataset[0]['observations']) # episode length
         470
     """
-    assert env_name in ENV_CONFIGS, \
-        ('{} is invalid. Expected values include {}'
-         .format(env_name, ENV_CONFIGS.keys()))
-    assert dataset_name in ENV_CONFIGS[env_name]['datasets'], \
-        ('`{}` not found. It should be among following: {}'.
-         format(dataset_name, list(ENV_CONFIGS[env_name]['datasets'].keys())))
+    assert env_name in ENV_CONFIGS, "{} is invalid. Expected values include {}".format(
+        env_name, ENV_CONFIGS.keys()
+    )
+    assert (
+        dataset_name in ENV_CONFIGS[env_name]["datasets"]
+    ), "`{}` not found. It should be among following: {}".format(
+        dataset_name, list(ENV_CONFIGS[env_name]["datasets"].keys())
+    )
 
-    dataset_env = ENV_CONFIGS[env_name]['datasets'][dataset_name]['name']
+    dataset_env = ENV_CONFIGS[env_name]["datasets"][dataset_name]["name"]
     env = gym.make(dataset_env)
     dataset = env.get_dataset()
     # remove meta-data as the sequence dataset doesn't work with it.
-    metadata_keys = [k for k in dataset.keys() if 'meta' in k]
+    metadata_keys = [k for k in dataset.keys() if "meta" in k]
     for k in metadata_keys:
         dataset.pop(k)
 
-    split = ENV_CONFIGS[env_name]['datasets'][dataset_name]['split']
+    split = ENV_CONFIGS[env_name]["datasets"][dataset_name]["split"]
     if split is not None:
         dataset = {k: v[:split] for k, v in dataset.items()}
 
@@ -189,22 +213,25 @@ def get_qlearning_dataset(env_name, dataset_name):
         >>> import opcc
         >>> dataset = opcc.get_qlearning_dataset('Hopper-v2', 'medium') # dictionaries
         >>> dataset.keys()
-        dict_keys(['observations', 'actions', 'next_observations', 'rewards', 'terminals'])
+        dict_keys(['observations', 'actions', 'next_observations',
+         'rewards', 'terminals'])
         >>> len(dataset['observations']) # length of dataset
         999998
     """
-    assert env_name in ENV_CONFIGS, \
-        ('{} is invalid. Expected values include {}'
-         .format(env_name, ENV_CONFIGS.keys()))
-    assert dataset_name in ENV_CONFIGS[env_name]['datasets'], \
-        ('`{}` not found. It should be among following: {}'.
-         format(dataset_name, list(ENV_CONFIGS[env_name]['datasets'].keys())))
+    assert env_name in ENV_CONFIGS, "{} is invalid. Expected values include {}".format(
+        env_name, ENV_CONFIGS.keys()
+    )
+    assert (
+        dataset_name in ENV_CONFIGS[env_name]["datasets"]
+    ), "`{}` not found. It should be among following: {}".format(
+        dataset_name, list(ENV_CONFIGS[env_name]["datasets"].keys())
+    )
 
-    dataset_env = ENV_CONFIGS[env_name]['datasets'][dataset_name]['name']
+    dataset_env = ENV_CONFIGS[env_name]["datasets"][dataset_name]["name"]
     env = gym.make(dataset_env)
     dataset = d4rl.qlearning_dataset(env)
 
-    split = ENV_CONFIGS[env_name]['datasets'][dataset_name]['split']
+    split = ENV_CONFIGS[env_name]["datasets"][dataset_name]["split"]
     if split is not None:
         dataset = {k: v[:split] for k, v in dataset.items()}
     return dataset
@@ -225,10 +252,12 @@ def get_dataset_names(env_name):
         >>> opcc.get_dataset_names('Hopper-v2')
         ['random', 'expert', 'medium', 'medium-replay', 'medium-expert']
     """
-    assert env_name in ENV_CONFIGS, \
-        ('`{}` not found. It should be among following: {}'.
-         format(env_name, list(ENV_CONFIGS.keys())))
-    return list(ENV_CONFIGS[env_name]['datasets'].keys())
+    assert (
+        env_name in ENV_CONFIGS
+    ), "`{}` not found. It should be among following: {}".format(
+        env_name, list(ENV_CONFIGS.keys())
+    )
+    return list(ENV_CONFIGS[env_name]["datasets"].keys())
 
 
 def get_env_names():
@@ -241,6 +270,8 @@ def get_env_names():
     :example:
         >>> import opcc
         >>> opcc.get_env_names()
-        ['HalfCheetah-v2', 'Hopper-v2', 'Walker2d-v2', 'd4rl:maze2d-large-v1', 'd4rl:maze2d-medium-v1', 'd4rl:maze2d-open-v0', 'd4rl:maze2d-umaze-v1']
+        ['HalfCheetah-v2', 'Hopper-v2', 'Walker2d-v2',
+         'd4rl:maze2d-large-v1', 'd4rl:maze2d-medium-v1',
+          'd4rl:maze2d-open-v0', 'd4rl:maze2d-umaze-v1']
     """
     return sorted(list(ENV_CONFIGS.keys()))
