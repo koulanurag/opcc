@@ -26,15 +26,14 @@ class ReplayBuffer(object):
         self.reward = np.zeros((max_size, 1))
         self.not_done = np.zeros((max_size, 1))
 
-        self.device = torch.device(
-            "cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def add(self, state, action, next_state, reward, done):
         self.state[self.ptr] = state
         self.action[self.ptr] = action
         self.next_state[self.ptr] = next_state
         self.reward[self.ptr] = reward
-        self.not_done[self.ptr] = 1. - done
+        self.not_done[self.ptr] = 1.0 - done
 
         self.ptr = (self.ptr + 1) % self.max_size
         self.size = min(self.size + 1, self.max_size)
@@ -47,25 +46,24 @@ class ReplayBuffer(object):
             torch.FloatTensor(self.action[ind]).to(self.device),
             torch.FloatTensor(self.next_state[ind]).to(self.device),
             torch.FloatTensor(self.reward[ind]).to(self.device),
-            torch.FloatTensor(self.not_done[ind]).to(self.device)
+            torch.FloatTensor(self.not_done[ind]).to(self.device),
         )
 
 
 class TD3:
     def __init__(
-            self,
-            state_dim,
-            action_dim,
-            max_action,
-            hidden_dim=64,
-            discount=0.99,
-            tau=0.005,
-            policy_noise=0.2,
-            noise_clip=0.5,
-            policy_freq=2,
-            device="cpu"
+        self,
+        state_dim,
+        action_dim,
+        max_action,
+        hidden_dim=64,
+        discount=0.99,
+        tau=0.005,
+        policy_noise=0.2,
+        noise_clip=0.5,
+        policy_freq=2,
+        device="cpu",
     ):
-
         self.actor = ActorNetwork(state_dim, action_dim, hidden_dim, max_action)
         self.actor = self.actor.to(device)
         self.actor_target = copy.deepcopy(self.actor)
@@ -76,9 +74,11 @@ class TD3:
         self.critic_target_1 = copy.deepcopy(self.critic_1)
         self.critic_target_2 = copy.deepcopy(self.critic_2)
         self.critic_optimizer = torch.optim.Adam(
-            [{'params': self.critic_1.parameters()},
-             {'params': self.critic_2.parameters()}],
-            lr=3e-4
+            [
+                {"params": self.critic_1.parameters()},
+                {"params": self.critic_2.parameters()},
+            ],
+            lr=3e-4,
         )
 
         self.max_action = max_action
@@ -108,18 +108,18 @@ class TD3:
     def update(self, batch):
         self.total_it += 1
 
-        state = batch['state']
-        action = batch['action']
-        next_state = batch['next_state']
-        reward = batch['reward']
-        not_done = batch['not_done']
+        state = batch["state"]
+        action = batch["action"]
+        next_state = batch["next_state"]
+        reward = batch["reward"]
+        not_done = batch["not_done"]
 
         with torch.no_grad():
             # Select action according to policy and add clipped noise
-            noise = (torch.randn_like(action) * self.policy_noise)
+            noise = torch.randn_like(action) * self.policy_noise
             noise = noise.clamp(-self.noise_clip, self.noise_clip)
 
-            next_action = (self.actor_target(next_state) + noise)
+            next_action = self.actor_target(next_state) + noise
             next_action = next_action.clamp(-self.max_action, self.max_action)
 
             # Compute the target Q value
@@ -133,9 +133,9 @@ class TD3:
         current_q2 = self.critic_2(state, action)
 
         # Compute critic loss
-        critic_loss = (F.mse_loss(current_q1, target_q)
-                       + F.mse_loss(current_q2, target_q))
-        loss_info = {'critic': critic_loss.item()}
+        critic_loss = F.mse_loss(current_q1, target_q)
+        critic_loss += F.mse_loss(current_q2, target_q)
+        loss_info = {"critic": critic_loss.item()}
 
         # Optimize the critic
         self.critic_optimizer.zero_grad()
@@ -144,10 +144,9 @@ class TD3:
 
         # Delayed policy updates
         if self.total_it % self.policy_freq == 0:
-
             # Compute actor loss
             actor_loss = -self.critic_1(state, self.actor(state)).mean()
-            loss_info['actor'] = actor_loss.item()
+            loss_info["actor"] = actor_loss.item()
 
             # Optimize the actor
             self.actor_optimizer.zero_grad()
@@ -155,29 +154,37 @@ class TD3:
             self.actor_optimizer.step()
 
             # Update the frozen target models
-            for param, target_param in zip(self.critic_1.parameters(),
-                                           self.critic_target_1.parameters()):
-                target_param.data.copy_(self.tau * param.data
-                                        + (1 - self.tau) * target_param.data)
+            for param, target_param in zip(
+                self.critic_1.parameters(), self.critic_target_1.parameters()
+            ):
+                target_param.data.copy_(
+                    self.tau * param.data + (1 - self.tau) * target_param.data
+                )
 
-            for param, target_param in zip(self.critic_2.parameters(),
-                                           self.critic_target_2.parameters()):
-                target_param.data.copy_(self.tau * param.data
-                                        + (1 - self.tau) * target_param.data)
+            for param, target_param in zip(
+                self.critic_2.parameters(), self.critic_target_2.parameters()
+            ):
+                target_param.data.copy_(
+                    self.tau * param.data + (1 - self.tau) * target_param.data
+                )
 
-            for param, target_param in zip(self.actor.parameters(),
-                                           self.actor_target.parameters()):
-                target_param.data.copy_(self.tau * param.data
-                                        + (1 - self.tau) * target_param.data)
+            for param, target_param in zip(
+                self.actor.parameters(), self.actor_target.parameters()
+            ):
+                target_param.data.copy_(
+                    self.tau * param.data + (1 - self.tau) * target_param.data
+                )
         return loss_info
 
     def state_dict(self):
-        return {'actor': self.actor.state_dict(),
-                'critic': self.critic_1.state_dict(),
-                'critic_1': self.critic_1.state_dict(),
-                'critic_2': self.critic_2.state_dict(),
-                'critic_optimizer': self.critic_optimizer.state_dict(),
-                'actor_optimizer': self.actor_optimizer.state_dict()}
+        return {
+            "actor": self.actor.state_dict(),
+            "critic": self.critic_1.state_dict(),
+            "critic_1": self.critic_1.state_dict(),
+            "critic_2": self.critic_2.state_dict(),
+            "critic_optimizer": self.critic_optimizer.state_dict(),
+            "actor_optimizer": self.actor_optimizer.state_dict(),
+        }
 
     def save(self, save_path):
         torch.save(self.state_dict(), save_path)
@@ -185,15 +192,15 @@ class TD3:
     def load(self, load_path):
         state_dict = torch.load(load_path)
 
-        self.actor.load_state_dict(state_dict['actor'])
+        self.actor.load_state_dict(state_dict["actor"])
         self.actor_target = copy.deepcopy(self.actor)
-        self.actor_optimizer.load_state_dict(state_dict['actor_optimizer'])
+        self.actor_optimizer.load_state_dict(state_dict["actor_optimizer"])
 
-        self.critic_1.load_state_dict(state_dict['critic_1'])
-        self.critic_2.load_state_dict(state_dict['critic_2'])
+        self.critic_1.load_state_dict(state_dict["critic_1"])
+        self.critic_2.load_state_dict(state_dict["critic_2"])
         self.critic_target_1 = copy.deepcopy(self.critic_1)
         self.critic_target_2 = copy.deepcopy(self.critic_2)
-        self.critic_optimizer.load_state_dict(state_dict['critic_optimizer'])
+        self.critic_optimizer.load_state_dict(state_dict["critic_optimizer"])
 
 
 class Trainer(object):
@@ -213,27 +220,31 @@ class Trainer(object):
             wandb.save(glob_str=train_eval_log_path, policy="live")
 
     def train(
-            self,
-            env_fn,
-            replay_buffer,
-            batch_size,
-            start_time_steps,
-            max_time_steps,
-            expl_noise,
-            seed,
-            num_test_episodes=1,
-            checkpoint_interval=1,
-            eval_interval=1,
-            device='cpu',
+        self,
+        env_fn,
+        replay_buffer,
+        batch_size,
+        start_time_steps,
+        max_time_steps,
+        expl_noise,
+        seed,
+        num_test_episodes=1,
+        checkpoint_interval=1,
+        eval_interval=1,
+        device="cpu",
     ):
         # Evaluate untrained policy
         eval_info = self.eval(env_fn, seed, eval_episodes=num_test_episodes)
-        evaluations = {'original-task-score': [np.mean([np.sum(_) for _ in eval_info['original-task-reward']])]}
+        evaluations = {
+            "original-task-score": [
+                np.mean([np.sum(_) for _ in eval_info["original-task-reward"]])
+            ]
+        }
 
         # initialize episode and trackers
         env = env_fn()
         state, done = env.reset(), False
-        episode_reward = {'original-task': 0}
+        episode_reward = {"original-task": 0}
         episode_time_steps = 0
         episode_num = 0
 
@@ -248,11 +259,12 @@ class Trainer(object):
                 action = env.action_space.sample()
             else:
                 action = self.model.select_action(np.array(state))
-                action_noise = np.random.normal(0,
-                                                self.model.max_action * expl_noise,
-                                                size=self.model.action_dim)
-                action = (action + action_noise).clip(- self.model.max_action,
-                                                      self.model.max_action)
+                action_noise = np.random.normal(
+                    0, self.model.max_action * expl_noise, size=self.model.action_dim
+                )
+                action = (action + action_noise).clip(
+                    -self.model.max_action, self.model.max_action
+                )
 
             # Perform action
             next_state, reward, done, info = env.step(action)
@@ -268,7 +280,7 @@ class Trainer(object):
             state = next_state
 
             # store episode info
-            episode_reward['original-task'] += reward
+            episode_reward["original-task"] += reward
 
             if done:
                 # +1 to account for 0 indexing.
@@ -276,19 +288,23 @@ class Trainer(object):
                 # even if done=True
 
                 # log to file/console
-                episode_info = {'episode-num': episode_num + 1,
-                                'episode-time-steps': episode_time_steps,
-                                'episode-org-score': episode_reward['original-task']}
+                episode_info = {
+                    "episode-num": episode_num + 1,
+                    "episode-time-steps": episode_time_steps,
+                    "episode-org-score": episode_reward["original-task"],
+                }
                 log(
-                    {"env-steps": t + 1,
-                     **{f"train-data/{k}": v for k, v in episode_info.items()}},
+                    {
+                        "env-steps": t + 1,
+                        **{f"train-data/{k}": v for k, v in episode_info.items()},
+                    },
                     logging.getLogger("train-eval"),
                     use_wandb=self.use_wandb,
                 )
 
                 # Reset environment
                 state, done = env.reset(), False
-                episode_reward = {'original-task': 0., 'task': 0.}
+                episode_reward = {"original-task": 0.0, "task": 0.0}
                 episode_time_steps = 0
                 episode_num += 1
 
@@ -305,16 +321,18 @@ class Trainer(object):
             if (t + 1) % eval_interval == 0:
                 eval_info = self.eval(env_fn, seed, eval_episodes=num_test_episodes)
 
-                evaluations['original-task-score'].append(
-                    np.mean([np.sum(_) for _ in
-                             eval_info['original-task-reward']]))
+                evaluations["original-task-score"].append(
+                    np.mean([np.sum(_) for _ in eval_info["original-task-reward"]])
+                )
 
-                np.save(os.path.join(self.expr_dir, 'evaluations'), evaluations)
+                np.save(os.path.join(self.expr_dir, "evaluations"), evaluations)
 
                 # log to file/console
                 log(
-                    {"env-steps": t + 1,
-                     **{f"train-eval/{k}": v[-1] for k, v in evaluations.items()}},
+                    {
+                        "env-steps": t + 1,
+                        **{f"train-eval/{k}": v[-1] for k, v in evaluations.items()},
+                    },
                     logging.getLogger("train-eval"),
                     use_wandb=self.use_wandb,
                 )
@@ -324,7 +342,7 @@ class Trainer(object):
             info = {}
 
         # create checkpoint
-        checkpoint = {"model": self.model.state_dict(), 'info': info}
+        checkpoint = {"model": self.model.state_dict(), "info": info}
 
         # save locally
         torch.save(checkpoint, self.model_path)
@@ -335,7 +353,7 @@ class Trainer(object):
 
     def load_checkpoint(self):
         checkpoint = torch.load(self.model_path, map_location=torch.device("cpu"))
-        self.model.load_state_dict(state_dict=checkpoint['model'])
+        self.model.load_state_dict(state_dict=checkpoint["model"])
 
         return checkpoint["info"]
 
@@ -343,9 +361,8 @@ class Trainer(object):
         eval_env = env_fn()
         eval_env.seed(seed + seed_offset)
 
-        eval_info = {'original-task-reward': [], 'images': []}
+        eval_info = {"original-task-reward": [], "images": []}
         for _ in range(eval_episodes):
-
             # init logging structure
             for k in eval_info:
                 eval_info[k].append([])
@@ -353,14 +370,14 @@ class Trainer(object):
             state, done = eval_env.reset(), False
             while not done:
                 if render:
-                    img = eval_env.render(mode='rgb_array')
-                    eval_info['images'][-1].append(img)
+                    img = eval_env.render(mode="rgb_array")
+                    eval_info["images"][-1].append(img)
 
                 action = self.model.select_action(np.array(state))
                 next_state, reward, done, info = eval_env.step(action)
 
                 # estimate custom reward
-                eval_info['original-task-reward'][-1].append(reward)
+                eval_info["original-task-reward"][-1].append(reward)
 
                 state = next_state
 
@@ -443,10 +460,10 @@ def get_args():
     if not args.no_cuda and torch.cuda.is_available():
         args.device = torch.device("cuda")
     elif (
-            not args.no_cuda
-            and hasattr(torch.backends, "mps")
-            and torch.backends.mps.is_available()
-            and torch.backends.mps.is_built()
+        not args.no_cuda
+        and hasattr(torch.backends, "mps")
+        and torch.backends.mps.is_available()
+        and torch.backends.mps.is_built()
     ):
         args.device = torch.device("mps")
     else:
@@ -517,7 +534,7 @@ def main():
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     torch.random.manual_seed(args.seed)
-    if args.device == 'cuda':
+    if args.device == "cuda":
         torch.cuda.manual_seed(args.seed)
 
     # ##################################################################################
@@ -549,9 +566,9 @@ def main():
             root=".",
             include_fn=lambda path: True,
             exclude_fn=lambda path: "results" in path
-                                    or "__pycache__" in path
-                                    or "datasets" in path
-                                    or "wandb" in path,
+            or "__pycache__" in path
+            or "datasets" in path
+            or "wandb" in path,
         )
 
     # ##################################################################################
@@ -585,9 +602,7 @@ def main():
     # ##################################################################################
     # Job: Train Model
     # ##################################################################################
-    trainer = Trainer(model=model,
-                      expr_dir=args.expr_dir,
-                      use_wandb=args.use_wandb)
+    trainer = Trainer(model=model, expr_dir=args.expr_dir, use_wandb=args.use_wandb)
 
     if args.job == "train":
         replay_buffer = ReplayBuffer(state_dim, action_dim)
@@ -602,7 +617,7 @@ def main():
             num_test_episodes=args.num_test_episodes,
             checkpoint_interval=args.checkpoint_interval,
             eval_interval=args.eval_interval,
-            device=args.device
+            device=args.device,
         )
 
     # ##################################################################################
@@ -620,7 +635,7 @@ def main():
             env_fn=lambda: gym.make(args.env),
             seed=args.seed,
             seed_offset=100,
-            eval_episodes=args.num_test_episode
+            eval_episodes=args.num_test_episode,
         )
 
         # log to file/console
@@ -634,5 +649,5 @@ def main():
         wandb.finish()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
