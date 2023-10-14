@@ -24,8 +24,8 @@ from opcc.config import ASSETS_DIR
 def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
     assert horizon <= env._max_episode_steps
 
-    sim_state = np.array(sim_state).astype('float64')
-    init_action = np.array(init_action).astype('float32')
+    sim_state = np.array(sim_state).astype("float64")
+    init_action = np.array(init_action).astype("float32")
 
     expected_score = []
     expected_step = []
@@ -42,7 +42,7 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
             with torch.no_grad():
                 obs = torch.tensor(obs).unsqueeze(0)
                 action = policy.actor(obs).data.cpu().numpy()[0]
-            obs, reward, done, info = env.step(action.astype('float32'))
+            obs, reward, done, info = env.step(action.astype("float32"))
             step_count += 1
             score += reward
 
@@ -56,7 +56,6 @@ def generate_query_states(env, policies, max_transaction_count, args):
     # create collection of states
     env_states = []
     while len(env_states) < max_transaction_count:
-
         policy = random.choice(list(policies.values()))
         obs = env.reset()
 
@@ -64,12 +63,13 @@ def generate_query_states(env, policies, max_transaction_count, args):
         while not done:
             save = random.random() >= args.save_prob
             if save:
-                env_states.append((obs.tolist(),
-                                   env.sim.get_state().flatten().tolist()))
+                env_states.append(
+                    (obs.tolist(), env.sim.get_state().flatten().tolist())
+                )
             action = policy.actor(torch.tensor(obs).unsqueeze(0))
             noise = torch.normal(0, args.noise, size=action.shape)
             step_action = (action + noise).data.cpu().numpy()[0]
-            step_action = step_action.astype('float32')
+            step_action = step_action.astype("float32")
             obs, _, done, info = env.step(step_action)
     return env_states
 
@@ -81,7 +81,7 @@ def evaluate_queries(env, candidate_states, policies, args):
     policy_ids = sorted(policies.keys())
     for i, policy_id_a in enumerate(policy_ids):
         policy_a = policies[policy_id_a]
-        for policy_id_b in args.policy_ids[i + 1:]:
+        for policy_id_b in args.policy_ids[i + 1 :]:
             policy_b = policies[policy_id_b]
 
             # core attributes
@@ -105,10 +105,11 @@ def evaluate_queries(env, candidate_states, policies, args):
             query_count = 0
             ignore_count = 0
 
-            while (query_count < args.per_policy_comb_query
-                   and ignore_count < args.ignore_stuck_count):
-                same_state = random.choices([True, False],
-                                            weights=[0.2, 0.8], k=1)[0]
+            while (
+                query_count < args.per_policy_comb_query
+                and ignore_count < args.ignore_stuck_count
+            ):
+                same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[0]
 
                 # query-a attributes
                 (obs_a, sim_state_a) = random.choice(candidate_states)
@@ -124,21 +125,22 @@ def evaluate_queries(env, candidate_states, policies, args):
 
                 # evaluate
                 horizon = random.choice(args.horizons)
-                return_a, horizon_a = mc_return(env, sim_state_a, action_a,
-                                                horizon, policy_a,
-                                                args.eval_runs)
-                return_b, horizon_b = mc_return(env, sim_state_b, action_b,
-                                                horizon, policy_b,
-                                                args.eval_runs)
+                return_a, horizon_a = mc_return(
+                    env, sim_state_a, action_a, horizon, policy_a, args.eval_runs
+                )
+                return_b, horizon_b = mc_return(
+                    env, sim_state_b, action_b, horizon, policy_b, args.eval_runs
+                )
                 return_a_mean = np.mean(return_a)
                 return_b_mean = np.mean(return_b)
                 horizon_a_mean = np.mean(horizon_a)
                 horizon_b_mean = np.mean(horizon_b)
 
                 # ignore ambiguous queries
-                if (abs(return_a_mean - return_b_mean) <= args.ignore_delta) \
-                        or (min(return_b) <= max(return_a) <= max(return_b) or
-                            min(return_b) <= min(return_a) <= max(return_b)):
+                if (abs(return_a_mean - return_b_mean) <= args.ignore_delta) or (
+                    min(return_b) <= max(return_a) <= max(return_b)
+                    or min(return_b) <= min(return_a) <= max(return_b)
+                ):
                     ignore_count += 1
                     continue
                 else:
@@ -163,67 +165,93 @@ def evaluate_queries(env, candidate_states, policies, args):
 
                     # log for tracking progress
                     if args.use_wandb:
-                        wandb.log({'query-count': total_query_count})
+                        wandb.log({"query-count": total_query_count})
 
             _key = ((args.env_name, policy_id_a), (args.env_name, policy_id_b))
-            _queries[_key] = {'obs_a': np.array(obss_a),
-                              'action_a': np.array(actions_a),
-                              'obs_b': np.array(obss_b),
-                              'action_b': np.array(actions_b),
-                              'horizon': np.array(horizons),
-                              'target': np.array(targets),
-                              'info': {'return_a': np.array(returns_a),
-                                       'return_b': np.array(returns_b),
-                                       'return_list_a': np.array(
-                                           returns_list_a),
-                                       'return_list_b': np.array(
-                                           returns_list_b),
-                                       'state_a': np.array(sim_states_a),
-                                       'state_b': np.array(sim_states_b),
-                                       'runs': args.eval_runs,
-                                       'horizon_a': horizons_a,
-                                       'horizon_b': horizons_b}}
+            _queries[_key] = {
+                "obs_a": np.array(obss_a),
+                "action_a": np.array(actions_a),
+                "obs_b": np.array(obss_b),
+                "action_b": np.array(actions_b),
+                "horizon": np.array(horizons),
+                "target": np.array(targets),
+                "info": {
+                    "return_a": np.array(returns_a),
+                    "return_b": np.array(returns_b),
+                    "return_list_a": np.array(returns_list_a),
+                    "return_list_b": np.array(returns_list_b),
+                    "state_a": np.array(sim_states_a),
+                    "state_b": np.array(sim_states_b),
+                    "runs": args.eval_runs,
+                    "horizon_a": horizons_a,
+                    "horizon_b": horizons_b,
+                },
+            }
 
             # save data separately for ease of visualization
-            _overall_data['obs-a'] += obss_a
-            _overall_data['obs-b'] += obss_b
-            _overall_data['action-a'] += actions_a
-            _overall_data['action-b'] += actions_b
-            _overall_data['return-a'] += returns_a
-            _overall_data['return-b'] += returns_b
-            _overall_data['target'] += targets
-            _overall_data['horizon'] += horizons
-            _overall_data['horizon-a'] += horizons_a
-            _overall_data['horizon-b'] += horizons_b
+            _overall_data["obs-a"] += obss_a
+            _overall_data["obs-b"] += obss_b
+            _overall_data["action-a"] += actions_a
+            _overall_data["action-b"] += actions_b
+            _overall_data["return-a"] += returns_a
+            _overall_data["return-b"] += returns_b
+            _overall_data["target"] += targets
+            _overall_data["horizon"] += horizons
+            _overall_data["horizon-a"] += horizons_a
+            _overall_data["horizon-b"] += horizons_b
     return _queries, _overall_data
 
 
 def main():
     # Lets gather arguments
-    parser = argparse.ArgumentParser(description='Generate queries')
-    parser.add_argument('--env-name', default='d4rl:maze2d-open-v0')
-    parser.add_argument('--eval-runs', type=int, default=2)
-    parser.add_argument('--noise', type=float, default=0.05, )
-    parser.add_argument('--ignore-delta', type=float, default=20,
-                        help='ignore query if difference between two sides'
-                             ' of query is less than it.')
-    parser.add_argument('--horizons', nargs='+', help='horizon lists',
-                        type=int, required=True)
-    parser.add_argument('--policy-ids', nargs='+', help='policy id lists',
-                        type=int, required=True)
-    parser.add_argument('--use-wandb', action='store_true', default=False)
-    parser.add_argument('--max-trans-count', type=int, default=1000,
-                        help="maximum number of transition count")
-    parser.add_argument('--ignore-stuck-count', type=int, default=200, )
-    parser.add_argument('--save-prob', type=float, default=0.7, )
-    parser.add_argument('--per-policy-comb-query', type=int, default=100, )
+    parser = argparse.ArgumentParser(description="Generate queries")
+    parser.add_argument("--env-name", default="d4rl:maze2d-open-v0")
+    parser.add_argument("--eval-runs", type=int, default=2)
+    parser.add_argument(
+        "--noise",
+        type=float,
+        default=0.05,
+    )
+    parser.add_argument(
+        "--ignore-delta",
+        type=float,
+        default=20,
+        help="ignore query if difference between two sides"
+        " of query is less than it.",
+    )
+    parser.add_argument(
+        "--horizons", nargs="+", help="horizon lists", type=int, required=True
+    )
+    parser.add_argument(
+        "--policy-ids", nargs="+", help="policy id lists", type=int, required=True
+    )
+    parser.add_argument("--use-wandb", action="store_true", default=False)
+    parser.add_argument(
+        "--max-trans-count",
+        type=int,
+        default=1000,
+        help="maximum number of transition count",
+    )
+    parser.add_argument(
+        "--ignore-stuck-count",
+        type=int,
+        default=200,
+    )
+    parser.add_argument(
+        "--save-prob",
+        type=float,
+        default=0.7,
+    )
+    parser.add_argument(
+        "--per-policy-comb-query",
+        type=int,
+        default=100,
+    )
 
     # Process arguments
     args = parser.parse_args()
     if args.use_wandb:
-        wandb.init(project='opcc',
-                   config={'env_name': args.env_name},
-                   save_code=True)
+        wandb.init(project="opcc", config={"env_name": args.env_name}, save_code=True)
 
     # seed
     np.random.seed(0)
@@ -235,26 +263,25 @@ def main():
     env.action_space.seed(0)
     env.seed(0)
 
-    policies = {policy_id: opcc.get_policy(args.env_name, policy_id)[0]
-                for policy_id in args.policy_ids}
-    candidate_states = generate_query_states(env, policies,
-                                             args.max_trans_count,
-                                             args)
-    queries, overall_data = evaluate_queries(env,
-                                             candidate_states,
-                                             policies,
-                                             args)
+    policies = {
+        policy_id: opcc.get_policy(args.env_name, policy_id)[0]
+        for policy_id in args.policy_ids
+    }
+    candidate_states = generate_query_states(env, policies, args.max_trans_count, args)
+    queries, overall_data = evaluate_queries(env, candidate_states, policies, args)
 
     # estimate distance of queries from datasets
-    query_obs_action_a = np.concatenate((overall_data['obs-a'],
-                                         overall_data['action-a']), 1)
-    query_obs_action_b = np.concatenate((overall_data['obs-b'],
-                                         overall_data['action-b']), 1)
+    query_obs_action_a = np.concatenate(
+        (overall_data["obs-a"], overall_data["action-a"]), 1
+    )
+    query_obs_action_b = np.concatenate(
+        (overall_data["obs-b"], overall_data["action-b"]), 1
+    )
     for dataset_name in opcc.get_dataset_names(args.env_name):
-        dataset = opcc.get_qlearning_dataset(args.env_name,
-                                             dataset_name)
-        kd_tree = KDTree(np.concatenate((dataset['observations'],
-                                         dataset['actions']), 1))
+        dataset = opcc.get_qlearning_dataset(args.env_name, dataset_name)
+        kd_tree = KDTree(
+            np.concatenate((dataset["observations"], dataset["actions"]), 1)
+        )
         kd_data_a = kd_tree.get_knn_batch(query_obs_action_a, k=1)
         kd_data_b = kd_tree.get_knn_batch(query_obs_action_b, k=1)
 
@@ -262,38 +289,50 @@ def main():
         distance_b = [list(_.values())[0] for _ in kd_data_b]
 
         # store distances
-        overall_data['query_a-{}'.format(dataset_name)] = distance_a
-        overall_data['query_b-{}'.format(dataset_name)] = distance_b
+        overall_data["query_a-{}".format(dataset_name)] = distance_a
+        overall_data["query_b-{}".format(dataset_name)] = distance_b
 
     # visualize
     if args.use_wandb:
         overall_df = pd.DataFrame(data=overall_data)
-        return_fig = px.scatter(overall_df, x='return-a', y='return-b',
-                                color='target',
-                                marginal_x="histogram", marginal_y="histogram",
-                                symbol='horizon')
+        return_fig = px.scatter(
+            overall_df,
+            x="return-a",
+            y="return-b",
+            color="target",
+            marginal_x="histogram",
+            marginal_y="histogram",
+            symbol="horizon",
+        )
 
         distances_data = []
         dataset_names_data = []
         for dataset_name in opcc.get_dataset_names(args.env_name):
-            distances_data += overall_data['query_a-{}'.format(dataset_name)]
-            distances_data += overall_data['query_b-{}'.format(dataset_name)]
-            dataset_names_data += [dataset_name for _ in
-                                   range(len(overall_data['obs-a']))]
-            dataset_names_data += [dataset_name for _ in
-                                   range(len(overall_data['obs-a']))]
+            distances_data += overall_data["query_a-{}".format(dataset_name)]
+            distances_data += overall_data["query_b-{}".format(dataset_name)]
+            dataset_names_data += [
+                dataset_name for _ in range(len(overall_data["obs-a"]))
+            ]
+            dataset_names_data += [
+                dataset_name for _ in range(len(overall_data["obs-a"]))
+            ]
 
-        distance_df = pd.DataFrame(data={'distance': distances_data,
-                                         'dataset': dataset_names_data})
+        distance_df = pd.DataFrame(
+            data={"distance": distances_data, "dataset": dataset_names_data}
+        )
         distance_fig = px.histogram(distance_df, x="distance", color="dataset")
-        wandb.log({'query-values-scatter': return_fig,
-                   'distance-histogram': distance_fig,
-                   'query-data': wandb.Table(dataframe=overall_df)})
+        wandb.log(
+            {
+                "query-values-scatter": return_fig,
+                "distance-histogram": distance_fig,
+                "query-data": wandb.Table(dataframe=overall_df),
+            }
+        )
 
     # save queries
-    _path = os.path.join(ASSETS_DIR, args.env_name, 'queries.p')
+    _path = os.path.join(ASSETS_DIR, args.env_name, "queries.p")
     os.makedirs(os.path.join(ASSETS_DIR, args.env_name), exist_ok=True)
-    pickle.dump(queries, open(_path, 'wb'))
+    pickle.dump(queries, open(_path, "wb"))
     if args.use_wandb:
         wandb.save(_path)
 
@@ -301,5 +340,5 @@ def main():
     env.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
