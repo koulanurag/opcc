@@ -89,9 +89,10 @@ class TD3:
         self.policy_freq = policy_freq
 
         self.total_it = 0
+        self.device = device
 
-    def select_action(self, state, device):
-        state = torch.FloatTensor(state.reshape(1, -1)).to(device)
+    def select_action(self, state):
+        state = torch.FloatTensor(state.reshape(1, -1)).to(self.device)
         return self.actor(state).cpu().data.numpy().flatten()
 
     def train(self):
@@ -227,8 +228,7 @@ class Trainer(object):
     ):
         # Evaluate untrained policy
         eval_info = self.eval(env_fn, seed, eval_episodes=num_test_episodes)
-        evaluations = {'original-task-score': [np.mean([np.sum(_) for _ in eval_info['original-task-reward']])],
-                       'task-score': [np.mean([np.sum(_) for _ in eval_info['task-reward']])]}
+        evaluations = {'original-task-score': [np.mean([np.sum(_) for _ in eval_info['original-task-reward']])]}
 
         # initialize episode and trackers
         env = env_fn()
@@ -278,7 +278,6 @@ class Trainer(object):
                 # log to file/console
                 episode_info = {'episode-num': episode_num + 1,
                                 'episode-time-steps': episode_time_steps,
-                                'episode-score': episode_reward['task'],
                                 'episode-org-score': episode_reward['original-task']}
                 log(
                     {"env-steps": t + 1,
@@ -309,15 +308,13 @@ class Trainer(object):
                 evaluations['original-task-score'].append(
                     np.mean([np.sum(_) for _ in
                              eval_info['original-task-reward']]))
-                evaluations['task-score'].append(
-                    np.mean([np.sum(_) for _ in eval_info['task-reward']]))
 
                 np.save(os.path.join(self.expr_dir, 'evaluations'), evaluations)
 
                 # log to file/console
                 log(
                     {"env-steps": t + 1,
-                     **{f"train-eval/{k}": v for k, v in eval_info.items()}},
+                     **{f"train-eval/{k}": v[-1] for k, v in evaluations.items()}},
                     logging.getLogger("train-eval"),
                     use_wandb=self.use_wandb,
                 )
@@ -426,6 +423,7 @@ def get_args():
     train_args.add_argument("--eval-interval", default=int(5e3), type=int)
 
     # TD3
+    train_args.add_argument("--start-time-steps", default=25e3, type=int)
     train_args.add_argument("--max-time-steps", default=1e6, type=int)
     train_args.add_argument("--expl-noise", default=0.1)
     train_args.add_argument("--expl_noise", default=0.1)
@@ -597,8 +595,8 @@ def main():
             env_fn=lambda: gym.make(args.env),
             replay_buffer=replay_buffer,
             batch_size=args.batch_size,
-            start_time_steps=args.start_timesteps,
-            max_time_steps=args.max_timesteps,
+            start_time_steps=args.start_time_steps,
+            max_time_steps=args.max_time_steps,
             expl_noise=args.expl_noise,
             seed=args.seed,
             num_test_episodes=args.num_test_episodes,
