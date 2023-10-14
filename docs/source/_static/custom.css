@@ -13,6 +13,10 @@
     height: 100%;
 }
 
+.tldr-section {
+    font-family: monospace;
+}
+
 .author-section {
     font-family: monospace;
 }
@@ -49,4 +53,5 @@
     margin: 0px 20px;
 
 }
+
 
