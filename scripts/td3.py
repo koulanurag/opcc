@@ -41,13 +41,13 @@ class ReplayBuffer(object):
     def sample(self, batch_size):
         ind = np.random.randint(0, self.size, size=batch_size)
 
-        return (
-            torch.FloatTensor(self.state[ind]).to(self.device),
-            torch.FloatTensor(self.action[ind]).to(self.device),
-            torch.FloatTensor(self.next_state[ind]).to(self.device),
-            torch.FloatTensor(self.reward[ind]).to(self.device),
-            torch.FloatTensor(self.not_done[ind]).to(self.device),
-        )
+        return {
+            'state': torch.FloatTensor(self.state[ind]).to(self.device),
+            'action': torch.FloatTensor(self.action[ind]).to(self.device),
+            'next_state': torch.FloatTensor(self.next_state[ind]).to(self.device),
+            'reward': torch.FloatTensor(self.reward[ind]).to(self.device),
+            'not_done': torch.FloatTensor(self.not_done[ind]).to(self.device),
+        }
 
 
 class TD3:
@@ -81,6 +81,8 @@ class TD3:
             lr=3e-4,
         )
 
+        self.action_dim = action_dim
+        self.state_dim = state_dim
         self.max_action = max_action
         self.discount = discount
         self.tau = tau

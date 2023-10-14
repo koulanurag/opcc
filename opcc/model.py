@@ -41,6 +41,8 @@ class ActorNetwork(nn.Module):
 
         self.apply(weights_init_)
         self.max_action = max_action
+        self.state_dim = state_dim
+        self.action_dim = num_actions
 
     def forward(self, state):
         x = torch.tanh(self.linear1(state))
