@@ -9,35 +9,11 @@ import logging
 import pickle
 import wandb
 import gym
-from tqdm import tqdm
-from collections import defaultdict
 from opcc.model import ActorNetwork, ValueNetwork
 import copy
 import torch.nn.functional as F
 
 
-def estimate_task_reward(args, env, state, action, step_reward,
-                         next_state, done, step_info):
-    if args.env in ['HalfCheetah-v2', 'HalfCheetah-v4']:
-        delta_x = next_state.qpos[0] - state.qpos[0]
-        sign = np.sign(delta_x)
-        dt = env.unwrapped.dt
-        reward = sign * (min(np.abs(delta_x), args.distance_threshold)
-                         + max(0, np.abs(delta_x) - args.distance_threshold))
-        reward /= dt
-        if args.env_mode == 'default':
-            return reward
-        elif args.env_mode == 'backward':
-            return - reward
-        else:
-            raise ValueError
-	
-    elif args.env in ['maze2d-open-dense-v0', 'maze2d-umaze-dense-v1',
-                      'maze2d-medium-dense-v1', 'maze2d-large-dense-v1']:
-        pass
-    else:
-        raise NotImplementedError('custom reward fun. not defined for ')
-    
 class ReplayBuffer(object):
     def __init__(self, state_dim, action_dim, max_size=int(1e6)):
         self.max_size = max_size
@@ -73,6 +49,7 @@ class ReplayBuffer(object):
             torch.FloatTensor(self.reward[ind]).to(self.device),
             torch.FloatTensor(self.not_done[ind]).to(self.device)
         )
+
 
 class TD3:
     def __init__(
@@ -168,7 +145,6 @@ class TD3:
         if self.total_it % self.policy_freq == 0:
 
             # Compute actor loss
-            pi = self.actor(state)
             actor_loss = -self.critic_1(state, self.actor(state)).mean()
             loss_info['actor'] = actor_loss.item()
 
@@ -237,161 +213,110 @@ class Trainer(object):
 
     def train(
             self,
-            num_updates,
             env_fn,
+            replay_buffer,
+            batch_size,
+            start_time_steps,
+            max_time_steps,
+            expl_noise,
             seed,
             num_test_episodes=1,
             checkpoint_interval=1,
-            log_interval=1,
             eval_interval=1,
             device='cpu',
     ):
-
-        replay_buffer = ReplayBuffer(state_dim, action_dim)
-
         # Evaluate untrained policy
-        eval_info = eval_policy(args, policy, args.env, args.seed)
-        evaluations = {}
-        evaluations['original-task-score'] = [np.mean([np.sum(_) 
-                       for _ in eval_info['original-task-reward']])]
-        evaluations['task-score'] = [np.mean([np.sum(_) 
-                                 for _ in eval_info['task-reward']])] 
+        eval_info = self.eval(env_fn, seed, eval_episodes=num_test_episodes)
+        evaluations = {'original-task-score': [np.mean([np.sum(_) for _ in eval_info['original-task-reward']])],
+                       'task-score': [np.mean([np.sum(_) for _ in eval_info['task-reward']])]}
 
+        # initialize episode and trackers
+        env = env_fn()
         state, done = env.reset(), False
-        mj_state = env.sim.get_state()
-        episode_reward = {'original-task': 0., 'task': 0.}
-        episode_timesteps = 0
+        episode_reward = {'original-task': 0}
+        episode_time_steps = 0
         episode_num = 0
 
-        dataloader_iter = iter(dataloader)
-        loss_interval_info = defaultdict(lambda: 0)
+        # interact and train
+        for t in range(int(max_time_steps)):
+            self.model.train()
 
-        for t in range(int(args.max_timesteps)):
-
-            episode_timesteps += 1
+            episode_time_steps += 1
 
             # Select action randomly or according to policy
-            if t < args.start_timesteps:
+            if t < start_time_steps:
                 action = env.action_space.sample()
             else:
-                action = policy.select_action(np.array(state))
+                action = self.model.select_action(np.array(state))
                 action_noise = np.random.normal(0,
-                                                max_action * args.expl_noise,
-                                                size=action_dim)
-                action = (action + action_noise).clip(-max_action, max_action)
+                                                self.model.max_action * expl_noise,
+                                                size=self.model.action_dim)
+                action = (action + action_noise).clip(- self.model.max_action,
+                                                      self.model.max_action)
 
             # Perform action
             next_state, reward, done, info = env.step(action)
-            mj_next_state = env.sim.get_state()
-            if episode_timesteps < env._max_episode_steps:
+            if episode_time_steps < env._max_episode_steps:
                 done_bool = float(done)
             else:
                 done_bool = 0
 
             # Store data in replay buffer
-            task_reward = estimate_task_reward(args, env, mj_state, action,
-                                               reward,
-                                               mj_next_state, done, info)
-            replay_buffer.add(state, action, next_state, task_reward,
-                              done_bool)
+            replay_buffer.add(state, action, next_state, reward, done_bool)
 
+            # transition to next-state
             state = next_state
-            mj_state = mj_next_state
-            episode_reward['original-task'] += reward
-            episode_reward['task'] += task_reward
 
-            # Train agent after collecting sufficient data
-            if t >= args.start_timesteps:
-                policy.train(replay_buffer, args.batch_size)
+            # store episode info
+            episode_reward['original-task'] += reward
 
             if done:
                 # +1 to account for 0 indexing.
-                # +0 on ep_timesteps since it will increment +1
+                # +0 on ep_time_steps since it will increment +1
                 # even if done=True
-                print(f"Total T: {t + 1} "
-                      f"Episode Num: {episode_num + 1} "
-                      f"Episode T: {episode_timesteps} "
-                      f"Score: {episode_reward['task']:.3f}"
-                      f"Original Score: {episode_reward['original-task']:.3f}")
+
+                # log to file/console
+                episode_info = {'episode-num': episode_num + 1,
+                                'episode-time-steps': episode_time_steps,
+                                'episode-score': episode_reward['task'],
+                                'episode-org-score': episode_reward['original-task']}
+                log(
+                    {"env-steps": t + 1,
+                     **{f"train-data/{k}": v for k, v in episode_info.items()}},
+                    logging.getLogger("train-eval"),
+                    use_wandb=self.use_wandb,
+                )
 
                 # Reset environment
                 state, done = env.reset(), False
                 episode_reward = {'original-task': 0., 'task': 0.}
-                episode_timesteps = 0
+                episode_time_steps = 0
                 episode_num += 1
 
-            # Evaluate episode
-            if (t + 1) % args.eval_freq == 0:
-                eval_info = eval_policy(args, policy, args.env,
-                                        args.seed)
-                evaluations['original-task-score'].append(
-                               np.mean([np.sum(_) for _ in
-                               eval_info['original-task-reward']]))
-                evaluations['task-score'].append(
-                 np.mean([np.sum(_) for _ in eval_info['task-reward']]))
-
-                np.save(os.path.join(expr_dir, 'evaluations'),
-                        evaluations)
-
-                # msg
-                print("---------------------------------------")
-                print(f"Evaluation over {len(eval_info['task-reward'])}"
-                      f" episodes =>"
-                      f" Score : {evaluations['task-score'][-1]:.3f}"
-                      f" Original Score : "
-                      f"{evaluations['original-task-score'][-1]:.3f}")
-                print("---------------------------------------")
-
-                # save model
-                policy.save(model_path)
-
-                # log and save  to wandb
-                if args.use_wandb:
-                    wandb.log({**{'time-step': t + 1},
-                               **{k: v[-1] for k, v in evaluations.items()}})
-                    wandb.save(glob_str=model_path, policy='now')
-                    
-
-        # perform training
-        for update_iter in tqdm(range(num_updates), desc="Update Iter"):
-
-            self.model.train()
-
-            # sample a batch
-            try:
-                batch = next(dataloader_iter)
-            except StopIteration as _:
-                dataloader_iter = iter(dataloader)
-                batch = next(dataloader_iter)
-            batch = {k: v.to(device) for k, v in batch.items()}
-
-            # update
-            loss_info = self.model.update(batch)
-            for k, v in loss_info.items():
-                loss_interval_info[k] += v
-
-            # log to file/console
-            if update_iter % log_interval == 0:
-                loss_interval_info = {k: v / log_interval
-                                      for k, v in loss_interval_info.items()}
-                _log_info = {"updates": update_iter, **loss_interval_info}
-                log(_log_info, logging.getLogger("train"), use_wandb=self.use_wandb)
-                loss_interval_info = defaultdict(lambda: 0)
+            # Train agent after collecting sufficient data
+            if t >= start_time_steps:
+                batch = replay_buffer.sample(batch_size)
+                self.model.update({k: v.to(device) for k, v in batch.items()})
 
             # save model
-            if update_iter % checkpoint_interval == 0:
-                self.save_checkpoint(info={"updates": update_iter})
+            if (t + 1) % checkpoint_interval == 0:
+                self.save_checkpoint(info={"env-steps": t})
 
-            # evaluate
-            if update_iter % eval_interval == 0:
-                eval_info = self.eval(env_fn=env_fn,
-                                      device=device,
-                                      num_episodes=num_test_episodes,
-                                      seed=seed)
+            # Evaluate policy
+            if (t + 1) % eval_interval == 0:
+                eval_info = self.eval(env_fn, seed, eval_episodes=num_test_episodes)
+
+                evaluations['original-task-score'].append(
+                    np.mean([np.sum(_) for _ in
+                             eval_info['original-task-reward']]))
+                evaluations['task-score'].append(
+                    np.mean([np.sum(_) for _ in eval_info['task-reward']]))
+
+                np.save(os.path.join(self.expr_dir, 'evaluations'), evaluations)
 
                 # log to file/console
                 log(
-                    {"updates": update_iter,
+                    {"env-steps": t + 1,
                      **{f"train-eval/{k}": v for k, v in eval_info.items()}},
                     logging.getLogger("train-eval"),
                     use_wandb=self.use_wandb,
@@ -417,24 +342,32 @@ class Trainer(object):
 
         return checkpoint["info"]
 
-    def eval(self, env_fn, seed=0, seed_offset=100, num_episodes=1, device='cpu'):
-
+    def eval(self, env_fn, seed=0, seed_offset=100, eval_episodes=10, render=False):
         eval_env = env_fn()
         eval_env.seed(seed + seed_offset)
 
-        avg_reward = 0.
-        for _ in range(num_episodes):
+        eval_info = {'original-task-reward': [], 'images': []}
+        for _ in range(eval_episodes):
+
+            # init logging structure
+            for k in eval_info:
+                eval_info[k].append([])
+
             state, done = eval_env.reset(), False
             while not done:
-                state = (np.array(state).reshape(1, -1) - self.mean) / self.std
-                action = self.model.select_action(state, device)
-                state, reward, done, _ = eval_env.step(action)
-                avg_reward += reward
+                if render:
+                    img = eval_env.render(mode='rgb_array')
+                    eval_info['images'][-1].append(img)
 
-        avg_reward /= num_episodes
-        d4rl_score = eval_env.get_normalized_score(avg_reward) * 100
+                action = self.model.select_action(np.array(state))
+                next_state, reward, done, info = eval_env.step(action)
 
-        return {'d4rl-score': d4rl_score, 'avg-reward': avg_reward}
+                # estimate custom reward
+                eval_info['original-task-reward'][-1].append(reward)
+
+                state = next_state
+
+        return eval_info
 
 
 def get_args():
@@ -658,13 +591,17 @@ def main():
                       use_wandb=args.use_wandb)
 
     if args.job == "train":
+        replay_buffer = ReplayBuffer(state_dim, action_dim)
         trainer.train(
-            num_updates=args.max_updates,
             env_fn=lambda: gym.make(args.env),
+            replay_buffer=replay_buffer,
+            batch_size=args.batch_size,
+            start_time_steps=args.start_timesteps,
+            max_time_steps=args.max_timesteps,
+            expl_noise=args.expl_noise,
             seed=args.seed,
             num_test_episodes=args.num_test_episodes,
             checkpoint_interval=args.checkpoint_interval,
-            log_interval=args.log_interval,
             eval_interval=args.eval_interval,
             device=args.device
         )
@@ -683,8 +620,8 @@ def main():
         eval_info = trainer.eval(
             env_fn=lambda: gym.make(args.env),
             seed=args.seed,
-            num_episodes=args.num_test_episode,
-            device=args.device
+            seed_offset=100,
+            eval_episodes=args.num_test_episode
         )
 
         # log to file/console
