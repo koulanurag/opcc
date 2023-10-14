@@ -25,7 +25,7 @@
     <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=91adb8b6" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=2b8500c5" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b07f943c" />
     
     
 
@@ -261,7 +261,9 @@
 <dt class="field-odd">Example<span class="colon">:</span></dt>
 <dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">opcc</span><span class="o">.</span><span class="n">get_env_names</span><span class="p">()</span>
-<span class="go">[&#39;HalfCheetah-v2&#39;, &#39;Hopper-v2&#39;, &#39;Walker2d-v2&#39;, &#39;d4rl:maze2d-large-v1&#39;, &#39;d4rl:maze2d-medium-v1&#39;, &#39;d4rl:maze2d-open-v0&#39;, &#39;d4rl:maze2d-umaze-v1&#39;]</span>
+<span class="go">[&#39;HalfCheetah-v2&#39;, &#39;Hopper-v2&#39;, &#39;Walker2d-v2&#39;,</span>
+<span class="go"> &#39;d4rl:maze2d-large-v1&#39;, &#39;d4rl:maze2d-medium-v1&#39;,</span>
+<span class="go">  &#39;d4rl:maze2d-open-v0&#39;, &#39;d4rl:maze2d-umaze-v1&#39;]</span>
 </pre></div>
 </div>
 </dd>
@@ -291,7 +293,7 @@ stats of the policy for the given env_name</p>
 <dt class="field-even">Example<span class="colon">:</span></dt>
 <dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span><span class="o">,</span> <span class="nn">torch</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">policy</span><span class="p">,</span> <span class="n">policy_stats</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="s1">&#39;d4rl:maze2d-open-v0&#39;</span><span class="p">,</span><span class="n">pre_trained</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">actor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">())</span>
 <span class="go">tensor([[0.9754, 0.9998]], dtype=torch.float64, grad_fn=&lt;TanhBackward0&gt;)</span>
 </pre></div>
 </div>
@@ -314,7 +316,8 @@ stats of the policy for the given env_name</p>
 <dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_qlearning_dataset</span><span class="p">(</span><span class="s1">&#39;Hopper-v2&#39;</span><span class="p">,</span> <span class="s1">&#39;medium&#39;</span><span class="p">)</span> <span class="c1"># dictionaries</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="go">dict_keys([&#39;observations&#39;, &#39;actions&#39;, &#39;next_observations&#39;, &#39;rewards&#39;, &#39;terminals&#39;])</span>
+<span class="go">dict_keys([&#39;observations&#39;, &#39;actions&#39;, &#39;next_observations&#39;,</span>
+<span class="go"> &#39;rewards&#39;, &#39;terminals&#39;])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;observations&#39;</span><span class="p">])</span> <span class="c1"># length of dataset</span>
 <span class="go">999998</span>
 </pre></div>
@@ -333,7 +336,8 @@ stats of the policy for the given env_name</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>A nested dictionary with the following structure:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>   <span class="p">(</span><span class="n">policy_a_args</span><span class="p">,</span> <span class="n">policy_b_args</span><span class="p">):</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="p">(</span><span class="n">policy_a_args</span><span class="p">,</span> <span class="n">policy_b_args</span><span class="p">):</span> <span class="p">{</span>
             <span class="s1">&#39;obs_a&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
 
             <span class="s1">&#39;obs_b&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
@@ -376,8 +380,10 @@ stats of the policy for the given env_name</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>A list of dictionaries. Each dictionary is an episode containing</p>
-<p>keys :’next_observations’, ‘observations’, ‘rewards’, ‘terminals’, ‘timeouts’</p>
+<dd class="field-even"><p><p>A list of dictionaries. Each dictionary is an episode containing keys</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>[&#39;next_observations&#39;, &#39;observations&#39;, &#39;rewards&#39;, &#39;terminals&#39;, &#39;timeouts&#39;]`
+</pre></div>
+</div>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -389,7 +395,9 @@ stats of the policy for the given env_name</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
 <span class="go">2186</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="go">dict_keys([&#39;actions&#39;, &#39;infos/action_log_probs&#39;, &#39;infos/qpos&#39;, &#39;infos/qvel&#39;, &#39;next_observations&#39;, &#39;observations&#39;, &#39;rewards&#39;, &#39;terminals&#39;, &#39;timeouts&#39;])</span>
+<span class="go">dict_keys([&#39;actions&#39;, &#39;infos/action_log_probs&#39;, &#39;infos/qpos&#39;,</span>
+<span class="go"> &#39;infos/qvel&#39;, &#39;next_observations&#39;, &#39;observations&#39;, &#39;rewards&#39;,</span>
+<span class="go">  &#39;terminals&#39;, &#39;timeouts&#39;])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;observations&#39;</span><span class="p">])</span> <span class="c1"># episode length</span>
 <span class="go">470</span>
 </pre></div>

@@ -25,7 +25,7 @@
     <link rel="stylesheet" type="text/css" href="_static/katex-math.css?v=91adb8b6" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=2b8500c5" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b07f943c" />
     
     
 
@@ -226,14 +226,13 @@
          <p class="author-name"> <a href="https://koulanurag.dev" target="_blank" >Anurag Koul<sup>*</sup></a>, <a href="https://www.intel.com/content/www/us/en/research/featured-researchers/mariano-phielipp.html?wapkw=mariano%20phielipp" target="_blank" >Mariano Phielipp<sup>**</sup></a>, <a href="https://engineering.oregonstate.edu/people/alan-fern" target="_blank" >Alan Fern<sup>*</sup></p></a>
         <p class="autor-association"> <sup>*</sup>Oregon State University, <sup>**</sup>Intel Labs</p>
     </blockquote>
-</div><div class="note admonition">
-<p class="admonition-title">TL;DR</p>
-<blockquote>
-<div><p>It’s a benchmark comprising <strong>“policy comparison queries”(pcq)</strong> to evaluate uncertainty estimation in offline
-reinforcement learning.</p>
-</div></blockquote>
-</div>
-<section id="abstract">
+</div><div class="note admonition tldr-section">
+    <p class="admonition-title">TL;DR</p>
+    <blockquote>
+        It's a benchmark containing <strong>"policy comparison queries"(pcq)</strong> to evaluate uncertainty estimation in offline
+        reinforcement learning.
+    </blockquote>
+</div><section id="abstract">
 <h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this heading">#</a></h2>
 <p>Decision makers often wish to use offline historical data to compare sequential-action policies at various world states. Importantly, computational tools should produce confidence values for such offline policy comparison (OPC) to account for statistical variance and limited data coverage. Nevertheless, there is little work that directly evaluates the quality of confidence values for OPC. In this work, we address this issue by creating benchmarks for OPC with Confidence (OPCC), derived by adding sets of policy comparison queries to datasets from offline reinforcement learning. In addition, we present an empirical evaluation of the risk versus coverage trade-off for a class of model-based baselines. In particular, the baselines learn ensembles of dynamics models, which are used in various ways to produce simulations for answering queries with confidence values. While our results suggest advantages for certain baseline variations, there appears to be significant room for improvement in future work.</p>
 </section>
