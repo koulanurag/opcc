@@ -3,9 +3,12 @@ from pathlib import Path
 
 MAZE_ENV_CONFIGS = {
     "d4rl:maze2d-umaze-v1": {
-        "observation_size": 4,
-        "action_size": 2,
-        "max_action": 1,
+        "actor_kwargs": {
+            "state_dim": 4,
+            "action_dim": 2,
+            "max_action": 1,
+            "hidden_dim": 64,
+        },
         "datasets": {
             "1k": {"name": "d4rl:maze2d-umaze-v1", "split": 1000},
             "10k": {"name": "d4rl:maze2d-umaze-v1", "split": 10000},
@@ -14,9 +17,12 @@ MAZE_ENV_CONFIGS = {
         },
     },
     "d4rl:maze2d-medium-v1": {
-        "observation_size": 4,
-        "action_size": 2,
-        "max_action": 1,
+        "actor_kwargs": {
+            "state_dim": 4,
+            "action_dim": 2,
+            "max_action": 1,
+            "hidden_dim": 64,
+        },
         "datasets": {
             "1k": {"name": "d4rl:maze2d-medium-v1", "split": 1000},
             "10k": {"name": "d4rl:maze2d-medium-v1", "split": 10000},
@@ -25,9 +31,12 @@ MAZE_ENV_CONFIGS = {
         },
     },
     "d4rl:maze2d-large-v1": {
-        "observation_size": 4,
-        "action_size": 2,
-        "max_action": 1,
+        "actor_kwargs": {
+            "state_dim": 4,
+            "action_dim": 2,
+            "max_action": 1,
+            "hidden_dim": 64,
+        },
         "datasets": {
             "1k": {"name": "d4rl:maze2d-large-v1", "split": 1000},
             "10k": {"name": "d4rl:maze2d-large-v1", "split": 10000},
@@ -36,9 +45,12 @@ MAZE_ENV_CONFIGS = {
         },
     },
     "d4rl:maze2d-open-v0": {
-        "observation_size": 4,
-        "action_size": 2,
-        "max_action": 1,
+        "actor_kwargs": {
+            "state_dim": 4,
+            "action_dim": 2,
+            "max_action": 1,
+            "hidden_dim": 64,
+        },
         "datasets": {
             "1k": {"name": "d4rl:maze2d-open-v0", "split": 1000},
             "10k": {"name": "d4rl:maze2d-open-v0", "split": 10000},
@@ -49,9 +61,12 @@ MAZE_ENV_CONFIGS = {
 }
 MUJOCO_ENV_CONFIGS = {
     "Walker2d-v2": {
-        "observation_size": 17,
-        "action_size": 6,
-        "max_action": 1,
+        "actor_kwargs": {
+            "state_dim": 17,
+            "action_dim": 6,
+            "max_action": 1,
+            "hidden_dim": 64,
+        },
         "datasets": {
             "random": {"name": "d4rl:walker2d-random-v2", "split": None},
             "expert": {"name": "d4rl:walker2d-expert-v2", "split": None},
@@ -61,9 +76,12 @@ MUJOCO_ENV_CONFIGS = {
         },
     },
     "Hopper-v2": {
-        "observation_size": 11,
-        "action_size": 3,
-        "max_action": 1,
+        "actor_kwargs": {
+            "state_dim": 11,
+            "action_dim": 3,
+            "max_action": 1,
+            "hidden_dim": 64,
+        },
         "datasets": {
             "random": {"name": "d4rl:hopper-random-v2", "split": None},
             "expert": {"name": "d4rl:hopper-expert-v2", "split": None},
@@ -73,9 +91,12 @@ MUJOCO_ENV_CONFIGS = {
         },
     },
     "HalfCheetah-v2": {
-        "observation_size": 17,
-        "action_size": 6,
-        "max_action": 1,
+        "actor_kwargs": {
+            "state_dim": 17,
+            "action_dim": 6,
+            "max_action": 1,
+            "hidden_dim": 64,
+        },
         "datasets": {
             "random": {"name": "d4rl:halfcheetah-random-v2", "split": None},
             "expert": {"name": "d4rl:halfcheetah-expert-v2", "split": None},
