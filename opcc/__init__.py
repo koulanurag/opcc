@@ -86,7 +86,7 @@ def get_policy(env_name: str, pre_trained: int = 1):
         A tuple containing two objects: 1) policy. 2) a dictionary of performance
         stats of the policy for the given env_name
 
-    :rtype: tuple of (ActorCriticNetwork, dict)
+    :rtype: tuple of (ActorNetwork, dict)
 
     :example:
         >>> import opcc, torch
@@ -152,11 +152,8 @@ def get_sequence_dataset(env_name, dataset_name):
     :type dataset_name: str
 
     :return:
-        A list of dictionaries. Each dictionary is an episode containing keys
-
-        .. code-block:: python
-
-            ['next_observations', 'observations', 'rewards', 'terminals', 'timeouts']`
+        A list of dictionaries. Each dictionary is an episode containing 
+        keys ['next_observations', 'observations', 'rewards', 'terminals', 'timeouts']
 
     :rtype: list[dict]
 
