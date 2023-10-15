@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/katex-math.css?v=91adb8b6" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b07f943c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=ea0a7868" />
     
     
 
@@ -286,7 +286,7 @@
 <span class="sd">        A tuple containing two objects: 1) policy. 2) a dictionary of performance</span>
 <span class="sd">        stats of the policy for the given env_name</span>
 
-<span class="sd">    :rtype: tuple of (ActorCriticNetwork, dict)</span>
+<span class="sd">    :rtype: tuple of (ActorNetwork, dict)</span>
 
 <span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc, torch</span>
@@ -352,11 +352,8 @@
 <span class="sd">    :type dataset_name: str</span>
 
 <span class="sd">    :return:</span>
-<span class="sd">        A list of dictionaries. Each dictionary is an episode containing keys</span>
-
-<span class="sd">        .. code-block:: python</span>
-
-<span class="sd">            [&#39;next_observations&#39;, &#39;observations&#39;, &#39;rewards&#39;, &#39;terminals&#39;, &#39;timeouts&#39;]`</span>
+<span class="sd">        A list of dictionaries. Each dictionary is an episode containing </span>
+<span class="sd">        keys [&#39;next_observations&#39;, &#39;observations&#39;, &#39;rewards&#39;, &#39;terminals&#39;, &#39;timeouts&#39;]</span>
 
 <span class="sd">    :rtype: list[dict]</span>
 
