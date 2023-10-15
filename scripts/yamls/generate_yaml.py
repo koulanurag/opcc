@@ -28,6 +28,7 @@ environment:
     - echo 'export LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:/home/aiscuser/.mujoco/mujoco210/bin' >> /home/aiscuser/.bashrc
 
     # pip dependencies
+    - pip install protobuf==3.20.*
     - pip3 install wandb
     - pip3 install pyglet
     - pip3 install git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl -t /home/aiscuser/.python_packages
@@ -35,7 +36,6 @@ environment:
     - echo 'export CPATH="/usr/include:$$CPATH"' >> /home/aiscuser/.bashrc
     - echo 'export PYTHONPATH=$$PYTHONPATH:/home/aiscuser/.python_packages' >> /home/aiscuser/.bashrc
     - chmod -R 777 /home/aiscuser/.python_packages
-
 
 storage:
   opcctd3:
