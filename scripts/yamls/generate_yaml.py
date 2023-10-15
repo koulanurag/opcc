@@ -8,14 +8,6 @@ target:
   name: msrresrchvc
 """
 
-MPPR_TARGET = """
-description: OPCC+BC
-target:
-  service: amlk8s
-  name: itplabrr1cl1
-  vc: mprr2
-"""
-
 STATIC_YAML_SEGMENT = """
 environment:
   image: amlt-sing/pytorch-1.11.0
@@ -122,7 +114,7 @@ ENVS = (MAZE2D_ENVS
         + GYM_MUJOCO_ENVS
         + ADROIT_ENVS
         + FRANKA_KITCHEN)
-
+ENVS = ["hopper-random-v2"]
 ENV_VARIABLES = {"WANDB_API_KEY": "$WANDB_API_KEY",
                  "D4RL_DATASET_DIR": "\"/mnt/d4rl\"",
                  "MUJOCO_PY_MUJOCO_PATH": "\"/home/aiscuser/.mujoco/mujoco210\"",
@@ -193,21 +185,7 @@ def main():
             cmds.append({'job_name': hashlib.md5(cmd.encode()).hexdigest(),
                          'cmd': cmd})
 
-    # submit cmds to mprr2 cluster
-    per_node_commands = 0
-    if len(cmds) > per_node_commands:
-        last_idx = (len(cmds) // per_node_commands) * per_node_commands
-        if os.path.exists(os.path.join(os.getcwd(), 'opcc_td3_mppr.yaml')):
-            os.remove(os.path.join(os.getcwd(), 'opcc_td3_mppr.yaml'))
-        generate_yaml(cmds[:last_idx],
-                      MPPR_TARGET,
-                      STATIC_YAML_SEGMENT,
-                      os.path.join(os.getcwd(), 'opcc_td3_mppr.yaml'),
-                      per_node_commands=per_node_commands,
-                      num_gpu=8)
-        cmds = cmds[last_idx:]
 
-    # submit left out cmds to generic cluster
     if len(cmds) > 0:
         if os.path.exists(os.path.join(os.getcwd(), 'opcc_td3_generic.yaml')):
             os.remove(os.path.join(os.getcwd(), 'opcc_td3_generic.yaml'))
