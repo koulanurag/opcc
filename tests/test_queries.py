@@ -40,7 +40,7 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
                     else:
                         with torch.no_grad():
                             obs = torch.tensor(obss[env_i]).unsqueeze(0)
-                            step_action = policy.actor(obs).data.cpu().numpy()
+                            step_action = policy(obs).data.cpu().numpy()
                             step_action = step_action[0]
 
                     step_action = step_action.astype('float32')
