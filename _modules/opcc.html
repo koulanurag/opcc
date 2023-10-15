@@ -320,12 +320,7 @@
     <span class="p">}</span>
 
     <span class="c1"># create model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">ActorNetwork</span><span class="p">(</span>
-        <span class="n">ENV_CONFIGS</span><span class="p">[</span><span class="n">env_name</span><span class="p">][</span><span class="s2">&quot;observation_size&quot;</span><span class="p">],</span>
-        <span class="n">ENV_CONFIGS</span><span class="p">[</span><span class="n">env_name</span><span class="p">][</span><span class="s2">&quot;action_size&quot;</span><span class="p">],</span>
-        <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-        <span class="n">max_action</span><span class="o">=</span><span class="n">ENV_CONFIGS</span><span class="p">[</span><span class="n">env_name</span><span class="p">][</span><span class="s2">&quot;max_action&quot;</span><span class="p">],</span>
-    <span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ActorNetwork</span><span class="p">(</span><span class="o">**</span><span class="n">ENV_CONFIGS</span><span class="p">[</span><span class="n">env_name</span><span class="p">][</span><span class="s2">&quot;actor_kwargs&quot;</span><span class="p">])</span>
     <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">actor_state_dict</span><span class="p">)</span>
 
     <span class="c1"># Note: Gym returns observations with numpy float64( or double) type.</span>
