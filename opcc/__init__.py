@@ -120,12 +120,7 @@ def get_policy(env_name: str, pre_trained: int = 1):
     }
 
     # create model
-    model = ActorNetwork(
-        ENV_CONFIGS[env_name]["observation_size"],
-        ENV_CONFIGS[env_name]["action_size"],
-        hidden_dim=64,
-        max_action=ENV_CONFIGS[env_name]["max_action"],
-    )
+    model = ActorNetwork(**ENV_CONFIGS[env_name]["actor_kwargs"])
     model.load_state_dict(actor_state_dict)
 
     # Note: Gym returns observations with numpy float64( or double) type.
