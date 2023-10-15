@@ -293,8 +293,10 @@ stats of the policy for the given env_name</p>
 <dt class="field-even">Example<span class="colon">:</span></dt>
 <dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">opcc</span><span class="o">,</span> <span class="nn">torch</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">policy</span><span class="p">,</span> <span class="n">policy_stats</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="s1">&#39;d4rl:maze2d-open-v0&#39;</span><span class="p">,</span><span class="n">pre_trained</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">())</span>
-<span class="go">tensor([[0.9754, 0.9998]], dtype=torch.float64, grad_fn=&lt;TanhBackward0&gt;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">observation</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">DoubleTensor</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">action</span>
+<span class="go">tensor([[0.9977, 0.9998]], dtype=torch.float64, grad_fn=&lt;MulBackward0&gt;)</span>
 </pre></div>
 </div>
 </dd>

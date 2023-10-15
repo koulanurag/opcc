@@ -291,8 +291,11 @@
 <span class="sd">    :example:</span>
 <span class="sd">        &gt;&gt;&gt; import opcc, torch</span>
 <span class="sd">        &gt;&gt;&gt; policy, policy_stats = opcc.get_policy(&#39;d4rl:maze2d-open-v0&#39;,pre_trained=1)</span>
-<span class="sd">        &gt;&gt;&gt; action = policy(torch.randn(1,4).double())</span>
-<span class="sd">        tensor([[0.9754, 0.9998]], dtype=torch.float64, grad_fn=&lt;TanhBackward0&gt;)</span>
+<span class="sd">        &gt;&gt;&gt; observation = torch.DoubleTensor([[0.5, 0.5, 0.5, 0.5]])</span>
+<span class="sd">        &gt;&gt;&gt; action = policy(observation)</span>
+<span class="sd">        &gt;&gt;&gt; action</span>
+<span class="sd">        tensor([[0.9977, 0.9998]], dtype=torch.float64, grad_fn=&lt;MulBackward0&gt;)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">assert</span> <span class="n">MIN_PRE_TRAINED_LEVEL</span> <span class="o">&lt;=</span> <span class="n">pre_trained</span> <span class="o">&lt;=</span> <span class="n">MAX_PRE_TRAINED_LEVEL</span><span class="p">,</span> <span class="p">(</span>
