@@ -7,12 +7,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="installation.html" />
 <meta property="og:site_name" content="opcc" />
-<meta property="og:description" content="Setup (Important): Install package: Using PyPI:, Directly from source (recommended):, Install Pytorch>=1.8.0.." />
+<meta property="og:description" content="Setup Mujoco: Download[mujoco 210] and unzip in~/.mujoco, Add following to.bashrc/.zshrc and source it.(You can also refer here for step-by-step instructions on mujoco installation). Install packag..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="/_images/social_previews/summary_installation_46588c68.png" />
-<meta property="og:image:alt" content="Setup (Important): Install package: Using PyPI:, Directly from source (recommended):, Install Pytorch>=1.8.0.." />
-<meta name="description" content="Setup (Important): Install package: Using PyPI:, Directly from source (recommended):, Install Pytorch>=1.8.0.." />
+<meta property="og:image" content="/_images/social_previews/summary_installation_f65e4cf9.png" />
+<meta property="og:image:alt" content="Setup Mujoco: Download[mujoco 210] and unzip in~/.mujoco, Add following to.bashrc/.zshrc and source it.(You can also refer here for step-by-step instructions..." />
+<meta name="description" content="Setup Mujoco: Download[mujoco 210] and unzip in~/.mujoco, Add following to.bashrc/.zshrc and source it.(You can also refer here for step-by-step instructions on mujoco installation). Install packag..." />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Quick Start" href="quick-start.html" /><link rel="prev" title="Offline Policy Comparison with Confidence : Benchmark and Baselines" href="index.html" />
 
@@ -220,16 +220,31 @@
         <article role="main">
           <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h1>
-<section id="setup-important">
-<h2>Setup (Important)<a class="headerlink" href="#setup-important" title="Permalink to this heading">#</a></h2>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip3<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;setuptools&lt;=66&#39;</span>
-<span class="gp">$ </span>pip3<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;wheel&lt;=0.38.4&#39;</span>
+<section id="setup-mujoco">
+<h2>Setup Mujoco<a class="headerlink" href="#setup-mujoco" title="Permalink to this heading">#</a></h2>
+<ul>
+<li><p>Download <a class="reference external" href="https://github.com/google-deepmind/mujoco/releases/tag/2.1.0">[mujoco 210]</a> and unzip in  <cite>~/.mujoco</cite></p></li>
+<li><p>Add following to <cite>.bashrc/.zshrc</cite> and source it.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">MUJOCO_PY_MUJOCO_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/.mujoco/mujoco210/
+<span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LD_LIBRARY_PATH</span>:<span class="nv">$HOME</span>/.mujoco/mujoco210/bin
 </pre></div>
 </div>
+<p>(You can also refer <a class="reference external" href="https://github.com/koulanurag/opcc/blob/main/.github/workflows/python-package.yml#L27">here</a> for step-by-step instructions on mujoco installation)</p>
+</li>
+</ul>
 </section>
 <section id="install-package">
 <h2>Install package<a class="headerlink" href="#install-package" title="Permalink to this heading">#</a></h2>
 <ol class="arabic">
+<li><p>Setup <a class="reference external" href="https://www.python.org/downloads/">[Python 3.7+]</a> and optionally(recommended) create a  <cite>virtualenv</cite> (<a class="reference external" href="https://docs.python.org/3/tutorial/venv.html">refer here</a>)</p></li>
+<li><p>Install following</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip3<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;setuptools&lt;=66&#39;</span>
+<span class="gp">$ </span>pip3<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;wheel&lt;=0.38.4&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
 <li><p>Using PyPI:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>opcc
 </pre></div>
@@ -301,7 +316,7 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
-<li><a class="reference internal" href="#setup-important">Setup (Important)</a></li>
+<li><a class="reference internal" href="#setup-mujoco">Setup Mujoco</a></li>
 <li><a class="reference internal" href="#install-package">Install package</a></li>
 </ul>
 </li>
