@@ -13,6 +13,7 @@ from opcc.model import ActorNetwork
 import copy
 import torch.nn.functional as F
 import torch.nn as nn
+import d4rl
 
 
 class QNetwork(nn.Module):
@@ -459,10 +460,10 @@ def get_args():
     train_args.add_argument("--eval-interval", default=int(5e3), type=int)
 
     # TD3
+    train_args.add_argument("--hidden-dim", default=256, type=int)
     train_args.add_argument("--start-time-steps", default=25e3, type=int)
     train_args.add_argument("--max-time-steps", default=1e6, type=int)
     train_args.add_argument("--expl-noise", default=0.1)
-    train_args.add_argument("--expl_noise", default=0.1)
     train_args.add_argument("--batch-size", default=256, type=int)
     train_args.add_argument("--discount", default=0.99)
     train_args.add_argument("--tau", default=0.005)
@@ -611,6 +612,7 @@ def main():
         "discount": args.discount,
         "tau": args.tau,
         # TD3
+        "hidden_dim": args.hidden_dim,
         "policy_noise": args.policy_noise * max_action,
         "noise_clip": args.noise_clip * max_action,
         "policy_freq": args.policy_frequency,
