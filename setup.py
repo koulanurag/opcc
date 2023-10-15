@@ -4,7 +4,7 @@ import setuptools
 from setuptools import setup
 
 extras = {
-    'test': ['pytest', 'pytest_cases', 'pytest-cov'],
+    'test': ['pytest', 'pytest_cases', 'pytest-cov', 'xdoctest'],
     'dev': ['pandas==1.3.5', 'plotly==5.5.0', 'wandb'],
     'docs': ['sphinx', 'furo', 'sphinxcontrib-katex',
              'sphinx-copybutton', 'sphinx_design', 'myst-parser',

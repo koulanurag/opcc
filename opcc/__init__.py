@@ -91,8 +91,11 @@ def get_policy(env_name: str, pre_trained: int = 1):
     :example:
         >>> import opcc, torch
         >>> policy, policy_stats = opcc.get_policy('d4rl:maze2d-open-v0',pre_trained=1)
-        >>> action = policy(torch.randn(1,4).double())
-        tensor([[0.9754, 0.9998]], dtype=torch.float64, grad_fn=<TanhBackward0>)
+        >>> observation = torch.DoubleTensor([[0.5, 0.5, 0.5, 0.5]])
+        >>> action = policy(observation)
+        >>> action
+        tensor([[0.9977, 0.9998]], dtype=torch.float64, grad_fn=<MulBackward0>)
+
     """
 
     assert MIN_PRE_TRAINED_LEVEL <= pre_trained <= MAX_PRE_TRAINED_LEVEL, (
