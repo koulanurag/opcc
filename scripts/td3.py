@@ -16,6 +16,7 @@ import torch.nn as nn
 import d4rl
 from PIL import Image
 
+
 class QNetwork(nn.Module):
     def __init__(self, state_dim, hidden_dim, action_dim):
         super(QNetwork, self).__init__()
@@ -547,17 +548,25 @@ def log(info, logger, use_wandb=False):
     if use_wandb:
         wandb.log(info)
 
+
 def write_gif(episode_numpy_images, gif_path, save_mp4=True):
     episode_images = [Image.fromarray(_img) for _img in episode_numpy_images]
     # save as gif
-    episode_images[0].save(gif_path, save_all=True, 
-                           append_images=episode_images[1:], optimize=False, loop=1)
+    episode_images[0].save(
+        gif_path,
+        save_all=True,
+        append_images=episode_images[1:],
+        optimize=False,
+        loop=1,
+    )
 
     # save video
     if save_mp4:
         import moviepy.editor as mp
+
         clip = mp.VideoFileClip(gif_path)
-        clip.write_videofile(gif_path.replace('.gif', '.mp4'))
+        clip.write_videofile(gif_path.replace(".gif", ".mp4"))
+
 
 def main():
     # get arguments and seeding
@@ -610,18 +619,29 @@ def main():
     # ##################################################################################
     def env_fn():
         if "antmaze" in args.env:
-            _env =  gym.make(args.env, reward_type="dense")
+            _env = gym.make(args.env, reward_type="dense")
         else:
             _env = gym.make(args.env)
 
         # custom render function for adroit envs
-        if "door" in args.env:
+        if "door" in args.env or "pen" in args.env:
+
             def _render_fn(mode):
-                _frame_size=(640,480)
-                if mode == 'rgb_array':
-                    return _env.sim.render(width=_frame_size[0], height=_frame_size[1], mode="offscreen", camera_name=None, device_id=0)
+                _frame_size = (200, 200)
+                if mode == "rgb_array":
+                    # list available camera names:
+                    # >>> env.sim.model.camera_names
+                    # ('fixed', 'vil_camera')
+                    return _env.sim.render(
+                        width=_frame_size[0],
+                        height=_frame_size[1],
+                        mode="offscreen",
+                        camera_name=None,
+                        device_id=0,
+                    )
                 else:
                     raise NotImplementedError()
+
             _env.render = _render_fn
 
         return _env
@@ -689,18 +709,25 @@ def main():
             seed=args.seed,
             seed_offset=100,
             eval_episodes=args.num_test_episodes,
-            render=True
+            render=True,
         )
-        
+
         # save video of 1st episode
-        write_gif(eval_info['images'][0], gif_path=os.path.join(args.expr_dir, "eval_episode.gif"), save_mp4=True )
-        eval_info.pop('images')
+        write_gif(
+            eval_info["images"][0],
+            gif_path=os.path.join(args.expr_dir, "eval_episode.gif"),
+            save_mp4=True,
+        )
+        eval_info.pop("images")
 
         # log to file/console
-        log({f"eval/{k}":  np.mean([np.sum(_) for _ in v])
-             for k, v in eval_info.items()}, logging.getLogger("eval"))
-
-
+        log(
+            {
+                f"eval/{k}": np.mean([np.sum(_) for _ in v])
+                for k, v in eval_info.items()
+            },
+            logging.getLogger("eval"),
+        )
 
     else:
         raise ValueError(f"{args.job} is not supported")
