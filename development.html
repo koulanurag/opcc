@@ -7,12 +7,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="development.html" />
 <meta property="og:site_name" content="opcc" />
-<meta property="og:description" content="Install :,,. Generate-Queries: Generate pre-trained policy performance stats for README: Testing Package:- Install :,,., Testing is computationally expensive as we validate ground truth value estim..." />
+<meta property="og:description" content="We begin by installing following dependencies: Generate-Queries: In order to generate queries for the considered environments, we run following commands You can understand available command attribu..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="/_images/social_previews/summary_development_050b6f0a.png" />
-<meta property="og:image:alt" content="Install :,,. Generate-Queries: Generate pre-trained policy performance stats for README: Testing Package:- Install :,,., Testing is computationally expensive..." />
-<meta name="description" content="Install :,,. Generate-Queries: Generate pre-trained policy performance stats for README: Testing Package:- Install :,,., Testing is computationally expensive as we validate ground truth value estim..." />
+<meta property="og:image" content="/_images/social_previews/summary_development_d28cbd63.png" />
+<meta property="og:image:alt" content="We begin by installing following dependencies: Generate-Queries: In order to generate queries for the considered environments, we run following commands You..." />
+<meta name="description" content="We begin by installing following dependencies: Generate-Queries: In order to generate queries for the considered environments, we run following commands You can understand available command attribu..." />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="api.html" /><link rel="prev" title="Benchmark Information" href="benchmark-information.html" />
 
@@ -220,14 +220,15 @@
         <article role="main">
           <section id="development">
 <h1>Development<a class="headerlink" href="#development" title="Permalink to this heading">#</a></h1>
-<dl>
-<dt>Install :</dt><dd><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e &quot;.[dev]&quot;</span>
+<p>We begin by installing following dependencies:</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e &quot;.[dev]&quot;</span>
 </pre></div>
 </div>
-</dd>
-</dl>
+</div></blockquote>
 <section id="generate-queries">
 <h2>Generate-Queries<a class="headerlink" href="#generate-queries" title="Permalink to this heading">#</a></h2>
+<p>In order to generate queries for the considered environments, we run following commands</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">% </span>following<span class="w"> </span>commands<span class="w"> </span>were<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>generate<span class="w"> </span>queries
 <span class="go">python scripts/generate_queries.py --env-name HalfCheetah-v2 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb</span>
 <span class="go">python scripts/generate_queries.py --env-name Hopper-v2 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb</span>
@@ -236,6 +237,10 @@
 <span class="go">python scripts/generate_queries.py --env-name d4rl:maze2d-umaze-v1 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.2 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb</span>
 <span class="go">python scripts/generate_queries.py --env-name d4rl:maze2d-medium-v1 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.2 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb</span>
 <span class="go">python scripts/generate_queries.py --env-name d4rl:maze2d-open-v0 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.5 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb</span>
+</pre></div>
+</div>
+<p>You can understand available command attributes using following command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python scripts/generate_queries.py --help</span>
 </pre></div>
 </div>
 </section>
@@ -249,7 +254,7 @@
 <h2>Testing Package<a class="headerlink" href="#testing-package" title="Permalink to this heading">#</a></h2>
 <ol class="arabic">
 <li><dl>
-<dt>Install :</dt><dd><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e &quot;.[test]&quot;</span>
+<dt>Install Dependencies :</dt><dd><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e &quot;.[test]&quot;</span>
 </pre></div>
 </div>
 </dd>
@@ -265,7 +270,7 @@
 </div></blockquote>
 </li>
 <li><dl>
-<dt>Run:</dt><dd><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest -v</span>
+<dt>Run:</dt><dd><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest -v --xdoc</span>
 </pre></div>
 </div>
 </dd>

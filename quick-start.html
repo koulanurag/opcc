@@ -7,12 +7,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="quick-start.html" />
 <meta property="og:site_name" content="opcc" />
-<meta property="og:description" content="Queries: Evaluation Metrics: Dataset: Policy Usage:" />
+<meta property="og:description" content="In the section, we understand minimal and sufficient usage of opcc framework. Queries: Following code is a demo of retrieving queries and iterating over them. Evaluation Metrics: Dataset: Policy Us..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="/_images/social_previews/summary_quick-start_2982f712.png" />
-<meta property="og:image:alt" content="Queries: Evaluation Metrics: Dataset: Policy Usage:" />
-<meta name="description" content="Queries: Evaluation Metrics: Dataset: Policy Usage:" />
+<meta property="og:image" content="/_images/social_previews/summary_quick-start_b23c1aa4.png" />
+<meta property="og:image:alt" content="In the section, we understand minimal and sufficient usage of opcc framework. Queries: Following code is a demo of retrieving queries and iterating over them..." />
+<meta name="description" content="In the section, we understand minimal and sufficient usage of opcc framework. Queries: Following code is a demo of retrieving queries and iterating over them. Evaluation Metrics: Dataset: Policy Us..." />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Benchmark Information" href="benchmark-information.html" /><link rel="prev" title="Installation" href="installation.html" />
 
@@ -220,8 +220,10 @@
         <article role="main">
           <section id="quick-start">
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading">#</a></h1>
+<p>In the section, we understand minimal and sufficient usage of  <cite>opcc</cite> framework.</p>
 <section id="queries">
 <h2>Queries<a class="headerlink" href="#queries" title="Permalink to this heading">#</a></h2>
+<p>Following code is a demo of retrieving queries and iterating over them.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">opcc</span>
 <span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
@@ -237,47 +239,53 @@
 <span class="linenos">13</span><span class="n">queries</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_queries</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
 <span class="linenos">14</span>
 <span class="linenos">15</span>
-<span class="linenos">16</span><span class="k">def</span> <span class="nf">random_predictor</span><span class="p">(</span><span class="n">obs_a</span><span class="p">,</span> <span class="n">obs_b</span><span class="p">,</span> <span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">,</span>
-<span class="linenos">17</span>                     <span class="n">policy_a</span><span class="p">,</span> <span class="n">policy_b</span><span class="p">,</span> <span class="n">horizon</span><span class="p">):</span>
-<span class="linenos">18</span>    <span class="n">answer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">obs_a</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="linenos">19</span>    <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">obs_a</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="linenos">20</span>    <span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">confidence</span>
-<span class="linenos">21</span>
-<span class="linenos">22</span>
-<span class="linenos">23</span><span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">24</span><span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">25</span><span class="n">confidences</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos">26</span><span class="c1"># Batch iteration through Queries :</span>
-<span class="linenos">27</span><span class="k">for</span> <span class="p">(</span><span class="n">policy_a_id</span><span class="p">,</span> <span class="n">policy_b_id</span><span class="p">),</span> <span class="n">query_batch</span> <span class="ow">in</span> <span class="n">queries</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-<span class="linenos">28</span>    <span class="c1"># retrieve policies</span>
-<span class="linenos">29</span>    <span class="n">policy_a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_a_id</span><span class="p">)</span>
-<span class="linenos">30</span>    <span class="n">policy_b</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_b_id</span><span class="p">)</span>
-<span class="linenos">31</span>
-<span class="linenos">32</span>    <span class="c1"># query-a</span>
-<span class="linenos">33</span>    <span class="n">obs_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_a&#39;</span><span class="p">]</span>
-<span class="linenos">34</span>    <span class="n">action_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_a&#39;</span><span class="p">]</span>
-<span class="linenos">35</span>
-<span class="linenos">36</span>    <span class="c1"># query-b</span>
-<span class="linenos">37</span>    <span class="n">obs_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_b&#39;</span><span class="p">]</span>
-<span class="linenos">38</span>    <span class="n">action_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_b&#39;</span><span class="p">]</span>
-<span class="linenos">39</span>
-<span class="linenos">40</span>    <span class="c1"># horizon for policy evaluation</span>
-<span class="linenos">41</span>    <span class="n">horizon</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;horizon&#39;</span><span class="p">]</span>
-<span class="linenos">42</span>
-<span class="linenos">43</span>    <span class="c1"># ground truth binary vector:</span>
-<span class="linenos">44</span>    <span class="c1"># (Q(obs_a, action_a, policy_a, horizon)</span>
-<span class="linenos">45</span>    <span class="c1"># &lt;  Q(obs_b, action_b, policy_b, horizon))</span>
-<span class="linenos">46</span>    <span class="n">target</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="linenos">47</span>    <span class="n">targets</span> <span class="o">+=</span> <span class="n">target</span>
+<span class="linenos">16</span><span class="c1"># ########################################################</span>
+<span class="linenos">17</span><span class="c1"># Following is a random answer predictor for a query</span>
+<span class="linenos">18</span><span class="c1"># ########################################################</span>
+<span class="linenos">19</span><span class="k">def</span> <span class="nf">random_predictor</span><span class="p">(</span><span class="n">obs_a</span><span class="p">,</span> <span class="n">obs_b</span><span class="p">,</span> <span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">,</span>
+<span class="linenos">20</span>                     <span class="n">policy_a</span><span class="p">,</span> <span class="n">policy_b</span><span class="p">,</span> <span class="n">horizon</span><span class="p">):</span>
+<span class="linenos">21</span>    <span class="n">answer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">obs_a</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="linenos">22</span>    <span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">obs_a</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="linenos">23</span>    <span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">confidence</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="c1"># ########################################################</span>
+<span class="linenos">27</span><span class="c1"># Query Iterator</span>
+<span class="linenos">28</span><span class="c1"># ########################################################</span>
+<span class="linenos">29</span><span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">30</span><span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">31</span><span class="n">confidences</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">32</span><span class="c1"># Batch iteration through Queries :</span>
+<span class="linenos">33</span><span class="k">for</span> <span class="p">(</span><span class="n">policy_a_id</span><span class="p">,</span> <span class="n">policy_b_id</span><span class="p">),</span> <span class="n">query_batch</span> <span class="ow">in</span> <span class="n">queries</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="linenos">34</span>    <span class="c1"># retrieve policies</span>
+<span class="linenos">35</span>    <span class="n">policy_a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_a_id</span><span class="p">)</span>
+<span class="linenos">36</span>    <span class="n">policy_b</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_b_id</span><span class="p">)</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span>    <span class="c1"># query-a</span>
+<span class="linenos">39</span>    <span class="n">obs_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_a&#39;</span><span class="p">]</span>
+<span class="linenos">40</span>    <span class="n">action_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_a&#39;</span><span class="p">]</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span>    <span class="c1"># query-b</span>
+<span class="linenos">43</span>    <span class="n">obs_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_b&#39;</span><span class="p">]</span>
+<span class="linenos">44</span>    <span class="n">action_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_b&#39;</span><span class="p">]</span>
+<span class="linenos">45</span>
+<span class="linenos">46</span>    <span class="c1"># horizon for policy evaluation</span>
+<span class="linenos">47</span>    <span class="n">horizon</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;horizon&#39;</span><span class="p">]</span>
 <span class="linenos">48</span>
-<span class="linenos">49</span>    <span class="c1"># Let&#39;s make predictions for the given queries.</span>
-<span class="linenos">50</span>    <span class="c1"># One can use any mechanism to predict the corresponding</span>
-<span class="linenos">51</span>    <span class="c1"># answer to queries, and we simply use a random predictor</span>
-<span class="linenos">52</span>    <span class="c1"># over here for demonstration purposes</span>
-<span class="linenos">53</span>    <span class="n">p</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">random_predictor</span><span class="p">(</span><span class="n">obs_a</span><span class="p">,</span> <span class="n">obs_b</span><span class="p">,</span> <span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">,</span>
-<span class="linenos">54</span>                            <span class="n">policy_a</span><span class="p">,</span> <span class="n">policy_b</span><span class="p">,</span> <span class="n">horizon</span><span class="p">)</span>
-<span class="linenos">55</span>    <span class="n">predictions</span> <span class="o">+=</span> <span class="n">p</span>
-<span class="linenos">56</span>    <span class="n">confidences</span> <span class="o">+=</span> <span class="n">c</span>
+<span class="linenos">49</span>    <span class="c1"># ground truth binary vector:</span>
+<span class="linenos">50</span>    <span class="c1"># (Q(obs_a, action_a, policy_a, horizon)</span>
+<span class="linenos">51</span>    <span class="c1"># &lt;  Q(obs_b, action_b, policy_b, horizon))</span>
+<span class="linenos">52</span>    <span class="n">target</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="linenos">53</span>    <span class="n">targets</span> <span class="o">+=</span> <span class="n">target</span>
+<span class="linenos">54</span>
+<span class="linenos">55</span>    <span class="c1"># Let&#39;s make predictions for the given queries.</span>
+<span class="linenos">56</span>    <span class="c1"># One can use any mechanism to predict the corresponding</span>
+<span class="linenos">57</span>    <span class="c1"># answer to queries, and we simply use a random predictor</span>
+<span class="linenos">58</span>    <span class="c1"># over here for demonstration purposes</span>
+<span class="linenos">59</span>    <span class="n">p</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">random_predictor</span><span class="p">(</span><span class="n">obs_a</span><span class="p">,</span> <span class="n">obs_b</span><span class="p">,</span> <span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">,</span>
+<span class="linenos">60</span>                            <span class="n">policy_a</span><span class="p">,</span> <span class="n">policy_b</span><span class="p">,</span> <span class="n">horizon</span><span class="p">)</span>
+<span class="linenos">61</span>    <span class="n">predictions</span> <span class="o">+=</span> <span class="n">p</span>
+<span class="linenos">62</span>    <span class="n">confidences</span> <span class="o">+=</span> <span class="n">c</span>
 </pre></div>
 </div>
 </section>
@@ -348,14 +356,14 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">opcc</span><span class="o">,</span> <span class="nn">gym</span><span class="o">,</span> <span class="nn">torch</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="n">env_name</span> <span class="o">=</span> <span class="s2">&quot;HalfCheetah-v2&quot;</span>
-<span class="linenos"> 4</span><span class="n">model</span><span class="p">,</span> <span class="n">model_info</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">pre_trained</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 4</span><span class="n">policy</span><span class="p">,</span> <span class="n">policy_info</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">pre_trained</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="linenos"> 5</span>
 <span class="linenos"> 6</span><span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos"> 7</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
 <span class="linenos"> 8</span>
 <span class="linenos"> 9</span><span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="linenos">10</span><span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-<span class="linenos">11</span>    <span class="n">action</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">actor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="linenos">11</span>    <span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 <span class="linenos">12</span>    <span class="n">action</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
 <span class="linenos">13</span>    <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">step_info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 <span class="linenos">14</span>    <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
