@@ -7,12 +7,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="quick-start.html" />
 <meta property="og:site_name" content="opcc" />
-<meta property="og:description" content="In the section, we understand minimal and sufficient usage of opcc framework. Queries: Following code is a demo of retrieving queries and iterating over them. Evaluation Metrics: Dataset: Policy Us..." />
+<meta property="og:description" content="In the section, we understand minimal and sufficient usage of opcc framework. Queries: Following code is a demo of retrieving queries and iterating over them. Evaluation Metrics: Given the query pr..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
 <meta property="og:image" content="/_images/social_previews/summary_quick-start_b23c1aa4.png" />
 <meta property="og:image:alt" content="In the section, we understand minimal and sufficient usage of opcc framework. Queries: Following code is a demo of retrieving queries and iterating over them..." />
-<meta name="description" content="In the section, we understand minimal and sufficient usage of opcc framework. Queries: Following code is a demo of retrieving queries and iterating over them. Evaluation Metrics: Dataset: Policy Us..." />
+<meta name="description" content="In the section, we understand minimal and sufficient usage of opcc framework. Queries: Following code is a demo of retrieving queries and iterating over them. Evaluation Metrics: Given the query pr..." />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Benchmark Information" href="benchmark-information.html" /><link rel="prev" title="Installation" href="installation.html" />
 
@@ -291,6 +291,7 @@
 </section>
 <section id="evaluation-metrics">
 <h2>Evaluation Metrics<a class="headerlink" href="#evaluation-metrics" title="Permalink to this heading">#</a></h2>
+<p>Given the query <cite>predictions</cite> and <cite>targets</cite>, we demo estimation of various evaluation metrics:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># #########################################</span>
 <span class="linenos"> 2</span><span class="c1"># (Section 3.3 in paper)</span>
 <span class="linenos"> 3</span><span class="c1"># #########################################</span>
@@ -328,7 +329,8 @@
 <span class="linenos">35</span><span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="n">_</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">k</span><span class="p">)]</span>
 <span class="linenos">36</span><span class="n">cr_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">coverages</span><span class="p">,</span> <span class="n">bins</span><span class="p">))</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
 <span class="linenos">37</span>
-<span class="linenos">38</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;aurcc: </span><span class="si">{}</span><span class="s2">, rpp: </span><span class="si">{}</span><span class="s2">, cr_</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aurcc</span><span class="p">,</span> <span class="n">rpp</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cr_k</span><span class="p">))</span>
+<span class="linenos">38</span><span class="c1"># print evaluation metrics</span>
+<span class="linenos">39</span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aurcc: </span><span class="si">{</span><span class="n">aurcc</span><span class="si">}</span><span class="s2">, rpp: </span><span class="si">{</span><span class="n">rpp</span><span class="si">}</span><span class="s2">, cr_</span><span class="si">{</span><span class="n">cr_k</span><span class="si">}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
