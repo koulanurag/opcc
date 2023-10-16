@@ -599,7 +599,11 @@ def main():
     # ##################################################################################
     # Setup env/ dataLoader
     # ##################################################################################
-    env = gym.make(args.env)
+    if "antmaze" in args.env:
+        env_fn = lambda: gym.make(args.env, reward_type="dense")
+    else:
+        env_fn = lambda: gym.make(args.env)
+    env = env_fn()
     env.action_space.seed(args.seed)
 
     state_dim = env.observation_space.shape[0]
@@ -633,7 +637,7 @@ def main():
     if args.job == "train":
         replay_buffer = ReplayBuffer(state_dim, action_dim)
         trainer.train(
-            env_fn=lambda: gym.make(args.env),
+            env_fn=env_fn,
             replay_buffer=replay_buffer,
             batch_size=args.batch_size,
             start_time_steps=args.start_time_steps,
