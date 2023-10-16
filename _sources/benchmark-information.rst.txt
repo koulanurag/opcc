@@ -86,9 +86,9 @@ Pre-trained policy performance
 .. raw:: html
 
     <p float="left">
-        <img width="160" alt="mujoco-halfcheetah" src="opcc/assets/HalfCheetah-v2/halfcheetah.png" />
-        <img width="160" alt="mujoco-hopper" src="opcc/assets/Hopper-v2/hopper.png" />
-        <img width="160" alt="mujoco-walker2d" src="opcc/assets/Walker2d-v2/walker2d.png" />
+        <img width="160" alt="mujoco-halfcheetah" src="_static/images/halfcheetah.png" />
+        <img width="160" alt="mujoco-hopper" src="_static/images/hopper.png" />
+        <img width="160" alt="mujoco-walker2d" src="_static/images/walker2d.png" />
     </p>
 
 ~~~~~~~~~
@@ -150,13 +150,13 @@ Pre-trained policy performance
 
 
 ----------------------------------------------------------------------------
-`ADROIT <https://github.com/Farama-Foundation/D4RL/wiki/Tasks#adroit>`_
+`Adroit <https://github.com/Farama-Foundation/D4RL/wiki/Tasks#adroit>`_
 ----------------------------------------------------------------------------
 .. raw:: html
 
     <p float="left">
-        <img width="160" alt="pen-v0" src="opcc/assets/d4rl:pen-v0/pen.png" />
-        <img width="160" alt="door-v0" src="opcc/assets/d4rl:door-v0/door.png" />
+        <img width="160" alt="pen-v0" src="_static/images/pen.png" />
+        <img width="160" alt="door-v0" src="_static/images//door.png" />
     </p>
 
 ~~~~~~~~~
