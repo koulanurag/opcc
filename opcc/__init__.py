@@ -152,7 +152,7 @@ def get_sequence_dataset(env_name, dataset_name):
     :type dataset_name: str
 
     :return:
-        A list of dictionaries. Each dictionary is an episode containing 
+        A list of dictionaries. Each dictionary is an episode containing
         keys ['next_observations', 'observations', 'rewards', 'terminals', 'timeouts']
 
     :rtype: list[dict]

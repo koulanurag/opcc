@@ -70,17 +70,17 @@ class ReplayBuffer(object):
 
 class TD3:
     def __init__(
-            self,
-            state_dim,
-            action_dim,
-            max_action,
-            hidden_dim=64,
-            discount=0.99,
-            tau=0.005,
-            policy_noise=0.2,
-            noise_clip=0.5,
-            policy_freq=2,
-            device="cpu",
+        self,
+        state_dim,
+        action_dim,
+        max_action,
+        hidden_dim=64,
+        discount=0.99,
+        tau=0.005,
+        policy_noise=0.2,
+        noise_clip=0.5,
+        policy_freq=2,
+        device="cpu",
     ):
         self.actor = ActorNetwork(state_dim, action_dim, hidden_dim, max_action)
         self.actor = self.actor.to(device)
@@ -175,21 +175,21 @@ class TD3:
 
             # Update the frozen target models
             for param, target_param in zip(
-                    self.critic_1.parameters(), self.critic_target_1.parameters()
+                self.critic_1.parameters(), self.critic_target_1.parameters()
             ):
                 target_param.data.copy_(
                     self.tau * param.data + (1 - self.tau) * target_param.data
                 )
 
             for param, target_param in zip(
-                    self.critic_2.parameters(), self.critic_target_2.parameters()
+                self.critic_2.parameters(), self.critic_target_2.parameters()
             ):
                 target_param.data.copy_(
                     self.tau * param.data + (1 - self.tau) * target_param.data
                 )
 
             for param, target_param in zip(
-                    self.actor.parameters(), self.actor_target.parameters()
+                self.actor.parameters(), self.actor_target.parameters()
             ):
                 target_param.data.copy_(
                     self.tau * param.data + (1 - self.tau) * target_param.data
@@ -242,18 +242,18 @@ class Trainer(object):
             wandb.save(glob_str=train_eval_log_path, policy="live")
 
     def train(
-            self,
-            env_fn,
-            replay_buffer,
-            batch_size,
-            start_time_steps,
-            max_time_steps,
-            expl_noise,
-            seed,
-            num_test_episodes=1,
-            checkpoint_interval=1,
-            eval_interval=1,
-            device="cpu",
+        self,
+        env_fn,
+        replay_buffer,
+        batch_size,
+        start_time_steps,
+        max_time_steps,
+        expl_noise,
+        seed,
+        num_test_episodes=1,
+        checkpoint_interval=1,
+        eval_interval=1,
+        device="cpu",
     ):
         # Evaluate untrained policy
         eval_info = self.eval(env_fn, seed, eval_episodes=num_test_episodes)
@@ -485,10 +485,10 @@ def get_args():
     if not args.no_cuda and torch.cuda.is_available():
         args.device = torch.device("cuda")
     elif (
-            not args.no_cuda
-            and hasattr(torch.backends, "mps")
-            and torch.backends.mps.is_available()
-            and torch.backends.mps.is_built()
+        not args.no_cuda
+        and hasattr(torch.backends, "mps")
+        and torch.backends.mps.is_available()
+        and torch.backends.mps.is_built()
     ):
         args.device = torch.device("mps")
     else:
@@ -591,9 +591,9 @@ def main():
             root=".",
             include_fn=lambda path: True,
             exclude_fn=lambda path: "results" in path
-                                    or "__pycache__" in path
-                                    or "datasets" in path
-                                    or "wandb" in path,
+            or "__pycache__" in path
+            or "datasets" in path
+            or "wandb" in path,
         )
 
     # ##################################################################################

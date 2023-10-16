@@ -10,9 +10,9 @@ from opcc.config import ENV_CONFIGS
 
 DATASET_ENV_PAIRS = []
 for _env_name in ENV_CONFIGS.keys():
-    DATASET_ENV_PAIRS += [(_env_name, dataset_name)
-                          for dataset_name in
-                          ENV_CONFIGS[_env_name]['datasets']]
+    DATASET_ENV_PAIRS += [
+        (_env_name, dataset_name) for dataset_name in ENV_CONFIGS[_env_name]["datasets"]
+    ]
 
 
 def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
@@ -22,8 +22,7 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
         for _ in range(runs):
             env = gym.make(env_name)
             env.reset()
-            env.sim.set_state_from_flattened(np.array(sim_state)
-                                             .astype('float64'))
+            env.sim.set_state_from_flattened(np.array(sim_state).astype("float64"))
             env.sim.forward()
             envs.append(env)
 
@@ -43,7 +42,7 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
                             step_action = policy(obs).data.cpu().numpy()
                             step_action = step_action[0]
 
-                    step_action = step_action.astype('float32')
+                    step_action = step_action.astype("float32")
                     obs, reward, done, info = env.step(step_action)
 
                     obss[env_i] = obs
@@ -58,12 +57,18 @@ def mc_return(env_name, sim_states, init_actions, horizon, policy, runs):
     return np.array(all_returns).mean(1)
 
 
-@pytest.mark.parametrize('env_name', ENV_CONFIGS.keys())
+@pytest.mark.parametrize("env_name", ENV_CONFIGS.keys())
 def test_get_queries(env_name):
-    keys = ['obs_a', 'obs_a', 'action_a', 'action_b',
-            'horizon', 'target', 'info']
-    info_keys = ['return_a', 'return_b', 'state_a', 'state_b',
-                 'runs', 'horizon_a', 'horizon_b']
+    keys = ["obs_a", "obs_a", "action_a", "action_b", "horizon", "target", "info"]
+    info_keys = [
+        "return_a",
+        "return_b",
+        "state_a",
+        "state_b",
+        "runs",
+        "horizon_a",
+        "horizon_b",
+    ]
 
     queries = opcc.get_queries(env_name)
     for (policy_a_id, policy_b_id), query_batch in queries.items():
@@ -71,79 +76,100 @@ def test_get_queries(env_name):
         policy_b = opcc.get_policy(*policy_b_id)
 
         for key in keys:
-            assert key in query_batch, '{} not in query_batch'.format(key)
+            assert key in query_batch, "{} not in query_batch".format(key)
 
         for key in info_keys:
-            assert key in query_batch['info'], \
-                '{} not in query_batch'.format(key)
+            assert key in query_batch["info"], "{} not in query_batch".format(key)
 
-        avg_batch_size = np.mean([len(query_batch[key])
-                                  for key in keys if key != 'info']
-                                 + [len(query_batch['info'][key])
-                                    for key in info_keys if key != 'runs'])
-        assert avg_batch_size == len(query_batch['obs_a']), \
-            ' batch sizes does not match'
+        avg_batch_size = np.mean(
+            [len(query_batch[key]) for key in keys if key != "info"]
+            + [len(query_batch["info"][key]) for key in info_keys if key != "runs"]
+        )
+        assert avg_batch_size == len(
+            query_batch["obs_a"]
+        ), " batch sizes does not match"
 
 
-@pytest.mark.parametrize('env_name', ENV_CONFIGS.keys())
-@pytest.mark.skipif(os.environ.get('SKIP_QUERY_TARGET_TESTS',
-                                   default='0') == '1',
-                    reason="forcefully skipped by user")
+@pytest.mark.parametrize("env_name", ENV_CONFIGS.keys())
+@pytest.mark.skipif(
+    os.environ.get("SKIP_QUERY_TARGET_TESTS", default="0") == "1",
+    reason="forcefully skipped by user",
+)
 def test_query_targets(env_name):
     queries = opcc.get_queries(env_name)
 
     for (policy_a_id, policy_b_id), query_batch in queries.items():
         policy_a, _ = opcc.get_policy(*policy_a_id)
         policy_b, _ = opcc.get_policy(*policy_b_id)
-        target = query_batch['target']
-        horizons = query_batch['horizon']
+        target = query_batch["target"]
+        horizons = query_batch["horizon"]
 
         for horizon in np.unique(horizons, return_counts=False):
             _filter = horizons == horizon
-            state_a = query_batch['info']['state_a'][_filter]
-            state_b = query_batch['info']['state_b'][_filter]
-            action_a = query_batch['action_a'][_filter]
-            action_b = query_batch['action_b'][_filter]
-            return_a = mc_return(env_name, state_a, action_a, horizon,
-                                 policy_a, query_batch['info']['runs'])
-            return_b = mc_return(env_name, state_b, action_b, horizon,
-                                 policy_b, query_batch['info']['runs'])
+            state_a = query_batch["info"]["state_a"][_filter]
+            state_b = query_batch["info"]["state_b"][_filter]
+            action_a = query_batch["action_a"][_filter]
+            action_b = query_batch["action_b"][_filter]
+            return_a = mc_return(
+                env_name,
+                state_a,
+                action_a,
+                horizon,
+                policy_a,
+                query_batch["info"]["runs"],
+            )
+            return_b = mc_return(
+                env_name,
+                state_b,
+                action_b,
+                horizon,
+                policy_b,
+                query_batch["info"]["runs"],
+            )
             predict = return_a < return_b
 
-            target_return_a = query_batch['info']['return_a'][_filter]
-            target_return_b = query_batch['info']['return_b'][_filter]
+            target_return_a = query_batch["info"]["return_a"][_filter]
+            target_return_b = query_batch["info"]["return_b"][_filter]
 
             # Note: Sometimes different processors(or slight variation in
             # numpy version) cause difference in precision leading to  error
             # accumulation over multiple steps. This creates small differences
             # in value estimates. Also, this value differences gets exaggerated
             # with long horizons.
-            assert all((return_a - target_return_a) <= 4), \
-                ("Estimates of Query-A don't match for policies: {} and "
-                 "horizon: {}.\n Found: {} Expected: {}"
-                 .format((policy_a_id, policy_b_id), horizon, return_a,
-                         target_return_a))
+            assert all((return_a - target_return_a) <= 4), (
+                "Estimates of Query-A don't match for policies: {} and "
+                "horizon: {}.\n Found: {} Expected: {}".format(
+                    (policy_a_id, policy_b_id), horizon, return_a, target_return_a
+                )
+            )
 
-            assert all((return_b - target_return_b) <= 4), \
-                ("Estimates of Query-B don't match for policies: {} and "
-                 "horizon: {}.\n Found: {} Expected: {}"
-                 .format((policy_a_id, policy_b_id), horizon, return_b,
-                         target_return_b))
+            assert all((return_b - target_return_b) <= 4), (
+                "Estimates of Query-B don't match for policies: {} and "
+                "horizon: {}.\n Found: {} Expected: {}".format(
+                    (policy_a_id, policy_b_id), horizon, return_b, target_return_b
+                )
+            )
 
-            assert all(target[_filter] == predict), \
-                ('Query targets do not match for policies: {} and horizon: {}'
-                 .format((policy_a_id, policy_b_id), horizon))
+            assert all(
+                target[_filter] == predict
+            ), "Query targets do not match for policies: {} and horizon: {}".format(
+                (policy_a_id, policy_b_id), horizon
+            )
 
 
-@pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)
-@pytest.mark.skipif(os.environ.get('SKIP_Q_LEARNING_DATASET_TEST', '0') == '1',
-                    reason="forcefully skipped by user")
+@pytest.mark.parametrize("env_name,dataset_name", DATASET_ENV_PAIRS)
+@pytest.mark.skipif(
+    os.environ.get("SKIP_Q_LEARNING_DATASET_TEST", "0") == "1",
+    reason="forcefully skipped by user",
+)
 def test_get_qlearning_dataset(env_name, dataset_name):
     dataset = opcc.get_qlearning_dataset(env_name, dataset_name)
 
 
-@pytest.mark.parametrize('env_name,dataset_name', DATASET_ENV_PAIRS)
-@pytest.mark.skipif(os.environ.get('SKIP_SEQUENCE_DATASET_TEST', '0') == '1',
-                    reason="forcefully skipped by user")
+@pytest.mark.parametrize("env_name,dataset_name", DATASET_ENV_PAIRS)
+@pytest.mark.skipif(
+    os.environ.get("SKIP_SEQUENCE_DATASET_TEST", "0") == "1",
+    reason="forcefully skipped by user",
+)
 def test_get_sequence_dataset(env_name, dataset_name):
     dataset = opcc.get_sequence_dataset(env_name, dataset_name)

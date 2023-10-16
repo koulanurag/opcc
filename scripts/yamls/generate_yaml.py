@@ -66,11 +66,11 @@ MAZE2D_DENSE_ENVS = [
 ]
 
 ANT_MAZE_ENVS = [
-    'antmaze-umaze-v0',
+    "antmaze-umaze-v0",
     # 'antmaze-umaze-diverse-v0',
-    'antmaze-medium-diverse-v0',
+    "antmaze-medium-diverse-v0",
     # 'antmaze-medium-play-v0',
-    'antmaze-large-diverse-v0',
+    "antmaze-large-diverse-v0",
     # 'antmaze-large-play-v0',
 ]
 
@@ -104,29 +104,37 @@ ADROIT_ENVS = [
     "relocate-human-v1",
 ]
 
-FRANKA_KITCHEN = [
-    'kitchen-complete-v0'
-]
+FRANKA_KITCHEN = ["kitchen-complete-v0"]
 
-ENVS = (MAZE2D_ENVS
-        + MAZE2D_DENSE_ENVS
-        + ANT_MAZE_ENVS
-        + GYM_MUJOCO_ENVS
-        + ADROIT_ENVS
-        + FRANKA_KITCHEN)
+ENVS = (
+    MAZE2D_ENVS
+    + MAZE2D_DENSE_ENVS
+    + ANT_MAZE_ENVS
+    + GYM_MUJOCO_ENVS
+    + ADROIT_ENVS
+    + FRANKA_KITCHEN
+)
 ENVS = ["hopper-random-v2"]
-ENV_VARIABLES = {"WANDB_API_KEY": "$WANDB_API_KEY",
-                 "D4RL_DATASET_DIR": "\"/mnt/d4rl\"",
-                 "MUJOCO_PY_MUJOCO_PATH": "\"/home/aiscuser/.mujoco/mujoco210\"",
-                 "LD_LIBRARY_PATH": "\"$$LD_LIBRARY_PATH:/home/aiscuser/.mujoco/mujoco210/bin\"",
-                 "PYTHONPATH": "\"$$PYTHONPATH:/home/aiscuser/.python_packages\""}
+ENV_VARIABLES = {
+    "WANDB_API_KEY": "$WANDB_API_KEY",
+    "D4RL_DATASET_DIR": '"/mnt/d4rl"',
+    "MUJOCO_PY_MUJOCO_PATH": '"/home/aiscuser/.mujoco/mujoco210"',
+    "LD_LIBRARY_PATH": '"$$LD_LIBRARY_PATH:/home/aiscuser/.mujoco/mujoco210/bin"',
+    "PYTHONPATH": '"$$PYTHONPATH:/home/aiscuser/.python_packages"',
+}
 SEEDS = range(1)
 WANDB_OFFLINE = False
 USE_WANDB = True
 
 
-def generate_yaml(cmds, target_yaml, static_yaml_segment,
-                  output_yaml_path, per_node_commands, num_gpu=1):
+def generate_yaml(
+    cmds,
+    target_yaml,
+    static_yaml_segment,
+    output_yaml_path,
+    per_node_commands,
+    num_gpu=1,
+):
     yaml = target_yaml + "\n\n" + static_yaml_segment
     yaml += "\n\njobs:"
 
@@ -137,14 +145,14 @@ def generate_yaml(cmds, target_yaml, static_yaml_segment,
         env_var_cmd = None
 
     for start_idx in range(0, len(cmds), per_node_commands):
-        cmd_batch = cmds[start_idx: start_idx + per_node_commands]
+        cmd_batch = cmds[start_idx : start_idx + per_node_commands]
 
         # add job
-        job_name = "_".join(_['job_name'] for _ in cmd_batch)
+        job_name = "_".join(_["job_name"] for _ in cmd_batch)
         job_name = hashlib.md5(job_name.encode()).hexdigest()
-        yaml += (f"\n   - name: {job_name}"
-                 + f"\n     sku: G{num_gpu}"
-                 + f"\n     command:")
+        yaml += (
+            f"\n   - name: {job_name}" + f"\n     sku: G{num_gpu}" + f"\n     command:"
+        )
 
         if WANDB_OFFLINE:
             yaml += f"\n     - wandb offline"
@@ -154,14 +162,14 @@ def generate_yaml(cmds, target_yaml, static_yaml_segment,
             yaml += f"\n     - {env_var_cmd}"
 
         # add python command
-        python_cmd = " & ".join(_['cmd'] for _ in cmd_batch)
+        python_cmd = " & ".join(_["cmd"] for _ in cmd_batch)
         yaml += f"\n     - {python_cmd}"
 
         if WANDB_OFFLINE:
             yaml += f"\n     - wandb sync --sync-all"
 
     # write yaml file
-    with open(output_yaml_path, 'w') as yaml_file:
+    with open(output_yaml_path, "w") as yaml_file:
         yaml_file.write(yaml)
 
 
@@ -171,31 +179,33 @@ def main():
 
     for env_name in ENVS:
         for seed in SEEDS:
-            cmd = (f"python scripts/td3.py "
-                   + f" --seed {seed}"
-                   + f" --env {env_name} "
-                   + f" --start-time-steps 50000"
-                   + f" --max-time-steps 10000000"
-                   + f" --hidden-dim 256"
-                   + f" --batch-size 512"
-                   + f" --result-dir /mnt/opcctd3/results")
+            cmd = (
+                f"python scripts/td3.py "
+                + f" --seed {seed}"
+                + f" --env {env_name} "
+                + f" --start-time-steps 50000"
+                + f" --max-time-steps 10000000"
+                + f" --hidden-dim 256"
+                + f" --batch-size 512"
+                + f" --result-dir /mnt/opcctd3/results"
+            )
             if USE_WANDB:
                 cmd += f" --use-wandb"
                 cmd += f" --wandb-project-name opcc-td3"
-            cmds.append({'job_name': hashlib.md5(cmd.encode()).hexdigest(),
-                         'cmd': cmd})
-
+            cmds.append({"job_name": hashlib.md5(cmd.encode()).hexdigest(), "cmd": cmd})
 
     if len(cmds) > 0:
-        if os.path.exists(os.path.join(os.getcwd(), 'opcc_td3_generic.yaml')):
-            os.remove(os.path.join(os.getcwd(), 'opcc_td3_generic.yaml'))
-        generate_yaml(cmds,
-                      GENERIC_TARGET,
-                      STATIC_YAML_SEGMENT,
-                      os.path.join(os.getcwd(), 'opcc_td3_generic.yaml'),
-                      per_node_commands=1,
-                      num_gpu=1)
+        if os.path.exists(os.path.join(os.getcwd(), "opcc_td3_generic.yaml")):
+            os.remove(os.path.join(os.getcwd(), "opcc_td3_generic.yaml"))
+        generate_yaml(
+            cmds,
+            GENERIC_TARGET,
+            STATIC_YAML_SEGMENT,
+            os.path.join(os.getcwd(), "opcc_td3_generic.yaml"),
+            per_node_commands=1,
+            num_gpu=1,
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

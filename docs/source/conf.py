@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
+sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -11,11 +11,11 @@ sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'opcc'
-copyright = '2023, Anurag Koul'
-author = 'Anurag Koul'
-version = '0.0.1'
-release = '0.0.1'
+project = "opcc"
+copyright = "2023, Anurag Koul"
+author = "Anurag Koul"
+version = "0.0.1"
+release = "0.0.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -25,9 +25,9 @@ release = '0.0.1'
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
-    'sphinx.ext.napoleon',
+    "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
-    'sphinx.ext.githubpages',
+    "sphinx.ext.githubpages",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
@@ -36,14 +36,14 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinxcontrib.katex",
     "sphinx.ext.autosectionlabel",
-    'sphinx.ext.autosummary',
+    "sphinx.ext.autosummary",
     "sphinx_copybutton",
     "sphinx_design",
     "myst_parser",
     "sphinxext.opengraph",
 ]
 
-templates_path = ['_templates']
+templates_path = ["_templates"]
 exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
@@ -52,12 +52,12 @@ exclude_patterns = []
 html_theme = "furo"
 html_title = "opcc"
 # html_logo = "logo.png"
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (eg. https://...)
 html_css_files = [
-    'custom.css',
+    "custom.css",
 ]
 
 html_theme_options = {
@@ -79,8 +79,8 @@ autodoc_typehints = "description"
 autodoc_class_signature = "mixed"
 
 autodoc_default_options = {
-    'member-order': 'alphabetical',
-    'special-members': '__init__',
-    'undoc-members': True,
-    'exclude-members': '__weakref__'
+    "member-order": "alphabetical",
+    "special-members": "__init__",
+    "undoc-members": True,
+    "exclude-members": "__weakref__",
 }
