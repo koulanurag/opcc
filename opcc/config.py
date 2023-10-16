@@ -186,6 +186,12 @@ ENV_PERFORMANCE_STATS = {
         3: {"score_mean": 1632.13, "score_std": 790.67},
         4: {"score_mean": -58.07, "score_std": 0.58},
     },
+    "pen-v0": {
+        1: {"score_mean": 3882.5, "score_std": 1896.45},
+        2: {"score_mean": 3300.54, "score_std": 2038.72},
+        3: {"score_mean": 3105.94, "score_std": 1971.26},
+        4: {"score_mean": 248.85, "score_std": 694.86},
+    },
 }
 
 ADROIT_ENV_CONFIGS = {
@@ -201,7 +207,20 @@ ADROIT_ENV_CONFIGS = {
             "cloned": {"name": "d4rl:door-cloned-v0", "split": None},
             "expert": {"name": "d4rl:door-expert-v0", "split": None},
         },
-    }
+    },
+    "pen-v0": {
+        "actor_kwargs": {
+            "state_dim": 45,
+            "action_dim": 24,
+            "max_action": 1,
+            "hidden_dim": 256,
+        },
+        "datasets": {
+            "human": {"name": "d4rl:pen-human-v0", "split": None},
+            "cloned": {"name": "d4rl:pen-cloned-v0", "split": None},
+            "expert": {"name": "d4rl:pen-expert-v0", "split": None},
+        },
+    },
 }
 
 ENV_CONFIGS = {**MAZE_ENV_CONFIGS, **MUJOCO_ENV_CONFIGS, **ADROIT_ENV_CONFIGS}
