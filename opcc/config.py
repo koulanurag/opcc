@@ -180,9 +180,31 @@ ENV_PERFORMANCE_STATS = {
         3: {"score_mean": 387.01, "score_std": 42.82},
         4: {"score_mean": 162.7, "score_std": 102.14},
     },
+    "door-v0": {
+        1: {"score_mean": 3011.04, "score_std": 380.93},
+        2: {"score_mean": 2396.11, "score_std": 538.26},
+        3: {"score_mean": 1632.13, "score_std": 790.67},
+        4: {"score_mean": -58.07, "score_std": 0.58},
+    },
 }
 
-ENV_CONFIGS = {**MAZE_ENV_CONFIGS, **MUJOCO_ENV_CONFIGS}
+ADROIT_ENV_CONFIGS = {
+    "door-v0": {
+        "actor_kwargs": {
+            "state_dim": 39,
+            "action_dim": 28,
+            "max_action": 1,
+            "hidden_dim": 256,
+        },
+        "datasets": {
+            "human": {"name": "d4rl:door-human-v0", "split": None},
+            "cloned": {"name": "d4rl:door-cloned-v0", "split": None},
+            "expert": {"name": "d4rl:door-expert-v0", "split": None},
+        },
+    }
+}
+
+ENV_CONFIGS = {**MAZE_ENV_CONFIGS, **MUJOCO_ENV_CONFIGS, **ADROIT_ENV_CONFIGS}
 MIN_PRE_TRAINED_LEVEL = 1
 MAX_PRE_TRAINED_LEVEL = 4
 ASSETS_DIR = os.path.join(Path(os.path.dirname(__file__)), "assets")

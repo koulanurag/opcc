@@ -6,7 +6,7 @@ import gym
 import torch
 
 from .config import ASSETS_DIR
-from .config import ENV_CONFIGS, ENV_PERFORMANCE_STATS
+from .config import ENV_CONFIGS, ENV_PERFORMANCE_STATS, ADROIT_ENV_CONFIGS
 from .config import MAX_PRE_TRAINED_LEVEL
 from .config import MIN_PRE_TRAINED_LEVEL
 from .model import ActorNetwork
@@ -118,9 +118,12 @@ def get_policy(env_name: str, pre_trained: int = 1):
     assert os.path.exists(model_path), f"model not found @ {model_path}"
 
     state_dict = torch.load(model_path, map_location=torch.device("cpu"))
-    actor_state_dict = {
-        k.replace("actor.", ""): v for k, v in state_dict.items() if "actor" in k
-    }
+    if env_name in ADROIT_ENV_CONFIGS.keys():
+        actor_state_dict = { k: v for k, v in state_dict['model']['actor'].items()} 
+    else:
+        actor_state_dict = {
+            k.replace("actor.", ""): v for k, v in state_dict.items() if "actor" in k
+        }
 
     # create model
     model = ActorNetwork(**ENV_CONFIGS[env_name]["actor_kwargs"])
