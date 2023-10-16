@@ -615,10 +615,13 @@ def main():
             _env = gym.make(args.env)
 
         # custom render function for adroit envs
-        if "door" in args.env:
+        if "door" in args.env or "pen" in args.env:
             def _render_fn(mode):
-                _frame_size=(640,480)
+                _frame_size=(200,200)
                 if mode == 'rgb_array':
+                    # list available camera names:
+                    # >>> env.sim.model.camera_names
+                    # ('fixed', 'vil_camera')
                     return _env.sim.render(width=_frame_size[0], height=_frame_size[1], mode="offscreen", camera_name=None, device_id=0)
                 else:
                     raise NotImplementedError()
@@ -692,6 +695,7 @@ def main():
             render=True
         )
         
+        import pdb; pdb.set_trace()
         # save video of 1st episode
         write_gif(eval_info['images'][0], gif_path=os.path.join(args.expr_dir, "eval_episode.gif"), save_mp4=True )
         eval_info.pop('images')
