@@ -180,13 +180,13 @@ ENV_PERFORMANCE_STATS = {
         3: {"score_mean": 387.01, "score_std": 42.82},
         4: {"score_mean": 162.7, "score_std": 102.14},
     },
-    "door-v0": {
+    "d4rl:door-v0": {
         1: {"score_mean": 2924.69, "score_std": 921.62},
         2: {"score_mean": 2396.11, "score_std": 538.26},
         3: {"score_mean": 1632.13, "score_std": 790.67},
         4: {"score_mean": -58.07, "score_std": 0.58},
     },
-    "pen-v0": {
+    "d4rl:pen-v0": {
         1: {"score_mean": 3882.5, "score_std": 1896.45},
         2: {"score_mean": 3105.94, "score_std": 1971.26},
         3: {"score_mean": 1394.94, "score_std": 1608.43},
