@@ -147,3 +147,61 @@ Pre-trained policy performance
      - 387.01±42.82
      - 162.7±102.14
 
+
+
+----------------------------------------------------------------------------
+`ADROIT <https://github.com/Farama-Foundation/D4RL/wiki/Tasks#adroit>`_
+----------------------------------------------------------------------------
+.. raw:: html
+
+    <p float="left">
+        <img width="160" alt="pen-v0" src="opcc/assets/d4rl:pen-v0/pen.png" />
+        <img width="160" alt="door-v0" src="opcc/assets/d4rl:door-v0/door.png" />
+    </p>
+
+~~~~~~~~~
+Datasets
+~~~~~~~~~
+
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+   :align: left
+
+   * - Environment Name
+     - Datasets
+     - Query-Count
+   * - `d4rl:pen-v0`
+     - `human, cloned, expert`
+     - `1500`
+   * - `d4rl:door-v0`
+     - `human, cloned, expert`
+     - `1500`
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Pre-trained policy performance
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+   :align: left
+
+   * - Environment Name
+     - `pre_trained=1` (best)
+     - `pre_trained=2`
+     - `pre_trained=3`
+     - `pre_trained=4` (worst)
+
+   * - `d4rl:pen-v0`
+     - 1169.13±80.45
+     - 1044.39±112.61
+     - 785.88±303.59
+     - 94.79±40.88
+
+   * - `d4rl:door-v0`
+     - 1995.84±794.71
+     - 1466.71±497.1
+     - 1832.43±560.86
+     - 236.51±1.09
