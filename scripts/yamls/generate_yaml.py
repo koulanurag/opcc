@@ -114,7 +114,6 @@ ENVS = (
     + ADROIT_ENVS
     + FRANKA_KITCHEN
 )
-ENVS = ["hopper-random-v2"]
 ENV_VARIABLES = {
     "WANDB_API_KEY": "$WANDB_API_KEY",
     "D4RL_DATASET_DIR": '"/mnt/d4rl"',
