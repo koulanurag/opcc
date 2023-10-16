@@ -5,6 +5,8 @@ reinforcement learning.
 
 __Reserach Paper:__ [https://arxiv.org/abs/2205.10739](https://arxiv.org/abs/2205.10739)
 
+__Website/Docs:__  [https://koulanurag.dev/opcc](https://koulanurag.dev/opcc)
+
 [![Python package](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml/badge.svg)](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml)
 ![License](https://img.shields.io/github/license/koulanurag/opcc)
 [![codecov](https://codecov.io/gh/koulanurag/opcc/branch/main/graph/badge.svg?token=47LIB1CLI4)](https://codecov.io/gh/koulanurag/opcc)
@@ -28,15 +30,6 @@ __Reserach Paper:__ [https://arxiv.org/abs/2205.10739](https://arxiv.org/abs/220
   pip3 install --upgrade 'setuptools<=66'
   pip3 install --upgrade 'wheel<=0.38.4'
   pip3 install git+https://github.com/koulanurag/opcc@main#egg=opcc
-  ```
-  
-  Or
-  
-  ```bash
-  git clone https://github.com/koulanurag/opcc.git
-  cd opcc
-  python3 -m pip install --upgrade pip setuptools wheel
-  pip install -e .
   ```
 
 **4. Install Pytorch [\[>= 1.8.0\]](https://pytorch.org/)**
