@@ -14,7 +14,7 @@ import copy
 import torch.nn.functional as F
 import torch.nn as nn
 import d4rl
-
+from PIL import Image
 
 class QNetwork(nn.Module):
     def __init__(self, state_dim, hidden_dim, action_dim):
@@ -549,6 +549,18 @@ def log(info, logger, use_wandb=False):
     if use_wandb:
         wandb.log(info)
 
+def write_gif(episode_numpy_images, gif_path, save_mp4=True):
+    import pdb; pdb.set_trace()
+    episode_images = [Image.fromarray(_img) for _img in episode_numpy_images]
+    # save as gif
+    episode_images[0].save(gif_path, save_all=True, 
+                           append_images=episode_images[1:], optimize=False, loop=1)
+
+    # save video
+    if save_mp4:
+        import moviepy.editor as mp
+        clip = mp.VideoFileClip(gif_path)
+        clip.write_videofile(gif_path.replace('.gif', '.mp4'))
 
 def main():
     # get arguments and seeding
@@ -658,18 +670,25 @@ def main():
         init_logger(args.expr_dir, "eval")
 
         # load model
-        trainer.load_checkpoint()
+        # trainer.load_checkpoint()
 
         # eval
         eval_info = trainer.eval(
             env_fn=lambda: gym.make(args.env),
             seed=args.seed,
             seed_offset=100,
-            eval_episodes=args.num_test_episode,
+            eval_episodes=args.num_test_episodes,
+            render=True
         )
+        
+        # save video of 1st episode
+        write_gif(eval_info['images'][0], gif_path=os.path.join(args.expr_dir, "eval_episode.gif"), save_mp4=True )
+        eval_info.pop('images')
 
         # log to file/console
         log({f"eval/{k}": v for k, v in eval_info.items()}, logging.getLogger("eval"))
+
+
 
     else:
         raise ValueError(f"{args.job} is not supported")
