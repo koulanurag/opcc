@@ -209,9 +209,7 @@ class TD3:
     def save(self, save_path):
         torch.save(self.state_dict(), save_path)
 
-    def load(self, load_path):
-        state_dict = torch.load(load_path)
-
+    def load_state_dict(self, state_dict):
         self.actor.load_state_dict(state_dict["actor"])
         self.actor_target = copy.deepcopy(self.actor)
         self.actor_optimizer.load_state_dict(state_dict["actor_optimizer"])
@@ -550,7 +548,6 @@ def log(info, logger, use_wandb=False):
         wandb.log(info)
 
 def write_gif(episode_numpy_images, gif_path, save_mp4=True):
-    import pdb; pdb.set_trace()
     episode_images = [Image.fromarray(_img) for _img in episode_numpy_images]
     # save as gif
     episode_images[0].save(gif_path, save_all=True, 
@@ -611,10 +608,24 @@ def main():
     # ##################################################################################
     # Setup env/ dataLoader
     # ##################################################################################
-    if "antmaze" in args.env:
-        env_fn = lambda: gym.make(args.env, reward_type="dense")
-    else:
-        env_fn = lambda: gym.make(args.env)
+    def env_fn():
+        if "antmaze" in args.env:
+            _env =  gym.make(args.env, reward_type="dense")
+        else:
+            _env = gym.make(args.env)
+
+        # custom render function for adroit envs
+        if "door" in args.env:
+            def _render_fn(mode):
+                _frame_size=(640,480)
+                if mode == 'rgb_array':
+                    return _env.sim.render(width=_frame_size[0], height=_frame_size[1], mode="offscreen", camera_name=None, device_id=0)
+                else:
+                    raise NotImplementedError()
+            _env.render = _render_fn
+
+        return _env
+
     env = env_fn()
     env.action_space.seed(args.seed)
 
@@ -670,11 +681,11 @@ def main():
         init_logger(args.expr_dir, "eval")
 
         # load model
-        # trainer.load_checkpoint()
+        trainer.load_checkpoint()
 
         # eval
         eval_info = trainer.eval(
-            env_fn=lambda: gym.make(args.env),
+            env_fn=env_fn,
             seed=args.seed,
             seed_offset=100,
             eval_episodes=args.num_test_episodes,
@@ -686,7 +697,8 @@ def main():
         eval_info.pop('images')
 
         # log to file/console
-        log({f"eval/{k}": v for k, v in eval_info.items()}, logging.getLogger("eval"))
+        log({f"eval/{k}":  np.mean([np.sum(_) for _ in v])
+             for k, v in eval_info.items()}, logging.getLogger("eval"))
 
 
 
