@@ -39,7 +39,7 @@ Links
         <div><a href="https://github.com/koulanurag/opcc">Benchmark-Code</a></div>
         <div><a href="https://github.com/koulanurag/opcc-baselines">Baselines-Code</a> </div>
         <div><a href="https://arxiv.org/abs/2205.10739">Arxiv</a> </div>
-        <div><a href="https://github.com/koulanurag/opcc-baselines">Poster</a> </div>
+        <div><a href="https://docs.google.com/presentation/d/e/2PACX-1vTb_B3XA5c0uxODLZ1rIMIX4Z4s-1DeUpT6jnsI2LXaKnuZenE6R96W7lJE4siH1oyxllZ-qdoC6SUz/pub?start=false&loop=false&delayms=3000">Poster</a></div>
     </div>
 
 
