@@ -81,6 +81,7 @@ Following code is a demo of retrieving queries and iterating over them.
 -------------------
 Evaluation Metrics
 -------------------
+Given the query `predictions` and `targets`, we demo estimation of various evaluation metrics:
 
 .. code-block:: python
     :linenos:
@@ -123,7 +124,8 @@ Evaluation Metrics
     bins = [_ for _ in np.arange(0, 1, 1 / k)]
     cr_k = np.unique(np.digitize(coverages, bins)).size / len(bins)
 
-    print("aurcc: {}, rpp: {}, cr_{}:{}".format(aurcc, rpp, k, cr_k))
+    # print evaluation metrics
+    print(f"aurcc: {aurcc}, rpp: {rpp}, cr_{cr_k}:{}")
 
 
 ---------
