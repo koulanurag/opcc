@@ -2,7 +2,8 @@
 Development
 =============
 
-Install :
+We begin by installing following dependencies:
+
     .. code-block:: console
 
         pip install -e ".[dev]"
@@ -10,6 +11,7 @@ Install :
 -----------------
 Generate-Queries
 -----------------
+In order to generate queries for the considered environments, we run following commands
 
 .. code-block:: console
 
@@ -22,6 +24,11 @@ Generate-Queries
     python scripts/generate_queries.py --env-name d4rl:maze2d-medium-v1 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.2 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
     python scripts/generate_queries.py --env-name d4rl:maze2d-open-v0 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.5 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
 
+You can understand available command attributes using following command
+
+.. code-block:: console
+
+    python scripts/generate_queries.py --help
 --------------------------------------------------------
 Generate pre-trained policy performance stats for README
 --------------------------------------------------------
@@ -35,7 +42,7 @@ Generate pre-trained policy performance stats for README
 Testing Package
 ----------------
 
-#. Install :
+#. Install Dependencies :
     .. code-block:: console
 
         pip install -e ".[test]"
@@ -51,7 +58,7 @@ Testing Package
 #. Run:
     .. code-block:: console
 
-        pytest -v
+        pytest -v --xdoc
 
 
 ----------------

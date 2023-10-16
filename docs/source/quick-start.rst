@@ -2,9 +2,13 @@
 Quick Start
 ============
 
+In the section, we understand minimal and sufficient usage of  `opcc` framework.
+
 ---------
 Queries
 ---------
+
+Following code is a demo of retrieving queries and iterating over them.
 
 .. code-block:: python
     :linenos:
@@ -24,6 +28,9 @@ Queries
     queries = opcc.get_queries(env_name)
 
 
+    # ########################################################
+    # Following is a random answer predictor for a query
+    # ########################################################
     def random_predictor(obs_a, obs_b, action_a, action_b,
                          policy_a, policy_b, horizon):
         answer = np.random.randint(low=0, high=2, size=len(obs_a)).tolist()
@@ -31,6 +38,9 @@ Queries
         return answer, confidence
 
 
+    # ########################################################
+    # Query Iterator
+    # ########################################################
     targets = []
     predictions = []
     confidences = []
@@ -148,14 +158,14 @@ Policy Usage
     import opcc, gym, torch
 
     env_name = "HalfCheetah-v2"
-    model, model_info = opcc.get_policy(env_name, pre_trained=1)
+    policy, policy_info = opcc.get_policy(env_name, pre_trained=1)
 
     done = False
     env = gym.make(env_name)
 
     obs = env.reset()
     while not done:
-        action = model.actor(torch.tensor(obs).unsqueeze(0))
+        action = policy(torch.tensor(obs).unsqueeze(0))
         action = action.data.cpu().numpy()[0].astype('float32')
         obs, reward, done, step_info = env.step(action)
         env.render()
