@@ -231,6 +231,7 @@ class Trainer(object):
         self.expr_dir = expr_dir
         self.model_path = os.path.join(expr_dir, "model.p")
         self.checkpoint_dir = os.path.join(expr_dir, "checkpoints")
+        os.makedirs(self.checkpoint_dir, exist_ok=True)
 
         # job specific loggers
         self.use_wandb = use_wandb
