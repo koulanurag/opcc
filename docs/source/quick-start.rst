@@ -84,6 +84,7 @@ Evaluation Metrics
 
 .. code-block:: python
     :linenos:
+    :emphasize-lines: 24, 27, 33
 
     # #########################################
     # (Section 3.3 in paper)
