@@ -36,7 +36,7 @@ def generate_env_stats(
             while not done:
                 if render:
                     env.render()
-                action = model.actor(torch.tensor(obs).unsqueeze(0))
+                action = model(torch.tensor(obs).unsqueeze(0))
                 action = action.data.numpy()[0].astype("float32")
                 obs, reward, done, step_info = env.step(action)
                 episode_reward += reward
@@ -137,5 +137,6 @@ if __name__ == "__main__":
             no_cache=args.no_cache,
             render=args.render,
         )
+    print(stats_info)
     table_markdown = markdown_pre_trained_scores(stats_info)
     print(table_markdown)
