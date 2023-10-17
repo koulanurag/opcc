@@ -627,7 +627,7 @@ def main():
         if "door" in args.env or "pen" in args.env:
 
             def _render_fn(mode):
-                _frame_size = (200, 200)
+                _frame_size = (640, 480)
                 if mode == "rgb_array":
                     # list available camera names:
                     # >>> env.sim.model.camera_names
@@ -642,7 +642,22 @@ def main():
                 else:
                     raise NotImplementedError()
 
-            _env.render = _render_fn
+        # custom render function for franka kitchen
+        elif "kitchen" in args.env:
+            from dm_control.mujoco import engine
+
+            def _render_fn(mode="rgb_array"):
+                if mode == "rgb_array":
+                    camera = engine.MovableCamera(_env.sim, 1920, 2560)
+                    camera.set_pose(
+                        distance=2.2, lookat=[-0.2, 0.5, 2.0], azimuth=70, elevation=-35
+                    )
+                    img = camera.render()
+                    return img
+                else:
+                    raise NotImplementedError()
+
+        _env.render = _render_fn
 
         return _env
 
