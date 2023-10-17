@@ -21,17 +21,6 @@ Offline Policy Comparison with Confidence : Benchmark and Baselines
         </blockquote>
     </div>
 
-.. raw:: html
-
-    <div class="note admonition tldr-section">
-        <p class="admonition-title">TL;DR</p>
-        <blockquote>
-            It's a benchmark containing <strong>"policy comparison queries"(pcq)</strong> to evaluate uncertainty estimation in offline
-            reinforcement learning.
-        </blockquote>
-    </div>
-
-
 
 ----------
 Abstract
