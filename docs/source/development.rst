@@ -83,6 +83,8 @@ Generate Docs
 Training Policies
 ------------------
 
+Run (example):
+
 .. code-block:: console
 
     python scripts/td3.py --env Hopper-v2
