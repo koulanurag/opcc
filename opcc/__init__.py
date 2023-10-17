@@ -119,7 +119,7 @@ def get_policy(env_name: str, pre_trained: int = 1):
 
     state_dict = torch.load(model_path, map_location=torch.device("cpu"))
     if env_name in ADROIT_ENV_CONFIGS.keys():
-        actor_state_dict = { k: v for k, v in state_dict['model']['actor'].items()}
+        actor_state_dict = {k: v for k, v in state_dict["model"]["actor"].items()}
     else:
         actor_state_dict = {
             k.replace("actor.", ""): v for k, v in state_dict.items() if "actor" in k
