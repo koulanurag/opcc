@@ -15,6 +15,7 @@ Benchmark Information
   :width: 500
   :alt: maze2d-environments
 
+.. maze2d-datasets:
 
 ~~~~~~~~~
 Datasets
@@ -40,6 +41,8 @@ Datasets
    * - `d4rl:maze2d-large-v1`
      - `1k, 10k, 100k, 1m`
      - `121`
+
+.. maze2d-pre-trained-policy-performances:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Pre-trained policy performance
@@ -91,6 +94,8 @@ Pre-trained policy performance
         <img width="160" alt="mujoco-walker2d" src="_static/images/walker2d.png" />
     </p>
 
+.. mujoco-datasets:
+
 ~~~~~~~~~
 Datasets
 ~~~~~~~~~
@@ -113,6 +118,9 @@ Datasets
    * - `Walker2d-v2`
      - `random, expert, medium, medium-replay, medium-expert`
      - `1500`
+
+
+.. mujoco-pre-trained-policy-performances:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Pre-trained policy performance
@@ -160,6 +168,9 @@ Pre-trained policy performance
         <img width="160" alt="door-v0" src="_static/images//hammer.png" />
     </p>
 
+
+.. adroit-datasets:
+
 ~~~~~~~~~
 Datasets
 ~~~~~~~~~
@@ -182,6 +193,9 @@ Datasets
    * - `d4rl:hammer-v0`
      - `human, cloned, expert`
      - `1500`
+
+
+.. adroit-pre-trained-policy-performances:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Pre-trained policy performance
