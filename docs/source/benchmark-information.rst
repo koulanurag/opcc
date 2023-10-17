@@ -3,11 +3,10 @@ Benchmark Information
 =======================
 
 + We borrow dataset's from `D4RL <https://arxiv.org/abs/2004.07219>`_.
-+ Queries can be visualized `HERE <https://wandb.ai/koulanurag/opcc/reports/Visualization-of-Policy-Comparison-Queries-pcq---VmlldzoxNTg3NzM2?accessToken=i71bbslusbt5rrb1kqfpz1e7n6yij6ocq47c19nydukrrvs4kv66k17j1s6dr5hw>`_.
-+ Baselines can be found `HERE <https://github.com/koulanurag/opcc-baselines>`_.
++ Queries can be visualized `HERE <https://wandb.ai/koulanurag/opcc/reports/Visualization-of-Policy-Comparison-Queries-pcq---VmlldzoxNTg3NzM2?accessToken=i71bbslusbt5rrb1kqfpz1e7n6yij6ocq47c19nydukrrvs4kv66k17j1s6dr5hw>`__.
++ Baselines can be found `HERE <https://github.com/koulanurag/opcc-baselines>`__.
 
 
-----------------------------------------------------------------------------
 `d4rl:maze2d <https://github.com/rail-berkeley/d4rl/wiki/Tasks#maze2d>`_
 ----------------------------------------------------------------------------
 
@@ -15,9 +14,7 @@ Benchmark Information
   :width: 500
   :alt: maze2d-environments
 
-.. maze2d-datasets:
 
-~~~~~~~~~
 Datasets
 ~~~~~~~~~
 
@@ -42,9 +39,7 @@ Datasets
      - `1k, 10k, 100k, 1m`
      - `121`
 
-.. maze2d-pre-trained-policy-performances:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -83,9 +78,9 @@ Pre-trained policy performance
      - 50.65±76.94
      - 9.95±9.95
 
-----------------------------------------------------
 `mujoco(gym) <https://gym.openai.com/envs/#mujoco>`_
 ----------------------------------------------------
+
 .. raw:: html
 
     <p float="left">
@@ -94,9 +89,7 @@ Pre-trained policy performance
         <img width="160" alt="mujoco-walker2d" src="_static/images/walker2d.png" />
     </p>
 
-.. mujoco-datasets:
 
-~~~~~~~~~
 Datasets
 ~~~~~~~~~
 
@@ -120,9 +113,6 @@ Datasets
      - `1500`
 
 
-.. mujoco-pre-trained-policy-performances:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -157,9 +147,9 @@ Pre-trained policy performance
 
 
 
-----------------------------------------------------------------------------
 `Adroit <https://github.com/Farama-Foundation/D4RL/wiki/Tasks#adroit>`_
-----------------------------------------------------------------------------
+------------------------------------------------------------------------
+
 .. raw:: html
 
     <p float="left">
@@ -169,9 +159,6 @@ Pre-trained policy performance
     </p>
 
 
-.. adroit-datasets:
-
-~~~~~~~~~
 Datasets
 ~~~~~~~~~
 
@@ -195,9 +182,7 @@ Datasets
      - `1500`
 
 
-.. adroit-pre-trained-policy-performances:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Pre-trained policy performance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
