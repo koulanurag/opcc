@@ -7,12 +7,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="development.html" />
 <meta property="og:site_name" content="opcc" />
-<meta property="og:description" content="We begin by installing following dependencies: Generate-Queries: In order to generate queries for the considered environments, we run following commands You can understand available command attribu..." />
+<meta property="og:description" content="We begin by installing following dependencies: Training Policies: We primarily use td3 for training policies and hand-pick checkpoints at regular intervals to get policies of various qualities. Run..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="/_images/social_previews/summary_development_d28cbd63.png" />
-<meta property="og:image:alt" content="We begin by installing following dependencies: Generate-Queries: In order to generate queries for the considered environments, we run following commands You..." />
-<meta name="description" content="We begin by installing following dependencies: Generate-Queries: In order to generate queries for the considered environments, we run following commands You can understand available command attribu..." />
+<meta property="og:image" content="/_images/social_previews/summary_development_0a4d66a6.png" />
+<meta property="og:image:alt" content="We begin by installing following dependencies: Training Policies: We primarily use td3 for training policies and hand-pick checkpoints at regular intervals t..." />
+<meta name="description" content="We begin by installing following dependencies: Training Policies: We primarily use td3 for training policies and hand-pick checkpoints at regular intervals to get policies of various qualities. Run..." />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="api.html" /><link rel="prev" title="Benchmark Information" href="benchmark-information.html" />
 
@@ -226,9 +226,23 @@
 </pre></div>
 </div>
 </div></blockquote>
+<a class="reference external image-reference" href="https://github.com/psf/black"><img alt="https://img.shields.io/badge/code%20style-black-000000.svg" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
+<section id="training-policies">
+<h2>Training Policies<a class="headerlink" href="#training-policies" title="Permalink to this heading">#</a></h2>
+<p>We primarily use <code class="code docutils literal notranslate"><span class="pre">td3</span></code> for training policies and hand-pick checkpoints at regular intervals to get policies of various qualities.</p>
+<p>Run (example):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python scripts/td3.py --env Hopper-v2</span>
+</pre></div>
+</div>
+<p>For more details, refer to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python scripts/td3.py --help</span>
+</pre></div>
+</div>
+<p>The policies are saved in <code class="code docutils literal notranslate"><span class="pre">opcc/assets/&lt;env-name&gt;/model/model_&lt;model-id&gt;.p</span></code>, where <code class="code docutils literal notranslate"><span class="pre">id</span></code> is an whole number. Also, For semantic reasons, we assign larger number to poor quality policies.</p>
+</section>
 <section id="generate-queries">
 <h2>Generate-Queries<a class="headerlink" href="#generate-queries" title="Permalink to this heading">#</a></h2>
-<p>In order to generate queries for the considered environments, we run following commands</p>
+<p>In order to generate queries for the considered environments and selected policies, we run following commands</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">% </span>following<span class="w"> </span>commands<span class="w"> </span>were<span class="w"> </span>used<span class="w"> </span>to<span class="w"> </span>generate<span class="w"> </span>queries
 <span class="go">python scripts/generate_queries.py --env-name HalfCheetah-v2 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb</span>
 <span class="go">python scripts/generate_queries.py --env-name Hopper-v2 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb</span>
@@ -297,17 +311,6 @@
 </li>
 </ol>
 </section>
-<section id="training-policies">
-<h2>Training Policies<a class="headerlink" href="#training-policies" title="Permalink to this heading">#</a></h2>
-<p>Run (example):</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python scripts/td3.py --env Hopper-v2</span>
-</pre></div>
-</div>
-<p>For more details, refer to:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python scripts/td3.py --help</span>
-</pre></div>
-</div>
-</section>
 </section>
 
         </article>
@@ -366,11 +369,11 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Development</a><ul>
+<li><a class="reference internal" href="#training-policies">Training Policies</a></li>
 <li><a class="reference internal" href="#generate-queries">Generate-Queries</a></li>
 <li><a class="reference internal" href="#generate-pre-trained-policy-performance-stats-for-readme">Generate pre-trained policy performance stats for README</a></li>
 <li><a class="reference internal" href="#testing-package">Testing Package</a></li>
 <li><a class="reference internal" href="#generate-docs">Generate Docs</a></li>
-<li><a class="reference internal" href="#training-policies">Training Policies</a></li>
 </ul>
 </li>
 </ul>

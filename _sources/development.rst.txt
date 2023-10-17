@@ -8,10 +8,33 @@ We begin by installing following dependencies:
 
         pip install -e ".[dev]"
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
+
+------------------
+Training Policies
+------------------
+
+We primarily use :code:`td3` for training policies and hand-pick checkpoints at regular intervals to get policies of various qualities.
+
+Run (example):
+
+.. code-block:: console
+
+    python scripts/td3.py --env Hopper-v2
+
+For more details, refer to:
+
+.. code-block:: console
+
+    python scripts/td3.py --help
+
+The policies are saved in :code:`opcc/assets/<env-name>/model/model_<model-id>.p`, where :code:`id` is an whole number. Also, For semantic reasons, we assign larger number to poor quality policies.
+
 -----------------
 Generate-Queries
 -----------------
-In order to generate queries for the considered environments, we run following commands
+In order to generate queries for the considered environments and selected policies, we run following commands
 
 .. code-block:: console
 
@@ -77,20 +100,3 @@ Generate Docs
     .. code-block:: console
 
         sphinx-build -M html docs/source/ docs/build/ -a
-
-
-------------------
-Training Policies
-------------------
-
-Run (example):
-
-.. code-block:: console
-
-    python scripts/td3.py --env Hopper-v2
-
-For more details, refer to:
-
-.. code-block:: console
-
-    python scripts/td3.py --help
