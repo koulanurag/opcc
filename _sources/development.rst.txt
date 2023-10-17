@@ -77,3 +77,18 @@ Generate Docs
     .. code-block:: console
 
         sphinx-build -M html docs/source/ docs/build/ -a
+
+
+------------------
+Training Policies
+------------------
+
+.. code-block:: console
+
+    python scripts/td3.py --env Hopper-v2
+
+For more details, refer to:
+
+.. code-block:: console
+
+    python scripts/td3.py --help
