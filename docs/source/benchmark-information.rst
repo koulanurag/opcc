@@ -157,6 +157,7 @@ Pre-trained policy performance
     <p float="left">
         <img width="160" alt="pen-v0" src="_static/images/pen.png" />
         <img width="160" alt="door-v0" src="_static/images//door.png" />
+        <img width="160" alt="door-v0" src="_static/images//hammer.png" />
     </p>
 
 ~~~~~~~~~
@@ -176,6 +177,9 @@ Datasets
      - `human, cloned, expert`
      - `1500`
    * - `d4rl:door-v0`
+     - `human, cloned, expert`
+     - `1500`
+   * - `d4rl:hammer-v0`
      - `human, cloned, expert`
      - `1500`
 
@@ -205,3 +209,9 @@ Pre-trained policy performance
      - 1466.71±497.1
      - 1832.43±560.86
      - 236.51±1.09
+
+   * - `d4rl:door-v0`
+     - 14863.43±3592.63
+     - 7057.41±7514.68
+     - 665.99±3454.75
+     - -231.54±79.61

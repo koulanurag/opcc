@@ -192,6 +192,12 @@ ENV_PERFORMANCE_STATS = {
         3: {"score_mean": 1394.94, "score_std": 1608.43},
         4: {"score_mean": 248.85, "score_std": 694.86},
     },
+    "d4rl:hammer-v0": {
+        1: {"score_mean": 14863.43, "score_std": 3592.63},
+        2: {"score_mean": 7057.41, "score_std": 7514.68},
+        3: {"score_mean": 665.99, "score_std": 3454.75},
+        4: {"score_mean": -231.54, "score_std": 79.61},
+    },
 }
 
 ADROIT_ENV_CONFIGS = {
@@ -212,6 +218,19 @@ ADROIT_ENV_CONFIGS = {
         "actor_kwargs": {
             "state_dim": 45,
             "action_dim": 24,
+            "max_action": 1,
+            "hidden_dim": 256,
+        },
+        "datasets": {
+            "human": {"name": "d4rl:pen-human-v0", "split": None},
+            "cloned": {"name": "d4rl:pen-cloned-v0", "split": None},
+            "expert": {"name": "d4rl:pen-expert-v0", "split": None},
+        },
+    },
+    "d4rl:hammer-v0": {
+        "actor_kwargs": {
+            "state_dim": 46,
+            "action_dim": 26,
             "max_action": 1,
             "hidden_dim": 256,
         },
