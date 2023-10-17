@@ -10,6 +10,15 @@ We begin by installing following dependencies:
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
+.. image:: https://github.com/koulanurag/opcc/actions/workflows/python-package.yml/badge.svg
+   :target: https://github.com/koulanurag/opcc/actions/workflows/python-package.yml
+   :alt: Python package
+.. image:: https://img.shields.io/github/license/koulanurag/opcc
+   :target: https://img.shields.io/github/license/koulanurag/opcc
+   :alt: License
+.. image:: https://codecov.io/gh/koulanurag/opcc/branch/main/graph/badge.svg?token=47LIB1CLI4
+   :target: https://codecov.io/gh/koulanurag/opcc
+   :alt: codecov
 
 ------------------
 Training Policies
@@ -29,7 +38,7 @@ For more details, refer to:
 
     python scripts/td3.py --help
 
-The policies are saved in :code:`opcc/assets/<env-name>/model/model_<model-id>.p`, where :code:`id` is an whole number. Also, For semantic reasons, we assign larger number to poor quality policies.
+The policies are saved in :code:`opcc/assets/<env-name>/model/model_<model-id>.p`, where :code:`id` is a whole number. For semantic reasons, we assign larger number to poor quality policies.
 
 -----------------
 Generate-Queries
@@ -53,12 +62,20 @@ You can understand available command attributes using following command
 
     python scripts/generate_queries.py --help
 --------------------------------------------------------
-Generate pre-trained policy performance stats for README
+Pre-trained policy stats
 --------------------------------------------------------
+
+Output of following command is used to updated benchmark information in readme.md or docs/source/benchmark-information.rst
 
 .. code-block:: console
 
     python scripts/generate_policy_stats.py --all-envs
+
+Also, refer to following for more usage details:
+
+.. code-block:: console
+
+    python scripts/generate_policy_stats.py --help
 
 
 ----------------
