@@ -61,6 +61,7 @@ You can understand available command attributes using following command
 .. code-block:: console
 
     python scripts/generate_queries.py --help
+
 --------------------------------------------------------
 Pre-trained policy stats
 --------------------------------------------------------
