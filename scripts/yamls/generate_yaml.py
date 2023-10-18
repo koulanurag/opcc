@@ -34,7 +34,6 @@ environment:
     - pip3 install git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl
     - pip3 install "cython<3" --upgrade
     - echo 'export CPATH="/usr/include:$$CPATH"' >> /home/aiscuser/.bashrc
-    - echo 'export PYTHONPATH=$$PYTHONPATH:/home/aiscuser/.python_packages' >> /home/aiscuser/.bashrc
     - chmod -R 777 /opt/conda/lib/python3.8/site-packages/mujoco_py
 
 storage:

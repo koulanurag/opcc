@@ -24,14 +24,14 @@ environment:
     - echo 'export LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:/home/aiscuser/.mujoco/mujoco210/bin' >> /home/aiscuser/.bashrc
 
     # pip dependencies
+    - pip install protobuf==3.20.1
     - pip3 install wandb
     - pip3 install pyglet
-    - pip3 install git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl -t /home/aiscuser/.python_packages
-    - pip3 install "cython<3" -t /home/aiscuser/.python_packages --upgrade
+    - pip3 install git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl
+    - pip3 install "cython<3" --upgrade
     - echo 'export CPATH="/usr/include:$$CPATH"' >> /home/aiscuser/.bashrc
-    - echo 'export PYTHONPATH=$$PYTHONPATH:/home/aiscuser/.python_packages' >> /home/aiscuser/.bashrc
-    - chmod -R 777 /home/aiscuser/.python_packages
-    - pip install protobuf==3.20.*
+    - chmod -R 777 /opt/conda/lib/python3.8/site-packages/mujoco_py
+    - pip install plotly
 
 
 storage:
