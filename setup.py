@@ -16,7 +16,7 @@ extras = {
         "sphinx-autobuild",
         "sphinxext-opengraph",
         "sphinx-prompt",
-        "sphinx-favicon"
+        "sphinx-favicon",
     ],
 }
 # Meta dependency groups.
