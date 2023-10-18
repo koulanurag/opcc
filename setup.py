@@ -15,7 +15,8 @@ extras = {
         "myst-parser",
         "sphinx-autobuild",
         "sphinxext-opengraph",
-        "sphinx-prompt"
+        "sphinx-prompt",
+        "sphinx-favicon"
     ],
 }
 # Meta dependency groups.
