@@ -5,7 +5,7 @@ from setuptools import setup
 
 extras = {
     "test": ["pytest", "pytest_cases", "pytest-cov", "xdoctest"],
-    "dev": ["pandas==1.3.5", "plotly==5.5.0", "wandb", "moviepy", "black"],
+    "dev": ["pandas==1.3.5", "plotly==5.5.0", "wandb", "moviepy", "black", "plotly"],
     "docs": [
         "sphinx",
         "furo",
