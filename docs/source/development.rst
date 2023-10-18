@@ -66,7 +66,7 @@ You can understand available command attributes using following command
 Pre-trained policy stats
 --------------------------------------------------------
 
-Output of following command is used to updated benchmark information in readme.md or docs/source/benchmark-information.rst
+Output of following command is used to updated benchmark information in :code:`readme.md` or :code:`docs/source/benchmark-information.rst`
 
 .. code-block:: console
 
