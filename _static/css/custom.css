@@ -12,7 +12,8 @@
     width: 100%;
     height: 100%;
 }
-/* 
+
+/*
 .tldr-section {
     font-family: monospace;
 }
@@ -39,10 +40,12 @@
     font-family: monospace;
 } */
 
-.source-code-container{
+.source-code-container {
     text-align: center;
+    padding: 14px 0px;
 }
-.source-code-container div{
+
+.source-code-container div {
     font-size: 15px;
     border: 1px solid rgb(201, 200, 200);
     border-radius: 5px;
