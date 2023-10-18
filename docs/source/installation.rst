@@ -26,16 +26,10 @@ Install package
        $ pip3 install 'setuptools<=66'
        $ pip3 install 'wheel<=0.38.4'
 
-#. Using PyPI:
-
-   .. code-block:: console
-
-      $ pip install opcc
-
-#. Directly from source (recommended):
+#. Install `Pytorch>=1.8.0 <https://pytorch.org/>`_.
+#. Install :code:`opcc`:
 
    .. code-block:: console
 
        $ pip install git+https://github.com/koulanurag/opcc@main#egg=opcc
 
-#. Install `Pytorch>=1.8.0 <https://pytorch.org/>`_.

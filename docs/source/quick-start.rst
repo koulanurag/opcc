@@ -2,7 +2,7 @@
 Quick Start
 ============
 
-In the section, we understand minimal and sufficient usage of  `opcc` framework.
+In the section, we understand minimal and sufficient usage of  :code:`opcc` framework.
 
 ---------
 Queries

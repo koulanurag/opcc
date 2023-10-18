@@ -2,7 +2,7 @@
 Development
 =============
 
-We begin by installing following dependencies:
+We begin by installing :code:`dev` dependencies:
 
     .. code-block:: console
 
