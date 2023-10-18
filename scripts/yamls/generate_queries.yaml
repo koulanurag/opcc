@@ -42,15 +42,6 @@ environment:
     - pip3 install importlib-metadata<5
 
 
-      # We use a fork of d4rl to resolve dm_control install
-      # issues arising due to lack of versioning across d4rl
-      # and dm_control packages.
-      # 'd4rl @ git+https://github.com/koulanurag/d4rl@master#egg=d4rl'
-      "d4rl @ git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl",
-      "cython<3",
-      "importlib-metadata<5",
-
-
 storage:
   opcctd3:
     storage_account_name: anuragkoul
