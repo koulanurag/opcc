@@ -56,7 +56,8 @@ search:
     command:
       - export WANDB_API_KEY=$WANDB_API_KEY && export D4RL_DATASET_DIR="/mnt/d4rl" && export MUJOCO_PY_MUJOCO_PATH="/home/aiscuser/.mujoco/mujoco210" && export LD_LIBRARY_PATH="$$LD_LIBRARY_PATH:/home/aiscuser/.mujoco/mujoco210/bin" && export PYTHONPATH="$$PYTHONPATH:/home/aiscuser/.python_packages"
       - python scripts/generate_queries.py --env-name {env_name} --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
-  max_trials: 1000
+  type: grid
+  max_trials: 25001
   params:
     - name: env_name
       values: [ "d4rl:pen-v0","d4rl:hammer-v0","d4rl:door-v0" ]
