@@ -60,4 +60,5 @@ search:
   max_trials: 25001
   params:
     - name: env_name
+      spec: discrete
       values: [ "d4rl:pen-v0","d4rl:hammer-v0","d4rl:door-v0" ]
