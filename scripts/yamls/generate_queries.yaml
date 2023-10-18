@@ -1,0 +1,62 @@
+description: OPCC-TD3
+target:
+  service: sing
+  name: msrresrchvc
+
+
+
+environment:
+  image: amlt-sing/pytorch-1.11.0
+  image_setup:
+
+    # Setup Mujoco
+    - sudo apt-get update
+    - sudo apt install -y  -q libosmesa6-dev  libglew-dev  libgl1-mesa-glx libgl1-mesa-dev libgl1-mesa-glx libglfw3
+    - echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    - sudo apt install -y -q xpra
+    - sudo apt install -y -q xserver-xorg-dev
+    - sudo apt install -y -q patchelf
+    - sudo apt install -y -q gcc-multilib
+    - mkdir -p /home/aiscuser/.mujoco
+    - wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
+    - tar -xf mujoco210-linux-x86_64.tar.gz -C /home/aiscuser/.mujoco
+    - rm -rf *.tar.gz*
+    - echo 'export LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:/home/aiscuser/.mujoco/mujoco210/bin' >> /home/aiscuser/.bashrc
+
+    # pip dependencies
+    - pip3 install wandb
+    - pip3 install pyglet
+    - pip3 install git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl -t /home/aiscuser/.python_packages
+    - pip3 install "cython<3" -t /home/aiscuser/.python_packages --upgrade
+    - echo 'export CPATH="/usr/include:$$CPATH"' >> /home/aiscuser/.bashrc
+    - echo 'export PYTHONPATH=$$PYTHONPATH:/home/aiscuser/.python_packages' >> /home/aiscuser/.bashrc
+    - chmod -R 777 /home/aiscuser/.python_packages
+    - pip install protobuf==3.20.*
+
+
+storage:
+  opcctd3:
+    storage_account_name: anuragkoul
+    container_name: opcctd3
+    is_output: true
+  d4rl:
+    storage_account_name: anuragkoul
+    container_name: d4rl
+    is_output: true
+
+
+code:
+  local_dir: $CONFIG_DIR/../..
+
+
+search:
+  job_template:
+    name: "{experiment_name:s}"
+    sku: G1
+    command:
+      - export WANDB_API_KEY=$WANDB_API_KEY && export D4RL_DATASET_DIR="/mnt/d4rl" && export MUJOCO_PY_MUJOCO_PATH="/home/aiscuser/.mujoco/mujoco210" && export LD_LIBRARY_PATH="$$LD_LIBRARY_PATH:/home/aiscuser/.mujoco/mujoco210/bin" && export PYTHONPATH="$$PYTHONPATH:/home/aiscuser/.python_packages"
+      - python scripts/generate_queries.py --env-name {env_name} --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
+  max_trials: 1000
+  params:
+    - name: env_name
+      values: [ "d4rl:pen-v0","d4rl:hammer-v0","d4rl:door-v0" ]
