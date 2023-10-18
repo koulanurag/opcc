@@ -39,7 +39,6 @@ environment:
     - pip3 install plotly==5.5.0
     - pip3 install moviepy
     - pip3 install plotly
-    - pip3 install importlib-metadata<5
 
 
 storage:
