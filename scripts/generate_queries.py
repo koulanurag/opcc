@@ -253,6 +253,17 @@ def main():
     if args.use_wandb:
         wandb.init(project="opcc", config={"env_name": args.env_name}, save_code=True)
 
+    # summarize arguments
+    print(
+        f'\n\n{"=" * 100}\n'
+        + f'{"Argument Name":<50}\tValue'
+        + f'\n{"------------":<50}\t-----\n'
+        + "\n".join(
+            f"{arg_name:<50}\t{getattr(args, arg_name)}" for arg_name in vars(args)
+        )
+        + f'\n\n{"=" * 100}\n'
+    )
+
     # seed
     np.random.seed(0)
     random.seed(0)
