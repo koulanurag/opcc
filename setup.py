@@ -50,6 +50,7 @@ setup(
         "d4rl @ git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl",
         "cython<3",
         "importlib-metadata<5",
+        "torch>=1.8.0"
     ],
     include_package_data=True,
     extras_require=extras,

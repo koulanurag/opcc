@@ -21,6 +21,7 @@ from kd import KDTree
 from opcc.config import ASSETS_DIR
 
 
+@torch.no_grad()
 def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
     assert horizon <= env._max_episode_steps
 
@@ -51,7 +52,7 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
 
     return expected_score, expected_step
 
-
+@torch.no_grad()
 def generate_query_states(env, policies, max_transaction_count, args):
     # create collection of states
     env_states = []
@@ -76,7 +77,7 @@ def generate_query_states(env, policies, max_transaction_count, args):
             obs, _, done, info = env.step(step_action)
     return env_states
 
-
+@torch.no_grad()
 def evaluate_queries(env, candidate_states, policies, args):
     _overall_data = defaultdict(lambda: [])
     _queries = {}
