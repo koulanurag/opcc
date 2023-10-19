@@ -31,6 +31,10 @@ environment:
     - pip install protobuf==3.20.1
     - pip3 install wandb
     - pip3 install pyglet
+    - pip3 install absl-py==1.0.0
+    - pip3 install numpy==1.21.5
+    - pip3 install scikit-learn
+    - pip3 install gym==0.21.0
     - pip3 install git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl
     - pip3 install "cython<3" --upgrade
     - echo 'export CPATH="/usr/include:$$CPATH"' >> /home/aiscuser/.bashrc
@@ -39,6 +43,7 @@ environment:
     - pip3 install plotly==5.5.0
     - pip3 install moviepy
     - pip3 install plotly
+    - pip3 install importlib-metadata<5
 
 storage:
   opcctd3:
