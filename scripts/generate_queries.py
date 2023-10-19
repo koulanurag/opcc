@@ -68,6 +68,9 @@ def generate_query_states(env, policies, max_transaction_count, args):
                 )
             action = policy(torch.tensor(obs).unsqueeze(0).double())
             noise = torch.normal(0, args.noise, size=action.shape).double()
+            print((action + noise).data.cpu())
+            print(type((action + noise).data.cpu()))
+            print((action + noise).data.cpu().shape())
             step_action = (action + noise).data.cpu().numpy()[0]
             step_action = step_action.astype("float32")
             obs, _, done, info = env.step(step_action)
