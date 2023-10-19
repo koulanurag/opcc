@@ -5,7 +5,7 @@ Installation
 ````````````
 Setup Mujoco
 ````````````
-+ Download `[mujoco 210] <https://github.com/google-deepmind/mujoco/releases/tag/2.1.0>`_ and unzip in  `~/.mujoco`
++ Download `[mujoco 210] <https://github.com/google-deepmind/mujoco/releases/tag/2.1.0>`_ and unzip in  :code:`~/.mujoco`
 + Add following to `.bashrc/.zshrc` and source it.
 
   .. code-block:: console
