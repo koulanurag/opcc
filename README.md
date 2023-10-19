@@ -3,7 +3,7 @@
 It's a benchmark comprising **"policy comparison queries"(pcq)** to evaluate uncertainty estimation in offline
 reinforcement learning. 
 
-__Reserach Paper:__ [https://arxiv.org/abs/2205.10739](https://arxiv.org/abs/2205.10739)
+__Research Paper:__ [https://arxiv.org/abs/2205.10739](https://arxiv.org/abs/2205.10739)
 
 __Website/Docs:__  [https://koulanurag.dev/opcc](https://koulanurag.dev/opcc)
 
@@ -15,8 +15,8 @@ __Website/Docs:__  [https://koulanurag.dev/opcc](https://koulanurag.dev/opcc)
 
 **1. Setup Mujoco**
 - Download **[mujoco 210](https://github.com/google-deepmind/mujoco/releases/tag/2.1.0)** and unzip in `~/.mujoco`
-- Add following to `.bashrc/.zshrc` and source it.  
-  ```bash
+- Add following to `.consolerc/.zshrc` and source it.  
+  ```console
   export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210/
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
   ```
@@ -25,7 +25,7 @@ __Website/Docs:__  [https://koulanurag.dev/opcc](https://koulanurag.dev/opcc)
 **2. Setup [Python 3.7+](https://www.python.org/downloads/)** and optionally(recommended) create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
 **3. Python package and dependencies could be installed using:**
 
-  ```bash
+  ```console
   pip3 install --upgrade 'pip<=23.0.1'
   pip3 install --upgrade 'setuptools<=66'
   pip3 install --upgrade 'wheel<=0.38.4'
@@ -239,7 +239,7 @@ while not done:
 - Run: `pytest -v`
 - Testing is computationally expensive as we validate ground truth value estimates and corresponding labels. These can
   be disabled by setting following flags:
-  ```bash
+  ```console
   export SKIP_QUERY_TARGET_TESTS=1 # disable target estimation and label validation  
   export SKIP_Q_LEARNING_DATASET_TEST=1  # disable test for checking dataset existence
   export SKIP_SEQUENCE_DATASET_TEST=1 # disables test for checking sequence dataset
@@ -248,7 +248,7 @@ while not done:
 ## Development:
 - Install : `pip install -e ".[all]"`
 - Generate-Queries:
-  ```bash
+  ```console
   % following commands were used to generate queries
   python scripts/generate_queries.py --env-name HalfCheetah-v2 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
   python scripts/generate_queries.py --env-name Hopper-v2 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
@@ -259,7 +259,7 @@ while not done:
   python scripts/generate_queries.py --env-name d4rl:maze2d-open-v0 --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.5 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
   ```
 - Generate policy performance stats for readme:
-  ```bash
+  ```console
   python scripts/generate_policy_stats.py --all-envs
   ```
 
