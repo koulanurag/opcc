@@ -15,6 +15,10 @@ Setup Mujoco
       $ export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210/
       $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
 
+  .. code-block:: console
+
+      $ source ~/.bashrc
+
   (You can also refer `here <https://github.com/koulanurag/opcc/blob/main/.github/workflows/python-package.yml#L41>`_ for step-by-step instructions on mujoco installation)
 
 `````````````````
