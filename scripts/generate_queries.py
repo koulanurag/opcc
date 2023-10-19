@@ -301,6 +301,13 @@ def main():
     candidate_states = generate_query_states(env, policies, args.max_trans_count, args)
     queries, overall_data = evaluate_queries(env, candidate_states, policies, args)
 
+    # save queries
+    _path = os.path.join(ASSETS_DIR, args.env_name, "queries.p")
+    os.makedirs(os.path.join(ASSETS_DIR, args.env_name), exist_ok=True)
+    pickle.dump(queries, open(_path, "wb"))
+    if args.use_wandb:
+        wandb.save(_path)
+
     # estimate distance of queries from datasets
     query_obs_action_a = np.concatenate(
         (overall_data["obs-a"], overall_data["action-a"]), 1
@@ -362,13 +369,6 @@ def main():
                 "query-data": wandb.Table(dataframe=overall_df),
             }
         )
-
-    # save queries
-    _path = os.path.join(ASSETS_DIR, args.env_name, "queries.p")
-    os.makedirs(os.path.join(ASSETS_DIR, args.env_name), exist_ok=True)
-    pickle.dump(queries, open(_path, "wb"))
-    if args.use_wandb:
-        wandb.save(_path)
 
     # close env
     env.close()
