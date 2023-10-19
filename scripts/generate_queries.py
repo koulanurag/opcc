@@ -21,6 +21,7 @@ from kd import KDTree
 from opcc.config import ASSETS_DIR
 
 
+@torch.no_grad()
 def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
     assert horizon <= env._max_episode_steps
 
@@ -40,7 +41,7 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
 
         while not done and step_count < horizon:
             with torch.no_grad():
-                obs = torch.tensor(obs).unsqueeze(0)
+                obs = torch.tensor(obs).unsqueeze(0).double()
                 action = policy(obs).data.cpu().numpy()[0]
             obs, reward, done, info = env.step(action.astype("float32"))
             step_count += 1
@@ -51,7 +52,7 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
 
     return expected_score, expected_step
 
-
+@torch.no_grad()
 def generate_query_states(env, policies, max_transaction_count, args):
     # create collection of states
     env_states = []
@@ -66,14 +67,14 @@ def generate_query_states(env, policies, max_transaction_count, args):
                 env_states.append(
                     (obs.tolist(), env.sim.get_state().flatten().tolist())
                 )
-            action = policy(torch.tensor(obs).unsqueeze(0))
-            noise = torch.normal(0, args.noise, size=action.shape)
+            action = policy(torch.tensor(obs).unsqueeze(0).double())
+            noise = torch.normal(0, args.noise, size=action.shape).double()
             step_action = (action + noise).data.cpu().numpy()[0]
             step_action = step_action.astype("float32")
             obs, _, done, info = env.step(step_action)
     return env_states
 
-
+@torch.no_grad()
 def evaluate_queries(env, candidate_states, policies, args):
     _overall_data = defaultdict(lambda: [])
     _queries = {}
@@ -252,6 +253,17 @@ def main():
     args = parser.parse_args()
     if args.use_wandb:
         wandb.init(project="opcc", config={"env_name": args.env_name}, save_code=True)
+
+    # summarize arguments
+    print(
+        f'\n\n{"=" * 100}\n'
+        + f'{"Argument Name":<50}\tValue'
+        + f'\n{"------------":<50}\t-----\n'
+        + "\n".join(
+            f"{arg_name:<50}\t{getattr(args, arg_name)}" for arg_name in vars(args)
+        )
+        + f'\n\n{"=" * 100}\n'
+    )
 
     # seed
     np.random.seed(0)
