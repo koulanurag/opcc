@@ -7,7 +7,7 @@ extras = {
     "test": ["pytest", "pytest_cases", "pytest-cov", "xdoctest"],
     "dev": ["pandas==1.3.5", "plotly==5.5.0", "wandb", "moviepy", "black", "plotly"],
     "docs": [
-        "sphinx",
+        "Sphinx<6.0,>=4.0",
         "furo",
         "sphinxcontrib-katex",
         "sphinx-copybutton",
@@ -17,6 +17,9 @@ extras = {
         "sphinxext-opengraph",
         "sphinx-prompt",
         "sphinx-favicon",
+        "nbsphinx>=0.9.3",
+        "pandoc>=2.3",
+        "myst-nb"
     ],
 }
 # Meta dependency groups.
@@ -50,7 +53,7 @@ setup(
         "d4rl @ git+https://github.com/Farama-Foundation/d4rl@master#egg=d4rl",
         "cython<3",
         "importlib-metadata<5",
-        "torch>=1.8.0"
+        "torch>=1.8.0",
     ],
     include_package_data=True,
     extras_require=extras,

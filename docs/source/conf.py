@@ -41,8 +41,9 @@ extensions = [
     "sphinx_design",
     "myst_parser",
     "sphinxext.opengraph",
-    "sphinx_prompt",
+    # "sphinx_prompt",
     "sphinx_favicon",
+    "nbsphinx",
 ]
 
 templates_path = ["_templates"]
