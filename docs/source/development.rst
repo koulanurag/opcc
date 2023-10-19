@@ -114,6 +114,7 @@ Generate Docs
 
         pip install -e ".[docs]"
 
+#. Install `Pandoc <https://pandoc.org/installing.html>`_.
 
 #. Generate Sphinx Doc
 
