@@ -1,3 +1,5 @@
+:og:description: Python API for OPCC framework
+
 API Reference
 =============
 

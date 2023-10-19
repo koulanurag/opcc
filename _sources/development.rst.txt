@@ -1,3 +1,5 @@
+:og:description: Development guide for OPCC framework
+
 =============
 Development
 =============
