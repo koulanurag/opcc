@@ -1,3 +1,5 @@
+:og:description: Installation guide for OPCC framework
+
 =============
 Installation
 =============

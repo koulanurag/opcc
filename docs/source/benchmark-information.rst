@@ -1,3 +1,5 @@
+:og:description: Benchmark information for OPCC framework
+
 =======================
 Benchmark Information
 =======================
