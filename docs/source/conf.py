@@ -41,6 +41,8 @@ extensions = [
     "sphinx_design",
     "myst_parser",
     "sphinxext.opengraph",
+    "sphinx_prompt",
+    "sphinx_favicon",
 ]
 
 templates_path = ["_templates"]
@@ -84,3 +86,7 @@ autodoc_default_options = {
     "undoc-members": True,
     "exclude-members": "__weakref__",
 }
+
+# Sphinx-copy button details
+# Ref: https://sphinx-copybutton.readthedocs.io/en/latest/use.html#
+copybutton_exclude = ".linenos, .gp"
