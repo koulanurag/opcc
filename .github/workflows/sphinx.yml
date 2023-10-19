@@ -28,7 +28,6 @@ jobs:
         wget https://github.com/deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz
         tar -xf mujoco210-linux-x86_64.tar.gz -C "$HOME/.mujoco"
         rm -rf mujoco210-linux-x86_64.tar.gz
-
     - name: Install dependencies
       run: |
         export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210
@@ -40,13 +39,15 @@ jobs:
         pip3 install -e .
         pip3 install torch==1.10.2+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
         pip3 install -e ".[docs]"
-
+    - name: Setup Pandoc
+      run: |
+        wget https://github.com/jgm/pandoc/releases/download/3.1.8/pandoc-3.1.8-1-amd64.deb
+        sudo dpkg -i pandoc-3.1.8-1-amd64.deb
     - name: Build html
       run: |
         export MUJOCO_PY_MUJOCO_PATH=$HOME/.mujoco/mujoco210
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.mujoco/mujoco210/bin
         sphinx-build -M html docs/source/ docs/build/ -a
-
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:

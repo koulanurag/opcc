@@ -623,6 +623,7 @@ def main():
         else:
             _env = gym.make(args.env)
 
+        _render_fn = _env.render
         # custom render function for adroit envs
         if "door" in args.env or "pen" in args.env:
 
