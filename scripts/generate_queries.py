@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import torch
-
+from tqdm import tqdm
 import opcc
 import wandb
 from kd import KDTree
@@ -52,27 +52,33 @@ def mc_return(env, sim_state, init_action, horizon, policy, max_episodes):
 
     return expected_score, expected_step
 
+
 @torch.no_grad()
 def generate_query_states(env, policies, max_transaction_count, args):
     # create collection of states
     env_states = []
-    while len(env_states) < max_transaction_count:
-        policy = random.choice(list(policies.values()))
-        obs = env.reset()
 
-        done = False
-        while not done:
-            save = random.random() >= args.save_prob
-            if save:
-                env_states.append(
-                    (obs.tolist(), env.sim.get_state().flatten().tolist())
-                )
-            action = policy(torch.tensor(obs).unsqueeze(0).double())
-            noise = torch.normal(0, args.noise, size=action.shape).double()
-            step_action = (action + noise).data.cpu().numpy()[0]
-            step_action = step_action.astype("float32")
-            obs, _, done, info = env.step(step_action)
+    with tqdm(total=max_transaction_count, desc="Generating Query States") as pbar:
+        while len(env_states) < max_transaction_count:
+            policy = random.choice(list(policies.values()))
+            obs = env.reset()
+
+            done = False
+            while not done:
+                save = random.random() >= args.save_prob
+                if save:
+                    env_states.append(
+                        (obs.tolist(), env.sim.get_state().flatten().tolist())
+                    )
+                    pbar.update(1)
+
+                action = policy(torch.tensor(obs).unsqueeze(0).double())
+                noise = torch.normal(0, args.noise, size=action.shape).double()
+                step_action = (action + noise).data.cpu().numpy()[0]
+                step_action = step_action.astype("float32")
+                obs, _, done, info = env.step(step_action)
     return env_states
+
 
 @torch.no_grad()
 def evaluate_queries(env, candidate_states, policies, args):
@@ -80,9 +86,9 @@ def evaluate_queries(env, candidate_states, policies, args):
     _queries = {}
     total_query_count = 0
     policy_ids = sorted(policies.keys())
-    for i, policy_id_a in enumerate(policy_ids):
+    for i, policy_id_a in enumerate(tqdm(policy_ids, desc="Policy-A")):
         policy_a = policies[policy_id_a]
-        for policy_id_b in args.policy_ids[i + 1 :]:
+        for policy_id_b in tqdm(args.policy_ids[i + 1 :], desc="Policy-B"):
             policy_b = policies[policy_id_b]
 
             # core attributes
@@ -106,67 +112,80 @@ def evaluate_queries(env, candidate_states, policies, args):
             query_count = 0
             ignore_count = 0
 
-            while (
-                query_count < args.per_policy_comb_query
-                and ignore_count < args.ignore_stuck_count
-            ):
-                same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[0]
-
-                # query-a attributes
-                (obs_a, sim_state_a) = random.choice(candidate_states)
-                action_a = env.action_space.sample()
-
-                # query-b attributes
-                if same_state:
-                    obs_b = deepcopy(obs_a)
-                    sim_state_b = deepcopy(sim_state_a)
-                else:
-                    obs_b, sim_state_b = random.choice(candidate_states)
-                action_b = env.action_space.sample()
-
-                # evaluate
-                horizon = random.choice(args.horizons)
-                return_a, horizon_a = mc_return(
-                    env, sim_state_a, action_a, horizon, policy_a, args.eval_runs
-                )
-                return_b, horizon_b = mc_return(
-                    env, sim_state_b, action_b, horizon, policy_b, args.eval_runs
-                )
-                return_a_mean = np.mean(return_a)
-                return_b_mean = np.mean(return_b)
-                horizon_a_mean = np.mean(horizon_a)
-                horizon_b_mean = np.mean(horizon_b)
-
-                # ignore ambiguous queries
-                if (abs(return_a_mean - return_b_mean) <= args.ignore_delta) or (
-                    min(return_b) <= max(return_a) <= max(return_b)
-                    or min(return_b) <= min(return_a) <= max(return_b)
+            with tqdm(
+                total=args.per_policy_comb_query, desc="Generating Query"
+            ) as pbar:
+                while (
+                    query_count < args.per_policy_comb_query
+                    and ignore_count < args.ignore_stuck_count
                 ):
-                    ignore_count += 1
-                    continue
-                else:
-                    obss_a.append(obs_a)
-                    obss_b.append(obs_b)
-                    actions_a.append(action_a)
-                    actions_b.append(action_b)
-                    horizons.append(horizon)
-                    targets.append(return_a_mean < return_b_mean)
+                    same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[
+                        0
+                    ]
 
-                    returns_a.append(return_a_mean)
-                    returns_b.append(return_b_mean)
-                    returns_list_a.append(return_a)
-                    returns_list_b.append(return_b)
-                    sim_states_a.append(sim_state_a)
-                    sim_states_b.append(sim_state_b)
-                    horizons_a.append(horizon_a_mean)
-                    horizons_b.append(horizon_b_mean)
+                    # query-a attributes
+                    (obs_a, sim_state_a) = random.choice(candidate_states)
+                    action_a = env.action_space.sample()
 
-                    query_count += 1
-                    total_query_count += 1
+                    # query-b attributes
+                    if same_state:
+                        obs_b = deepcopy(obs_a)
+                        sim_state_b = deepcopy(sim_state_a)
+                    else:
+                        obs_b, sim_state_b = random.choice(candidate_states)
+                    action_b = env.action_space.sample()
 
-                    # log for tracking progress
-                    if args.use_wandb:
-                        wandb.log({"query-count": total_query_count})
+                    # evaluate
+                    horizon = random.choice(args.horizons)
+                    return_a, horizon_a = mc_return(
+                        env, sim_state_a, action_a, horizon, policy_a, args.eval_runs
+                    )
+                    return_b, horizon_b = mc_return(
+                        env, sim_state_b, action_b, horizon, policy_b, args.eval_runs
+                    )
+                    return_a_mean = np.mean(return_a)
+                    return_b_mean = np.mean(return_b)
+                    horizon_a_mean = np.mean(horizon_a)
+                    horizon_b_mean = np.mean(horizon_b)
+
+                    # ignore ambiguous queries
+                    if (abs(return_a_mean - return_b_mean) <= args.ignore_delta) or (
+                        min(return_b) <= max(return_a) <= max(return_b)
+                        or min(return_b) <= min(return_a) <= max(return_b)
+                    ):
+                        ignore_count += 1
+                        continue
+                    else:
+                        obss_a.append(obs_a)
+                        obss_b.append(obs_b)
+                        actions_a.append(action_a)
+                        actions_b.append(action_b)
+                        horizons.append(horizon)
+                        targets.append(return_a_mean < return_b_mean)
+
+                        returns_a.append(return_a_mean)
+                        returns_b.append(return_b_mean)
+                        returns_list_a.append(return_a)
+                        returns_list_b.append(return_b)
+                        sim_states_a.append(sim_state_a)
+                        sim_states_b.append(sim_state_b)
+                        horizons_a.append(horizon_a_mean)
+                        horizons_b.append(horizon_b_mean)
+
+                        query_count += 1
+                        total_query_count += 1
+
+                        # update progress bar
+                        pbar.update(1)
+                        pbar.set_description(
+                            f"Ignore Count:{ignore_count} "
+                            f"| Total Query Count: {total_query_count}"
+                            f"| Generating Query"
+                        )
+
+                        # log for tracking progress
+                        if args.use_wandb:
+                            wandb.log({"query-count": total_query_count})
 
             _key = ((args.env_name, policy_id_a), (args.env_name, policy_id_b))
             _queries[_key] = {
@@ -289,7 +308,10 @@ def main():
     query_obs_action_b = np.concatenate(
         (overall_data["obs-b"], overall_data["action-b"]), 1
     )
-    for dataset_name in opcc.get_dataset_names(args.env_name):
+    for dataset_name in tqdm(
+        opcc.get_dataset_names(args.env_name),
+        desc=" Query distance from dataset| Datasets",
+    ):
         dataset = opcc.get_qlearning_dataset(args.env_name, dataset_name)
         kd_tree = KDTree(
             np.concatenate((dataset["observations"], dataset["actions"]), 1)
