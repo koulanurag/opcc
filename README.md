@@ -23,6 +23,7 @@ __Website/Docs:__  [https://koulanurag.dev/opcc](https://koulanurag.dev/opcc)
   <br>*(You can also refer **[here](https://github.com/koulanurag/opcc/blob/main/.github/workflows/python-package.yml#L27)** for step-by-step instructions on mujoco installation)*
 
 **2. Setup [Python 3.7+](https://www.python.org/downloads/)** and optionally(recommended) create a  `virtualenv` [(refer here)](https://docs.python.org/3/tutorial/venv.html)
+
 **3. Python package and dependencies could be installed using:**
 
   ```console
