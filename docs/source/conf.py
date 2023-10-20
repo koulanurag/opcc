@@ -69,6 +69,17 @@ html_theme_options = {
     "source_directory": "docs/source",
 }
 
+# Favicons configuration
+favicons = [
+    {"href": "_static/favicon/favicon.ico"},
+    {"href": "_static/favicon/favicon-16x16.png"},
+    {"href": "_static/favicon/favicon-32x32.png"},
+    {
+        "rel": "apple-touch-icon",
+        "href": "_static/favicon/apple-touch-icon.png",
+    },
+]
+
 # -- Options for autodoc ----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#configuration
 
