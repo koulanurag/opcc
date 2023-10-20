@@ -65,10 +65,13 @@ search:
       - pip install -e .
       - python -c "import os; [os.rename('/scratch/amlt_code/opcc/assets/'+x, '/scratch/amlt_code/opcc/assets/'+x.replace('%3A',':')) for x in os.listdir('/scratch/amlt_code/opcc/assets')]"
       - pip install torch --upgrade
-      - python scripts/generate_queries.py --env-name {env_name} --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta 10 --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
+      - python scripts/generate_queries.py --env-name {env_name} --horizons 10 20 30 40 50 --policy-ids 1 2 3 4 --noise 0.1 --eval-runs 10 --ignore-delta-per-horizons {ignore_delta_per_horizons} --max-trans-count 2000 --ignore-stuck-count 1000 --save-prob 0.6 --per-policy-comb-query 250 --use-wandb
   type: grid
   max_trials: 25001
   params:
     - name: env_name
       spec: discrete
       values: [ "d4rl:pen-v0","d4rl:hammer-v0","d4rl:door-v0" ]
+    - name: ignore_delta_per_horizons
+      spec: discrete
+      values: [ ""]

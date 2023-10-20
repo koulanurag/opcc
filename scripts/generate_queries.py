@@ -233,7 +233,7 @@ def main():
         default=0.05,
     )
     parser.add_argument(
-        "--ignore-delta-for-horizons",
+        "--ignore-delta-per-horizons",
         default=20,
         nargs="+",
         required=True,
