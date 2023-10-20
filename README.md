@@ -10,6 +10,7 @@ __Website/Docs:__  [https://koulanurag.dev/opcc](https://koulanurag.dev/opcc)
 [![Python package](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml/badge.svg)](https://github.com/koulanurag/opcc/actions/workflows/python-package.yml)
 ![License](https://img.shields.io/github/license/koulanurag/opcc)
 [![codecov](https://codecov.io/gh/koulanurag/opcc/branch/main/graph/badge.svg?token=47LIB1CLI4)](https://codecov.io/gh/koulanurag/opcc)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Installation
 
