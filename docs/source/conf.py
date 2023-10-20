@@ -71,12 +71,12 @@ html_theme_options = {
 
 # Favicons configuration
 favicons = [
-    {"href": "_static/favicon/favicon.ico"},
-    {"href": "_static/favicon/favicon-16x16.png"},
-    {"href": "_static/favicon/favicon-32x32.png"},
+    {"href": "favicon/favicon.ico"},
+    {"href": "favicon/favicon-16x16.png"},
+    {"href": "favicon/favicon-32x32.png"},
     {
         "rel": "apple-touch-icon",
-        "href": "_static/favicon/apple-touch-icon.png",
+        "href": "favicon/apple-touch-icon.png",
     },
 ]
 

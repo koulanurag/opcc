@@ -233,9 +233,11 @@ def main():
         default=0.05,
     )
     parser.add_argument(
-        "--ignore-delta",
-        type=float,
+        "--ignore-delta-for-horizons",
         default=20,
+        nargs="+",
+        required=True,
+        type=int,
         help="ignore query if difference between two sides"
         " of query is less than it.",
     )
@@ -270,6 +272,8 @@ def main():
 
     # Process arguments
     args = parser.parse_args()
+    assert len(args.ignore_delta_per_horizon)== len(args.horizons)
+
     if args.use_wandb:
         wandb.init(project="opcc", config={"env_name": args.env_name}, save_code=True)
 
@@ -298,25 +302,26 @@ def main():
         policy_id: opcc.get_policy(args.env_name, policy_id)[0]
         for policy_id in args.policy_ids
     }
-    
-    # candidate_states = generate_query_states(env, policies, args.max_trans_count, args)
-    # queries, overall_data = evaluate_queries(env, candidate_states, policies, args)
 
-    _path = os.path.join(ASSETS_DIR, args.env_name, "queries.p")
-    queries = pickle.load(open(_path, "rb"))
-    overall_data = defaultdict(lambda: [])
-    for value_dict in queries.values():
-        for _key, value in value_dict.items():
-            try:
-                overall_data[_key.replace("_","-")] += value.tolist()
-            except:
-                overall_data[_key.replace("_","-")] += value
-    # save queries
+    candidate_states = generate_query_states(env, policies, args.max_trans_count, args)
+    queries, overall_data = evaluate_queries(env, candidate_states, policies, args)
+
     # _path = os.path.join(ASSETS_DIR, args.env_name, "queries.p")
-    # os.makedirs(os.path.join(ASSETS_DIR, args.env_name), exist_ok=True)
-    # pickle.dump(queries, open(_path, "wb"))
-    # if args.use_wandb:
-    #     wandb.save(_path)
+    # queries = pickle.load(open(_path, "rb"))
+    # overall_data = defaultdict(lambda: [])
+    # for value_dict in queries.values():
+    #     for _key, value in value_dict.items():
+    #         try:
+    #             overall_data[_key.replace("_","-")] += value.tolist()
+    #         except:
+    #             overall_data[_key.replace("_","-")] += value
+
+    # save queries
+    _path = os.path.join(ASSETS_DIR, args.env_name, "queries.p")
+    os.makedirs(os.path.join(ASSETS_DIR, args.env_name), exist_ok=True)
+    pickle.dump(queries, open(_path, "wb"))
+    if args.use_wandb:
+        wandb.save(_path)
 
     # estimate distance of queries from datasets
     query_obs_action_a = np.concatenate((overall_data["obs-a"], overall_data["action-a"]), 1)
