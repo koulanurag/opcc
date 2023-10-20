@@ -298,20 +298,28 @@ def main():
         policy_id: opcc.get_policy(args.env_name, policy_id)[0]
         for policy_id in args.policy_ids
     }
-    candidate_states = generate_query_states(env, policies, args.max_trans_count, args)
-    queries, overall_data = evaluate_queries(env, candidate_states, policies, args)
+    
+    # candidate_states = generate_query_states(env, policies, args.max_trans_count, args)
+    # queries, overall_data = evaluate_queries(env, candidate_states, policies, args)
 
-    # save queries
     _path = os.path.join(ASSETS_DIR, args.env_name, "queries.p")
-    os.makedirs(os.path.join(ASSETS_DIR, args.env_name), exist_ok=True)
-    pickle.dump(queries, open(_path, "wb"))
-    if args.use_wandb:
-        wandb.save(_path)
+    queries = pickle.load(open(_path, "rb"))
+    overall_data = defaultdict(lambda: [])
+    for value_dict in queries.values():
+        for _key, value in value_dict.items():
+            try:
+                overall_data[_key.replace("_","-")] += value.tolist()
+            except:
+                overall_data[_key.replace("_","-")] += value
+    # save queries
+    # _path = os.path.join(ASSETS_DIR, args.env_name, "queries.p")
+    # os.makedirs(os.path.join(ASSETS_DIR, args.env_name), exist_ok=True)
+    # pickle.dump(queries, open(_path, "wb"))
+    # if args.use_wandb:
+    #     wandb.save(_path)
 
     # estimate distance of queries from datasets
-    query_obs_action_a = np.concatenate(
-        (overall_data["obs-a"], overall_data["action-a"]), 1
-    )
+    query_obs_action_a = np.concatenate((overall_data["obs-a"], overall_data["action-a"]), 1)
     query_obs_action_b = np.concatenate(
         (overall_data["obs-b"], overall_data["action-b"]), 1
     )
@@ -320,9 +328,7 @@ def main():
         desc=" Query distance from dataset| Datasets",
     ):
         dataset = opcc.get_qlearning_dataset(args.env_name, dataset_name)
-        kd_tree = KDTree(
-            np.concatenate((dataset["observations"], dataset["actions"]), 1)
-        )
+        kd_tree = KDTree(np.concatenate((dataset["observations"], dataset["actions"]), 1))
         kd_data_a = kd_tree.get_knn_batch(query_obs_action_a, k=1)
         kd_data_b = kd_tree.get_knn_batch(query_obs_action_b, k=1)
 
