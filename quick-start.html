@@ -7,12 +7,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="quick-start.html" />
 <meta property="og:site_name" content="opcc" />
-<meta property="og:description" content="In the section, we understand minimal and sufficient usage of opcc framework. We begin by importing the packages Queries: Evaluation Metrics: Given the query predictions and targets, we demo estima..." />
+<meta property="og:description" content="In the section, we understand minimal and sufficient usage of opcc framework. We begin by importing the packages Queries: We iterate over queries for an environment and make random predictions for ..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="/_images/social_previews/summary_quick-start_731d886a.png" />
-<meta property="og:image:alt" content="In the section, we understand minimal and sufficient usage of opcc framework. We begin by importing the packages Queries: Evaluation Metrics: Given the query..." />
-<meta name="description" content="In the section, we understand minimal and sufficient usage of opcc framework. We begin by importing the packages Queries: Evaluation Metrics: Given the query predictions and targets, we demo estima..." />
+<meta property="og:image" content="/_images/social_previews/summary_quick-start_7fcd88ad.png" />
+<meta property="og:image:alt" content="In the section, we understand minimal and sufficient usage of opcc framework. We begin by importing the packages Queries: We iterate over queries for an envi..." />
+<meta name="description" content="In the section, we understand minimal and sufficient usage of opcc framework. We begin by importing the packages Queries: We iterate over queries for an environment and make random predictions for ..." />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Benchmark Information" href="benchmark-information.html" /><link rel="prev" title="Installation" href="installation.html" />
 
@@ -251,6 +251,7 @@ pybullet build time: May 20 2022 19:44:17
 </div>
 <section id="Queries">
 <h2>Queries<a class="headerlink" href="#Queries" title="Permalink to this heading">#</a></h2>
+<p>We iterate over queries for an environment and make random predictions for them.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
@@ -372,12 +373,13 @@ pybullet build time: May 20 2022 19:44:17
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-aurcc: 0.470361306214452, rpp: 0.12584577777777778, cr_10:1.0
+aurcc: 0.4907414330597632, rpp: 0.12580133333333332, cr_10:1.0
 </pre></div></div>
 </div>
 </section>
 <section id="Dataset">
 <h2>Dataset<a class="headerlink" href="#Dataset" title="Permalink to this heading">#</a></h2>
+<p>Every environment comes along with multiple datasets ( borrowed from d4rl) and can be accessed as follows:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
@@ -411,7 +413,7 @@ Downloading dataset: http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoc
 <div class="highlight"><pre>
 /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages/gym/spaces/box.py:73: UserWarning: <span class="ansi-yellow-fg">WARN: Box bound precision lowered by casting to float32</span>
   logger.warn(
-load datafile: 100%|██████████| 9/9 [00:01&lt;00:00,  4.50it/s]
+load datafile: 100%|██████████| 9/9 [00:02&lt;00:00,  3.84it/s]
 </pre></div></div>
 </div>
 </section>
@@ -422,6 +424,7 @@ load datafile: 100%|██████████| 9/9 [00:01&lt;00:00,  4.50it
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">opcc</span><span class="o">,</span> <span class="nn">gym</span><span class="o">,</span> <span class="nn">torch</span>
+
 <span class="n">env_name</span> <span class="o">=</span> <span class="s2">&quot;HalfCheetah-v2&quot;</span>
 <span class="n">policy</span><span class="p">,</span> <span class="n">policy_info</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">pre_trained</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -429,6 +432,7 @@ load datafile: 100%|██████████| 9/9 [00:01&lt;00:00,  4.50it
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
 <span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">episode_score</span><span class="o">=</span><span class="mi">0</span>
+
 <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
     <span class="n">action</span> <span class="o">=</span> <span class="n">policy</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
     <span class="n">action</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
@@ -444,16 +448,8 @@ load datafile: 100%|██████████| 9/9 [00:01&lt;00:00,  4.50it
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Episode Score: 1299.2595821945486
+Episode Score: 1189.886255544013
 </pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
 </div>
 </section>
 </section>

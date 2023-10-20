@@ -40,6 +40,15 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "source": [
+    "We iterate over queries for an environment and make random predictions for them."
+   ],
+   "metadata": {
+    "collapsed": false
+   }
+  },
+  {
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
@@ -177,6 +186,15 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "source": [
+    "Every environment comes along with multiple datasets ( borrowed from d4rl) and can be accessed as follows:"
+   ],
+   "metadata": {
+    "collapsed": false
+   }
+  },
+  {
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
@@ -198,11 +216,6 @@
   {
    "cell_type": "markdown",
    "metadata": {},
-   "source": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
    "source": [
     "## Policy Usage"
    ]
@@ -214,6 +227,7 @@
    "outputs": [],
    "source": [
     "import opcc, gym, torch\n",
+    "\n",
     "env_name = \"HalfCheetah-v2\"\n",
     "policy, policy_info = opcc.get_policy(env_name, pre_trained=1)\n",
     "\n",
@@ -221,6 +235,7 @@
     "env = gym.make(env_name)\n",
     "obs = env.reset()\n",
     "episode_score=0\n",
+    "\n",
     "while not done:\n",
     "    action = policy(torch.tensor(obs).unsqueeze(0))\n",
     "    action = action.data.cpu().numpy()[0].astype('float32')\n",
@@ -229,13 +244,6 @@
     "\n",
     "print(f\"Episode Score: {episode_score}\")"
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
   }
  ],
  "metadata": {
