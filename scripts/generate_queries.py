@@ -149,7 +149,10 @@ def evaluate_queries(env, candidate_states, policies, args):
                     horizon_b_mean = np.mean(horizon_b)
 
                     # ignore ambiguous queries
-                    if (abs(return_a_mean - return_b_mean) <= args.ignore_delta_per_horizon[horizon]) or (
+                    if (
+                        abs(return_a_mean - return_b_mean)
+                        <= args.ignore_delta_per_horizon[horizon]
+                    ) or (
                         min(return_b) <= max(return_a) <= max(return_b)
                         or min(return_b) <= min(return_a) <= max(return_b)
                     ):
@@ -272,7 +275,7 @@ def main():
 
     # Process arguments
     args = parser.parse_args()
-    assert len(args.ignore_delta_per_horizons)== len(args.horizons)
+    assert len(args.ignore_delta_per_horizons) == len(args.horizons)
 
     if args.use_wandb:
         wandb.init(project="opcc", config={"env_name": args.env_name}, save_code=True)
@@ -324,7 +327,9 @@ def main():
         wandb.save(_path)
 
     # estimate distance of queries from datasets
-    query_obs_action_a = np.concatenate((overall_data["obs-a"], overall_data["action-a"]), 1)
+    query_obs_action_a = np.concatenate(
+        (overall_data["obs-a"], overall_data["action-a"]), 1
+    )
     query_obs_action_b = np.concatenate(
         (overall_data["obs-b"], overall_data["action-b"]), 1
     )
@@ -333,7 +338,9 @@ def main():
         desc=" Query distance from dataset| Datasets",
     ):
         dataset = opcc.get_qlearning_dataset(args.env_name, dataset_name)
-        kd_tree = KDTree(np.concatenate((dataset["observations"], dataset["actions"]), 1))
+        kd_tree = KDTree(
+            np.concatenate((dataset["observations"], dataset["actions"]), 1)
+        )
         kd_data_a = kd_tree.get_knn_batch(query_obs_action_a, k=1)
         kd_data_b = kd_tree.get_knn_batch(query_obs_action_b, k=1)
 

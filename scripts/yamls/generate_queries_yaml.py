@@ -70,7 +70,7 @@ HORIZONS = [10, 20, 30, 40, 50]
 IGNORE_DELTAS_PER_HORIZON = {
     "pen-v0": [700, 1400, 2100, 2800, 3500],
     "hammer-v0": [1000, 2000, 3000, 4000, 5000],
-    "door-v0": [200, 400, 600, 800, 1000]
+    "door-v0": [200, 400, 600, 800, 1000],
 }
 
 ENV_VARIABLES = {
@@ -85,12 +85,12 @@ USE_WANDB = True
 
 
 def generate_yaml(
-        cmds,
-        target_yaml,
-        static_yaml_segment,
-        output_yaml_path,
-        per_node_commands,
-        num_gpu=1,
+    cmds,
+    target_yaml,
+    static_yaml_segment,
+    output_yaml_path,
+    per_node_commands,
+    num_gpu=1,
 ):
     yaml = target_yaml + "\n\n" + static_yaml_segment
     yaml += "\n\njobs:"
@@ -102,13 +102,13 @@ def generate_yaml(
         env_var_cmd = None
 
     for start_idx in range(0, len(cmds), per_node_commands):
-        cmd_batch = cmds[start_idx: start_idx + per_node_commands]
+        cmd_batch = cmds[start_idx : start_idx + per_node_commands]
 
         # add job
         job_name = "_".join(_["job_name"] for _ in cmd_batch)
         job_name = hashlib.md5(job_name.encode()).hexdigest()
         yaml += (
-                f"\n   - name: {job_name}" + f"\n     sku: G{num_gpu}" + f"\n     command:"
+            f"\n   - name: {job_name}" + f"\n     sku: G{num_gpu}" + f"\n     command:"
         )
 
         if WANDB_OFFLINE:
@@ -139,18 +139,20 @@ def main():
     cmds = []
 
     for env_name in ENVS:
-        cmd = f"python " \
-              "scripts/generate_queries.py" \
-              f" --env-name {env_name}" \
-              f" --horizons {' '.join([str(x) for x in HORIZONS])}" \
-              " --policy-ids 1 2 3 4" \
-              " --noise 0.1 " \
-              " --eval-runs 10" \
-              f" --ignore-delta-per-horizons {' '.join([str(x) for x in IGNORE_DELTAS_PER_HORIZON[env_name]])}" \
-              " --max-trans-count 10000 " \
-              "--ignore-stuck-count 500" \
-              " --save-prob 0.6" \
-              " --per-policy-comb-query 250"
+        cmd = (
+            f"python "
+            "scripts/generate_queries.py"
+            f" --env-name {env_name}"
+            f" --horizons {' '.join([str(x) for x in HORIZONS])}"
+            " --policy-ids 1 2 3 4"
+            " --noise 0.1 "
+            " --eval-runs 10"
+            f" --ignore-delta-per-horizons {' '.join([str(x) for x in IGNORE_DELTAS_PER_HORIZON[env_name]])}"
+            " --max-trans-count 10000 "
+            "--ignore-stuck-count 500"
+            " --save-prob 0.6"
+            " --per-policy-comb-query 250"
+        )
 
         if USE_WANDB:
             cmd += f" --use-wandb"

@@ -19,7 +19,7 @@ extras = {
         "sphinx-favicon",
         "nbsphinx>=0.9.3",
         "pandoc>=2.3",
-        "myst-nb"
+        "myst-nb",
     ],
 }
 # Meta dependency groups.
