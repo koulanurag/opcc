@@ -151,7 +151,7 @@ def evaluate_queries(env, candidate_states, policies, args):
                     # ignore ambiguous queries
                     if (
                         abs(return_a_mean - return_b_mean)
-                        <= args.ignore_delta_per_horizon[horizon]
+                        <= args.ignore_delta_per_horizons[horizon]
                     ) or (
                         min(return_b) <= max(return_a) <= max(return_b)
                         or min(return_b) <= min(return_a) <= max(return_b)
