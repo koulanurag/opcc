@@ -272,7 +272,7 @@ def main():
 
     # Process arguments
     args = parser.parse_args()
-    assert len(args.ignore_delta_per_horizon)== len(args.horizons)
+    assert len(args.ignore_delta_per_horizons)== len(args.horizons)
 
     if args.use_wandb:
         wandb.init(project="opcc", config={"env_name": args.env_name}, save_code=True)
