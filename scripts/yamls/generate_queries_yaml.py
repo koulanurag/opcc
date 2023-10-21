@@ -154,7 +154,6 @@ def main():
 
         if USE_WANDB:
             cmd += f" --use-wandb"
-            cmd += f" --wandb-project-name opcc"
 
         cmds.append({"job_name": hashlib.md5(cmd.encode()).hexdigest(), "cmd": cmd})
 
