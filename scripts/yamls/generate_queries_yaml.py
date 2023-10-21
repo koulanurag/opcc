@@ -68,9 +68,9 @@ ADROIT_ENVS = [
 ENVS = ADROIT_ENVS
 HORIZONS = [10, 20, 30, 40, 50]
 IGNORE_DELTAS_PER_HORIZON = {
-    "pen-v0": [700, 1400, 2100, 2800, 3500],
-    "hammer-v0": [1000, 2000, 3000, 4000, 5000],
-    "door-v0": [200, 400, 600, 800, 1000],
+    "d4rl:pen-v0": [700, 1400, 2100, 2800, 3500],
+    "d4rl:hammer-v0": [1000, 2000, 3000, 4000, 5000],
+    "d4rl:door-v0": [200, 400, 600, 800, 1000],
 }
 
 ENV_VARIABLES = {
