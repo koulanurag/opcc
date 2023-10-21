@@ -60,9 +60,9 @@ code:
 """
 
 ADROIT_ENVS = [
-    "pen-v0",
-    "hammer-v0",
-    "door-v0",
+    "d4rl:pen-v0",
+    "d4rl:hammer-v0",
+    "d4rl:door-v0",
 ]
 
 ENVS = ADROIT_ENVS
