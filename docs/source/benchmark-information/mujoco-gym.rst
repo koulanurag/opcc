@@ -7,9 +7,9 @@ mujoco(gym)
 .. raw:: html
 
     <p float="left">
-        <img width="160" alt="mujoco-halfcheetah" src="_static/images/halfcheetah.png" />
-        <img width="160" alt="mujoco-hopper" src="_static/images/hopper.png" />
-        <img width="160" alt="mujoco-walker2d" src="_static/images/walker2d.png" />
+        <img width="160" alt="mujoco-halfcheetah" src="../_static/images/halfcheetah.png" />
+        <img width="160" alt="mujoco-hopper" src="../_static/images/hopper.png" />
+        <img width="160" alt="mujoco-walker2d" src="../_static/images/walker2d.png" />
     </p>
 
 
