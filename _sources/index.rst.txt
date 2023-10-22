@@ -70,13 +70,14 @@ Contents
 
    installation
    quick-start
-   benchmark-information
+   benchmark-information/index.rst
    development
    api
 
 Bibtex
 ----------------
 .. code-block:: latex
+
 
     @article{koul2022offline,
       title={Offline Policy Comparison with Confidence: Benchmarks and Baselines},
