@@ -276,7 +276,7 @@ def main():
     # Process arguments
     args = parser.parse_args()
     assert len(args.ignore_delta_per_horizons) == len(args.horizons)
-    args.ignore_delta_per_horizon_dict = {args.horizon[idx]: v
+    args.ignore_delta_per_horizon_dict = {args.horizons[idx]: v
                                           for idx, v in
                                           enumerate(args.ignore_delta_per_horizons)}
 
