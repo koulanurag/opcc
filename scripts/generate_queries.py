@@ -88,7 +88,7 @@ def evaluate_queries(env, candidate_states, policies, args):
     policy_ids = sorted(policies.keys())
     for i, policy_id_a in enumerate(tqdm(policy_ids, desc="Policy-A")):
         policy_a = policies[policy_id_a]
-        for policy_id_b in tqdm(args.policy_ids[i + 1:], desc="Policy-B"):
+        for policy_id_b in tqdm(args.policy_ids[i + 1 :], desc="Policy-B"):
             policy_b = policies[policy_id_b]
 
             # core attributes
@@ -113,11 +113,11 @@ def evaluate_queries(env, candidate_states, policies, args):
             ignore_count = 0
 
             with tqdm(
-                    total=args.per_policy_comb_query, desc="Generating Query"
+                total=args.per_policy_comb_query, desc="Generating Query"
             ) as pbar:
                 while (
-                        query_count < args.per_policy_comb_query
-                        and ignore_count < args.ignore_stuck_count
+                    query_count < args.per_policy_comb_query
+                    and ignore_count < args.ignore_stuck_count
                 ):
                     same_state = random.choices([True, False], weights=[0.2, 0.8], k=1)[
                         0
@@ -150,11 +150,11 @@ def evaluate_queries(env, candidate_states, policies, args):
 
                     # ignore ambiguous queries
                     if (
-                            abs(return_a_mean - return_b_mean)
-                            <= args.ignore_delta_per_horizon_dict[horizon]
+                        abs(return_a_mean - return_b_mean)
+                        <= args.ignore_delta_per_horizon_dict[horizon]
                     ) or (
-                            min(return_b) <= max(return_a) <= max(return_b)
-                            or min(return_b) <= min(return_a) <= max(return_b)
+                        min(return_b) <= max(return_a) <= max(return_b)
+                        or min(return_b) <= min(return_a) <= max(return_b)
                     ):
                         ignore_count += 1
                         continue
@@ -242,7 +242,7 @@ def main():
         required=True,
         type=int,
         help="ignore query if difference between two sides"
-             " of query is less than it.",
+        " of query is less than it.",
     )
     parser.add_argument(
         "--horizons", nargs="+", help="horizon lists", type=int, required=True
@@ -276,9 +276,9 @@ def main():
     # Process arguments
     args = parser.parse_args()
     assert len(args.ignore_delta_per_horizons) == len(args.horizons)
-    args.ignore_delta_per_horizon_dict = {args.horizon[idx]: v
-                                          for idx, v in
-                                          enumerate(args.ignore_delta_per_horizons)}
+    args.ignore_delta_per_horizon_dict = {
+        args.horizon[idx]: v for idx, v in enumerate(args.ignore_delta_per_horizons)
+    }
 
     if args.use_wandb:
         wandb.init(project="opcc", config={"env_name": args.env_name}, save_code=True)
@@ -337,8 +337,8 @@ def main():
         (overall_data["obs-b"], overall_data["action-b"]), 1
     )
     for dataset_name in tqdm(
-            opcc.get_dataset_names(args.env_name),
-            desc=" Query distance from dataset| Datasets",
+        opcc.get_dataset_names(args.env_name),
+        desc=" Query distance from dataset| Datasets",
     ):
         dataset = opcc.get_qlearning_dataset(args.env_name, dataset_name)
         kd_tree = KDTree(
