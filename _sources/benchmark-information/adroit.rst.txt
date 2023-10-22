@@ -7,9 +7,9 @@ Adroit
 .. raw:: html
 
     <p float="left">
-        <img width="160" alt="pen-v0" src="_static/images/pen.png" />
-        <img width="160" alt="door-v0" src="_static/images//door.png" />
-        <img width="160" alt="door-v0" src="_static/images//hammer.png" />
+        <img width="160" alt="pen-v0" src="../_static/images/pen.png" />
+        <img width="160" alt="door-v0" src="../_static/images/door.png" />
+        <img width="160" alt="hammer-v0" src="../_static/images/hammer.png" />
     </p>
 
 
