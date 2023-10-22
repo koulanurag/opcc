@@ -235,9 +235,9 @@ ADROIT_ENV_CONFIGS = {
             "hidden_dim": 256,
         },
         "datasets": {
-            "human": {"name": "d4rl:pen-human-v0", "split": None},
-            "cloned": {"name": "d4rl:pen-cloned-v0", "split": None},
-            "expert": {"name": "d4rl:pen-expert-v0", "split": None},
+            "human": {"name": "d4rl:hammer-human-v0", "split": None},
+            "cloned": {"name": "d4rl:hammer-cloned-v0", "split": None},
+            "expert": {"name": "d4rl:hammer-expert-v0", "split": None},
         },
     },
 }
