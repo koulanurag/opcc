@@ -68,9 +68,9 @@ ADROIT_ENVS = [
 ENVS = ADROIT_ENVS
 HORIZONS = [10, 20, 30, 40, 50]
 IGNORE_DELTAS_PER_HORIZON = {
-    "d4rl:pen-v0": [700, 1400, 2100, 2800, 3500],
-    "d4rl:hammer-v0": [1000, 2000, 3000, 4000, 5000],
-    "d4rl:door-v0": [200, 400, 600, 800, 1000],
+    "d4rl:pen-v0": [x // 4 for x in [700, 1400, 2100, 2800, 3500]],
+    "d4rl:hammer-v0": [x // 4 for x in [1000, 2000, 3000, 4000, 5000]],
+    "d4rl:door-v0": [x // 4 for x in [200, 400, 600, 800, 1000]],
 }
 
 ENV_VARIABLES = {
@@ -146,10 +146,10 @@ def main():
             f" --horizons {' '.join([str(x) for x in HORIZONS])}"
             " --policy-ids 1 2 3 4"
             " --noise 0.1 "
-            " --eval-runs 10"
+            " --eval-runs 50"
             f" --ignore-delta-per-horizons {' '.join([str(x) for x in IGNORE_DELTAS_PER_HORIZON[env_name]])}"
-            " --max-trans-count 10000 "
-            "--ignore-stuck-count 500"
+            " --max-trans-count 100000 "
+            "--ignore-stuck-count 5000"
             " --save-prob 0.6"
             " --per-policy-comb-query 250"
         )
@@ -159,14 +159,16 @@ def main():
 
         cmds.append({"job_name": hashlib.md5(cmd.encode()).hexdigest(), "cmd": cmd})
 
+    yaml_file_path = os.path.join(os.getcwd(), "opcc_query_generic.yaml")
     if len(cmds) > 0:
-        if os.path.exists(os.path.join(os.getcwd(), "opcc_queries_generic.yaml")):
-            os.remove(os.path.join(os.getcwd(), "opcc_queries_generic.yaml"))
+        if os.path.exists(yaml_file_path):
+            os.remove(yaml_file_path)
+
         generate_yaml(
             cmds,
             GENERIC_TARGET,
             STATIC_YAML_SEGMENT,
-            os.path.join(os.getcwd(), "opcc_queries_generic.yaml"),
+            yaml_file_path,
             per_node_commands=1,
             num_gpu=1,
         )
