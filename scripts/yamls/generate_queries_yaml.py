@@ -148,8 +148,8 @@ def main():
             " --noise 0.1 "
             " --eval-runs 10"
             f" --ignore-delta-per-horizons {' '.join([str(x) for x in IGNORE_DELTAS_PER_HORIZON[env_name]])}"
-            " --max-trans-count 10000 "
-            "--ignore-stuck-count 500"
+            " --max-trans-count 100000 "
+            "--ignore-stuck-count 5000"
             " --save-prob 0.6"
             " --per-policy-comb-query 250"
         )
@@ -159,14 +159,16 @@ def main():
 
         cmds.append({"job_name": hashlib.md5(cmd.encode()).hexdigest(), "cmd": cmd})
 
+    yaml_file_path = os.path.join(os.getcwd(), "opcc_query_generic.yaml")
     if len(cmds) > 0:
-        if os.path.exists(os.path.join(os.getcwd(), "opcc_generic.yaml")):
-            os.remove(os.path.join(os.getcwd(), "opcc_generic.yaml"))
+        if os.path.exists(yaml_file_path):
+            os.remove(yaml_file_path)
+
         generate_yaml(
             cmds,
             GENERIC_TARGET,
             STATIC_YAML_SEGMENT,
-            os.path.join(os.getcwd(), "opcc_generic.yaml"),
+            yaml_file_path,
             per_node_commands=1,
             num_gpu=1,
         )
