@@ -57,11 +57,11 @@ def get_queries(env_name):
         >>> opcc.get_queries('Hopper-v2')
 
     """
-    assert (
-        env_name in ENV_CONFIGS
-    ), "`{}` not found. It should be among following: {}".format(
-        env_name, list(ENV_CONFIGS.keys())
-    )
+    if env_name not in ENV_CONFIGS:
+        raise ValueError(
+            f"`{env_name}` not found. "
+            f"It should be among following: {list(ENV_CONFIGS.keys())}"
+        )
 
     env_dir = os.path.join(ASSETS_DIR, env_name)
     queries_path = os.path.join(env_dir, "queries.p")
@@ -98,19 +98,19 @@ def get_policy(env_name: str, pre_trained: int = 1):
 
     """
 
-    assert MIN_PRE_TRAINED_LEVEL <= pre_trained <= MAX_PRE_TRAINED_LEVEL, (
-        "pre_trained marker should be between [{},{}] where {} indicates "
-        "the best model and {} indicates the worst model".format(
-            MIN_PRE_TRAINED_LEVEL,
-            MAX_PRE_TRAINED_LEVEL,
-            MIN_PRE_TRAINED_LEVEL,
-            MAX_PRE_TRAINED_LEVEL,
+    if not (MIN_PRE_TRAINED_LEVEL <= pre_trained <= MAX_PRE_TRAINED_LEVEL):
+        raise ValueError(
+            f"pre_trained marker should be between"
+            f" [{MIN_PRE_TRAINED_LEVEL},{MAX_PRE_TRAINED_LEVEL}]"
+            f" where {MIN_PRE_TRAINED_LEVEL} indicates the best model "
+            f"and {MAX_PRE_TRAINED_LEVEL} indicates the worst model"
         )
-    )
 
-    assert env_name in ENV_CONFIGS, "{} is invalid. Expected values include {}".format(
-        env_name, ENV_CONFIGS.keys()
-    )
+    if env_name not in ENV_CONFIGS:
+        raise ValueError(
+            f"`{env_name}` not found. "
+            f"It should be among following: {list(ENV_CONFIGS.keys())}"
+        )
 
     # retrieve model
     model_dir = os.path.join(ASSETS_DIR, env_name, "models")
@@ -172,14 +172,18 @@ def get_sequence_dataset(env_name, dataset_name):
         >>> len(dataset[0]['observations']) # episode length
         470
     """
-    assert env_name in ENV_CONFIGS, "{} is invalid. Expected values include {}".format(
-        env_name, ENV_CONFIGS.keys()
-    )
-    assert (
-        dataset_name in ENV_CONFIGS[env_name]["datasets"]
-    ), "`{}` not found. It should be among following: {}".format(
-        dataset_name, list(ENV_CONFIGS[env_name]["datasets"].keys())
-    )
+    if env_name not in ENV_CONFIGS:
+        raise ValueError(
+            f"`{env_name}` not found. "
+            f"It should be among following: {list(ENV_CONFIGS.keys())}"
+        )
+
+    if dataset_name not in ENV_CONFIGS[env_name]["datasets"]:
+        raise ValueError(
+            f"`{dataset_name}` not found. "
+            f"It should be among following: "
+            f"{list(ENV_CONFIGS[env_name]['datasets'].keys())}"
+        )
 
     dataset_env = ENV_CONFIGS[env_name]["datasets"][dataset_name]["name"]
     env = gym.make(dataset_env)
@@ -216,14 +220,18 @@ def get_qlearning_dataset(env_name, dataset_name):
         >>> len(dataset['observations']) # length of dataset
         999998
     """
-    assert env_name in ENV_CONFIGS, "{} is invalid. Expected values include {}".format(
-        env_name, ENV_CONFIGS.keys()
-    )
-    assert (
-        dataset_name in ENV_CONFIGS[env_name]["datasets"]
-    ), "`{}` not found. It should be among following: {}".format(
-        dataset_name, list(ENV_CONFIGS[env_name]["datasets"].keys())
-    )
+    if env_name not in ENV_CONFIGS:
+        raise ValueError(
+            f"`{env_name}` not found. "
+            f"It should be among following: {list(ENV_CONFIGS.keys())}"
+        )
+
+    if dataset_name not in ENV_CONFIGS[env_name]["datasets"]:
+        raise ValueError(
+            f"`{dataset_name}` not found. "
+            f"It should be among following: "
+            f"{list(ENV_CONFIGS[env_name]['datasets'].keys())}"
+        )
 
     dataset_env = ENV_CONFIGS[env_name]["datasets"][dataset_name]["name"]
     env = gym.make(dataset_env)
@@ -250,11 +258,11 @@ def get_dataset_names(env_name):
         >>> opcc.get_dataset_names('Hopper-v2')
         ['random', 'expert', 'medium', 'medium-replay', 'medium-expert']
     """
-    assert (
-        env_name in ENV_CONFIGS
-    ), "`{}` not found. It should be among following: {}".format(
-        env_name, list(ENV_CONFIGS.keys())
-    )
+    if env_name not in ENV_CONFIGS:
+        raise ValueError(
+            f"`{env_name}` not found. "
+            f"It should be among following: {list(ENV_CONFIGS.keys())}"
+        )
     return list(ENV_CONFIGS[env_name]["datasets"].keys())
 
 
