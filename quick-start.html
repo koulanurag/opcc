@@ -294,17 +294,15 @@ pybullet build time: May 20 2022 19:44:17
 <span class="c1"># Batch iteration through Queries :</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">policy_a_id</span><span class="p">,</span> <span class="n">policy_b_id</span><span class="p">),</span> <span class="n">query_batch</span> <span class="ow">in</span> <span class="n">queries</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
-    <span class="c1"># retrieve policies</span>
-    <span class="n">policy_a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_a_id</span><span class="p">)</span>
-    <span class="n">policy_b</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_b_id</span><span class="p">)</span>
-
     <span class="c1"># query-a</span>
     <span class="n">obs_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_a&#39;</span><span class="p">]</span>
     <span class="n">action_a</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_a&#39;</span><span class="p">]</span>
+    <span class="n">policy_a</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_a_id</span><span class="p">)</span>
 
     <span class="c1"># query-b</span>
     <span class="n">obs_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;obs_b&#39;</span><span class="p">]</span>
     <span class="n">action_b</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;action_b&#39;</span><span class="p">]</span>
+    <span class="n">policy_b</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">opcc</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="o">*</span><span class="n">policy_b_id</span><span class="p">)</span>
 
     <span class="c1"># horizon for policy evaluation</span>
     <span class="n">horizon</span> <span class="o">=</span> <span class="n">query_batch</span><span class="p">[</span><span class="s1">&#39;horizon&#39;</span><span class="p">]</span>
@@ -381,7 +379,7 @@ pybullet build time: May 20 2022 19:44:17
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-aurcc: 0.5082808546562756, rpp: 0.12751333333333334, cr_10:1.0
+aurcc: 0.4894320274170224, rpp: 0.124292, cr_10:1.0
 </pre></div></div>
 </div>
 </section>
@@ -421,7 +419,7 @@ Downloading dataset: http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoc
 <div class="highlight"><pre>
 /opt/hostedtoolcache/Python/3.8.18/x64/lib/python3.8/site-packages/gym/spaces/box.py:73: UserWarning: <span class="ansi-yellow-fg">WARN: Box bound precision lowered by casting to float32</span>
   logger.warn(
-load datafile: 100%|██████████| 9/9 [00:02&lt;00:00,  4.09it/s]
+load datafile: 100%|██████████| 9/9 [00:02&lt;00:00,  4.06it/s]
 </pre></div></div>
 </div>
 </section>
@@ -456,7 +454,7 @@ load datafile: 100%|██████████| 9/9 [00:02&lt;00:00,  4.09it
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Episode Score: 1227.2942292762227
+Episode Score: 1226.4671773940179
 </pre></div></div>
 </div>
 </section>
